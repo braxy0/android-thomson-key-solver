@@ -10,43 +10,43 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.res.Resources.Theme;
+import android.os.Message;
 import android.widget.Toast;
 
 public class ThomsonCalc extends Thread {
 	
 	MessageDigest md;
-	Context ct;
 	String [] ret;
 	String router;
 	ThomsonSolver parent;
 	
-	public ThomsonCalc( Context ct  , ThomsonSolver par )
+	public ThomsonCalc( ThomsonSolver par )
 	{
-		this.ct = ct;
 		this.parent = par;
 	}
 	
 	public void  run()
 	{
 		ArrayList<String> pwList = new ArrayList<String>();
-		
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream("/sdcard/auxtable.dat");
-		} catch (FileNotFoundException e2) {
-			 Toast.makeText( this.ct , "Aux Table not found on SDCard!" , Toast.LENGTH_LONG).show();
-			return;
-		}
 
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
 			e1.printStackTrace();
 		}
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream("/sdcard/auxtable.dat");
+		} catch (FileNotFoundException e2) {
+			ret =  new String[]{"Aux Table not found on SDCard!"};
+			parent.setList(ret);
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
 		
-		if ( router == null || router.length() < 13 )
+		if ( router == null || router.length() != 13 ) 
 		{
-			ret =  new String[]{"Invalid ESSID!", "It must have at least 6 characters."};
+			ret =  new String[]{"Invalid ESSID!", "It must have 6 characters."};
 			parent.setList(ret);
 			parent.handler.sendEmptyMessage(0);
 			return;

@@ -38,9 +38,13 @@ public class ThomsonSolver extends Activity {
 
 	Handler handler = new Handler() {
           public void handleMessage(Message msg) {
+        	  
                   progressDialog.dismiss();
+              if ( msg.what == 0 )
                   lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
 							list));
+              if ( msg.what == 1 )
+            	  Toast.makeText( ThomsonSolver.this , list[0] , Toast.LENGTH_LONG).show();
 
           }
 	};
@@ -71,7 +75,7 @@ public class ThomsonSolver extends Activity {
 			public void onClick(View arg0) {
 				try
 				{
-					ThomsonSolver.this.calculator = new ThomsonCalc(getBaseContext() ,ThomsonSolver.this);
+					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 					ThomsonSolver.this.calculator.router = "Thomson" + ed.getText().toString().toUpperCase();
 					ThomsonSolver.this.calculator.start();
 					progressDialog = ProgressDialog.show(ThomsonSolver.this, "Working..", "Calculating Keys", true,
