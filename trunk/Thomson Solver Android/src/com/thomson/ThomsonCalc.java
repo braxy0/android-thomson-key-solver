@@ -8,11 +8,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import android.content.Context;
-import android.content.res.Resources.Theme;
-import android.os.Message;
-import android.widget.Toast;
-
 public class ThomsonCalc extends Thread {
 	
 	MessageDigest md;
@@ -64,13 +59,21 @@ public class ThomsonCalc extends Thread {
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
 		int offset = 0;
+		int progress = 0;
 		for (int y = 4; y <= 10; y++) {
-			for (int w = 0; w <= 52; w++) {
+			for (int w = 1; w <= 52; w++) {
 				try {
 					fis.read(week);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+				if ( progress >= 3 )
+				{
+					parent.handler.sendEmptyMessage(2);
+					progress = 0;
+				}
+				else
+					++progress;
 				offset = 0;
 				for (int a = 0; a < 36; a++) {
 					for (int b = 0; b < 36; b++) {

@@ -1,13 +1,5 @@
 package com.thomson;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -39,21 +31,24 @@ public class ThomsonSolver extends Activity {
 	Handler handler = new Handler() {
           public void handleMessage(Message msg) {
         	  
-                  progressDialog.dismiss();
-              if ( msg.what == 0 )
-                  lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
+			if ( msg.what == 0 )
+			{
+				lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
 							list));
-              if ( msg.what == 1 )
-            	  Toast.makeText( ThomsonSolver.this , list[0] , Toast.LENGTH_LONG).show();
-
+				removeDialog(DIALOG1_KEY);
+			}
+			if ( msg.what == 1 )
+				  Toast.makeText( ThomsonSolver.this , list[0] , Toast.LENGTH_LONG).show();
+			if ( msg.what == 2 )
+				  progressDialog.setProgress(progressDialog.getProgress() + 1);
           }
 	};
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.new_main);
-		lv1=(ListView)findViewById(R.id.ListView01);
+		setContentView(R.layout.main);
+		lv1 = (ListView) findViewById(R.id.ListView01);
 
 		lv1.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -78,8 +73,9 @@ public class ThomsonSolver extends Activity {
 					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 					ThomsonSolver.this.calculator.router = "Thomson" + ed.getText().toString().toUpperCase();
 					ThomsonSolver.this.calculator.start();
-					progressDialog = ProgressDialog.show(ThomsonSolver.this, "Working..", "Calculating Keys", true,
-                            false);
+					//progressDialog = ProgressDialog.show(ThomsonSolver.this, "Working..", "Calculating Keys", true,
+                      //      false);
+					showDialog(DIALOG1_KEY);
 				}
 				catch(Exception e)
 				{
@@ -90,11 +86,28 @@ public class ThomsonSolver extends Activity {
 		});
 	}
  
-    public void setList(String[] ret) 
-    {
+    public void setList(String[] ret) {
     	this.list = ret;
-    	
     }  
+    
+    private static final int DIALOG1_KEY = 0; 
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DIALOG1_KEY: {
+            	progressDialog = new ProgressDialog(ThomsonSolver.this);
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				progressDialog.setTitle("Working..");
+				progressDialog.setMessage("Calculating Keys...");
+				progressDialog.setCancelable(true);
+				progressDialog.setProgress(0);
+				progressDialog.setIndeterminate(false);
+                return progressDialog;
+            }
+          
+        }
+        return null;
+    }
 
 
 }
