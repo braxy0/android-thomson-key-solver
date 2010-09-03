@@ -1,13 +1,22 @@
 package com.thomson;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,7 +36,8 @@ public class ThomsonSolver extends Activity {
 	String lv_arr[]={"Android","iPhone","BlackBerry","AndroidPeople"};
 	ThomsonCalc calculator;
 	String [] list = null;
-
+	BroadcastReceiver receiver;
+	List<ScanResult> vulnerable;
 	Handler handler = new Handler() {
           public void handleMessage(Message msg) {
         	  
@@ -35,7 +45,7 @@ public class ThomsonSolver extends Activity {
 			{
 				lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
 							list));
-				removeDialog(DIALOG1_KEY);
+				removeDialog(PROGRESSBAR);
 			}
 			if ( msg.what == 1 )
 				  Toast.makeText( ThomsonSolver.this , list[0] , Toast.LENGTH_LONG).show();
@@ -48,6 +58,9 @@ public class ThomsonSolver extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		
 		lv1 = (ListView) findViewById(R.id.ListView01);
 
 		lv1.setOnItemClickListener(new OnItemClickListener() {
@@ -73,28 +86,33 @@ public class ThomsonSolver extends Activity {
 					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 					ThomsonSolver.this.calculator.router = "Thomson" + ed.getText().toString().toUpperCase();
 					ThomsonSolver.this.calculator.start();
-					//progressDialog = ProgressDialog.show(ThomsonSolver.this, "Working..", "Calculating Keys", true,
-                      //      false);
-					showDialog(DIALOG1_KEY);
+					showDialog(PROGRESSBAR);
 				}
 				catch(Exception e)
 				{
-					
+					e.printStackTrace();
 					return;
 				}
 			}
 		});
+        
+        if (receiver == null)
+			receiver = new WiFiScanReceiver(this);
+
+		registerReceiver(receiver, new IntentFilter(
+				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+
 	}
  
     public void setList(String[] ret) {
     	this.list = ret;
     }  
     
-    private static final int DIALOG1_KEY = 0; 
+    private static final int PROGRESSBAR = 0; 
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-            case DIALOG1_KEY: {
+            case PROGRESSBAR: {
             	progressDialog = new ProgressDialog(ThomsonSolver.this);
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 				progressDialog.setTitle("Working..");
@@ -108,6 +126,30 @@ public class ThomsonSolver extends Activity {
         }
         return null;
     }
+    
+    @Override
+	public void onStop() {
+		unregisterReceiver(receiver);
+	}
 
+    private class WiFiScanReceiver extends BroadcastReceiver {
+    	  ThomsonSolver solver;
+
+    	  public WiFiScanReceiver( ThomsonSolver wifiDemo) {
+    	    super();
+    	    this.solver = wifiDemo;
+    	  }
+
+    	  public void onReceive(Context c, Intent intent) {
+    	    List<ScanResult> results = solver.wifi.getScanResults();
+    	    List<ScanResult> vulnerable = new ArrayList<ScanResult>();
+    	    for (ScanResult result : results) {
+    	      if (result.SSID.contains("Thomson") || result.SSID.contains("SpeedTouch"))
+    	    	  vulnerable.add(result);
+    	    }
+    	    solver.vulnerable = vulnerable;
+      	 }
+
+    }
 
 }
