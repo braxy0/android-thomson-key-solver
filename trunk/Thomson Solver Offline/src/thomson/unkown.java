@@ -1,4 +1,4 @@
-package javaapplication1;
+package thomson;
 
 public class unkown {
 	static char charect[] = {
