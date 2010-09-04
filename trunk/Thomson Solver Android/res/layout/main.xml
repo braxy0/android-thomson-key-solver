@@ -9,7 +9,7 @@
     <Button android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calculate Possible Keys!" />
+            android:text="@string/calc" />
     <ListView android:id="@+id/ListView01"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />

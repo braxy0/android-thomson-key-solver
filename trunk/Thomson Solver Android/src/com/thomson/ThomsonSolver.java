@@ -16,7 +16,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.ClipboardManager;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,6 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class ThomsonSolver extends Activity {
 
 	WifiManager wifi;
+	boolean wifi_state;
 	ProgressDialog progressDialog;
 	TextView tv;
 	ListView lv1;
@@ -60,7 +63,7 @@ public class ThomsonSolver extends Activity {
 		setContentView(R.layout.main);
 		
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		
+	
 		lv1 = (ListView) findViewById(R.id.ListView01);
 
 		lv1.setOnItemClickListener(new OnItemClickListener() {
@@ -130,8 +133,41 @@ public class ThomsonSolver extends Activity {
     @Override
 	public void onStop() {
 		unregisterReceiver(receiver);
+		super.onStop();
 	}
+    
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.wifi, menu);
+        return true;
+    }
+    
+    public void scan(){
+    	try{
+    		if ( !wifi.isWifiEnabled() )
+    		{
+				  Toast.makeText( ThomsonSolver.this , "Wifi not activated!", Toast.LENGTH_SHORT).show();
+    		}
+	    	if ( wifi.startScan() )
+				  Toast.makeText( ThomsonSolver.this , "Scanning Started", Toast.LENGTH_SHORT).show();
+			else
+				  Toast.makeText( ThomsonSolver.this , "Scanning Failed!", Toast.LENGTH_SHORT).show();
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.wifi_scan:
+            scan();
+			return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    
     private class WiFiScanReceiver extends BroadcastReceiver {
     	  ThomsonSolver solver;
 
@@ -143,11 +179,16 @@ public class ThomsonSolver extends Activity {
     	  public void onReceive(Context c, Intent intent) {
     	    List<ScanResult> results = solver.wifi.getScanResults();
     	    List<ScanResult> vulnerable = new ArrayList<ScanResult>();
+    	    List<String> list = new ArrayList<String>();
     	    for (ScanResult result : results) {
-    	      if (result.SSID.contains("Thomson") || result.SSID.contains("SpeedTouch"))
+    	     // if (result.SSID.contains("Thomson") || result.SSID.contains("SpeedTouch"))
     	    	  vulnerable.add(result);
+    	    	  list.add(result.SSID);
     	    }
     	    solver.vulnerable = vulnerable;
+    	    
+    	    lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1, list
+					));
       	 }
 
     }
