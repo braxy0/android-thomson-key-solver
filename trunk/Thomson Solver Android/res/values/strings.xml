@@ -3,4 +3,5 @@
     <string name="calc">Calculate Possible Keys!</string>
     <string name="app_name">Thomson Solver</string>
     <string name="scan">Scan</string>
+    <string name="manual">Manual Input</string>
 </resources>

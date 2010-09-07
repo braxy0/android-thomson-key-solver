@@ -14,7 +14,8 @@ public class ThomsonCalc extends Thread {
 	String [] ret;
 	String router;
 	ThomsonSolver parent;
-	
+	boolean stopRequested = false;
+
 	public ThomsonCalc( ThomsonSolver par )
 	{
 		this.parent = par;
@@ -34,24 +35,23 @@ public class ThomsonCalc extends Thread {
 			fis = new FileInputStream("/sdcard/auxtable.dat");
 		} catch (FileNotFoundException e2) {
 			ret =  new String[]{"Aux Table not found on SDCard!"};
-			parent.setList(ret);
+			parent.list_key = ret;
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
 		
-		if ( router == null || router.length() != 13 ) 
+		if ( router == null || router.length() != 6 ) 
 		{
-			ret =  new String[]{"Invalid ESSID!", "It must have 6 characters."};
-			parent.setList(ret);
-			parent.handler.sendEmptyMessage(0);
+			ret =  new String[]{"Invalid ESSID! It must have 6 characters."};
+			parent.list_key = ret;
+			parent.handler.sendEmptyMessage(1);
 			return;
 		}
 		
 		byte[] routerESSID = new byte[3];
 		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(router.substring(7)
-					.charAt(i), 16) << 4) + Character.digit(router.substring(7)
-					.charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(router.charAt(i), 16) << 4)
+					+ Character.digit(router.charAt(i + 1), 16));
 
 		byte[] cp = new byte[12];
 		byte[] hash = new byte[19];
@@ -78,6 +78,8 @@ public class ThomsonCalc extends Thread {
 				for (int a = 0; a < 36; a++) {
 					for (int b = 0; b < 36; b++) {
 						for (int c = 0; c < 36; c++) {
+							if ( stopRequested )
+								return;
 							offset += 3;
 							if (week[offset - 3 + 0] != routerESSID[0])
 								continue;
@@ -113,9 +115,9 @@ public class ThomsonCalc extends Thread {
 		}
 		if(pwList.toArray().length == 0)
 		{
-			ret =  new String[]{"No matches were found!", "Try another ESSID"};
-			parent.setList(ret);
-			parent.handler.sendEmptyMessage(0);
+			ret =  new String[]{"No matches were found! Try another ESSID"};
+			parent.list_key = ret;
+			parent.handler.sendEmptyMessage(1);
 			return;
 		}
 
@@ -123,7 +125,7 @@ public class ThomsonCalc extends Thread {
 		int i = 0;
 		for(String s: pwList)
 			ret[i++] = s;
-		parent.setList(ret);
+		parent.list_key = ret;
 		parent.handler.sendEmptyMessage(0);
 		return;
 		

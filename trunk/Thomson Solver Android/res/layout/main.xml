@@ -3,13 +3,6 @@
               android:layout_width="fill_parent" 
               android:layout_height="fill_parent" 
               android:orientation="vertical" >
-    <EditText android:id="@+id/edittext"
-        	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"/>
-    <Button android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/calc" />
     <ListView android:id="@+id/ListView01"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />

@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
@@ -34,28 +35,31 @@ public class ThomsonSolver extends Activity {
 	WifiManager wifi;
 	boolean wifi_state;
 	ProgressDialog progressDialog;
-	TextView tv;
 	ListView lv1;
-	String lv_arr[]={"Android","iPhone","BlackBerry","AndroidPeople"};
 	ThomsonCalc calculator;
-	String [] list = null;
+	String [] list_key = null;
 	BroadcastReceiver receiver;
 	List<ScanResult> vulnerable;
+	String router;
+	
 	Handler handler = new Handler() {
           public void handleMessage(Message msg) {
         	  
 			if ( msg.what == 0 )
 			{
-				lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
-							list));
 				removeDialog(PROGRESSBAR);
+				showDialog(KEY_LIST);
 			}
 			if ( msg.what == 1 )
-				  Toast.makeText( ThomsonSolver.this , list[0] , Toast.LENGTH_LONG).show();
+			{
+				removeDialog(PROGRESSBAR);
+				Toast.makeText( ThomsonSolver.this , list_key[0] , Toast.LENGTH_SHORT).show();
+			}
 			if ( msg.what == 2 )
 				  progressDialog.setProgress(progressDialog.getProgress() + 1);
           }
 	};
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,36 +73,24 @@ public class ThomsonSolver extends Activity {
 		lv1.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-					Toast.makeText(getApplicationContext(), ((TextView) view).getText() + " was copied to clipboard!",
-							Toast.LENGTH_SHORT).show();
-		      
-					ClipboardManager clipboard = 
-						(ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
-	
-					clipboard.setText(((TextView) view).getText());
+					String essid;
+					router = ((TextView) view).getText().toString();
+					
+					if ( (essid = essidFilter(router))  == null )
+					{
+						  Toast.makeText( ThomsonSolver.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
+						  return;
+					}
+					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
+					ThomsonSolver.this.calculator.router = essid.toUpperCase();
+					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
+					ThomsonSolver.this.calculator.start();
+					removeDialog(KEY_LIST);
+					showDialog(PROGRESSBAR);
 			}
 		});
 		
-		final EditText ed = (EditText) findViewById(R.id.edittext);
-
-        Button calc = (Button) findViewById(R.id.button);
-        calc.setOnClickListener(new View.OnClickListener(){
-			public void onClick(View arg0) {
-				try
-				{
-					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
-					ThomsonSolver.this.calculator.router = "Thomson" + ed.getText().toString().toUpperCase();
-					ThomsonSolver.this.calculator.start();
-					showDialog(PROGRESSBAR);
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-					return;
-				}
-			}
-		});
-        
+     
         if (receiver == null)
 			receiver = new WiFiScanReceiver(this);
 
@@ -106,12 +98,18 @@ public class ThomsonSolver extends Activity {
 				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
 	}
+	
+	public String essidFilter( String essid ) {
+		if ( essid.contains("Thomson") && essid.length() == 13 )
+			return new String (essid.substring(7));
+		if (  essid.contains("SpeedTouch") && essid.length() == 16 )
+			return new String ( essid.substring(10));		
+		return null;
+	}
  
-    public void setList(String[] ret) {
-    	this.list = ret;
-    }  
     
     private static final int PROGRESSBAR = 0; 
+    private static final int KEY_LIST = 1;
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
@@ -120,10 +118,38 @@ public class ThomsonSolver extends Activity {
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 				progressDialog.setTitle("Working..");
 				progressDialog.setMessage("Calculating Keys...");
-				progressDialog.setCancelable(true);
+				progressDialog.setCancelable(false);
 				progressDialog.setProgress(0);
+				progressDialog.setButton("Cancel", new DialogInterface.OnClickListener(){
+					public void onClick(DialogInterface dialog, int which) {
+                                ThomsonSolver.this.calculator.stopRequested = true;
+                				removeDialog(PROGRESSBAR);
+					}
+        });
 				progressDialog.setIndeterminate(false);
                 return progressDialog;
+            }
+            case KEY_LIST: {
+            	Dialog dialog = new Dialog(this);
+
+            	dialog.setContentView(R.layout.results);
+            	dialog.setTitle(ThomsonSolver.this.router);
+          
+            	ListView list = (ListView) dialog.findViewById(R.id.list_keys);
+            	list.setOnItemClickListener(new OnItemClickListener() {
+        			public void onItemClick(AdapterView<?> parent, View view,
+        					int position, long id) {
+        					Toast.makeText(getApplicationContext(), ((TextView) view).getText() + " was copied to clipboard!",
+        							Toast.LENGTH_SHORT).show();
+        					ClipboardManager clipboard = 
+                                  (ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
+
+                          clipboard.setText(((TextView) view).getText());
+        			}
+        		});
+            	list.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
+						list_key));
+            	return dialog;
             }
           
         }
@@ -132,8 +158,8 @@ public class ThomsonSolver extends Activity {
     
     @Override
 	public void onStop() {
+    	super.onStop();
 		unregisterReceiver(receiver);
-		super.onStop();
 	}
     
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -147,6 +173,7 @@ public class ThomsonSolver extends Activity {
     		if ( !wifi.isWifiEnabled() )
     		{
 				  Toast.makeText( ThomsonSolver.this , "Wifi not activated!", Toast.LENGTH_SHORT).show();
+				  return;
     		}
 	    	if ( wifi.startScan() )
 				  Toast.makeText( ThomsonSolver.this , "Scanning Started", Toast.LENGTH_SHORT).show();
@@ -163,6 +190,8 @@ public class ThomsonSolver extends Activity {
         case R.id.wifi_scan:
             scan();
 			return true;
+        case R.id.manual_input:
+        	return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -178,15 +207,11 @@ public class ThomsonSolver extends Activity {
 
     	  public void onReceive(Context c, Intent intent) {
     	    List<ScanResult> results = solver.wifi.getScanResults();
-    	    List<ScanResult> vulnerable = new ArrayList<ScanResult>();
     	    List<String> list = new ArrayList<String>();
     	    for (ScanResult result : results) {
-    	     // if (result.SSID.contains("Thomson") || result.SSID.contains("SpeedTouch"))
-    	    	  vulnerable.add(result);
     	    	  list.add(result.SSID);
     	    }
-    	    solver.vulnerable = vulnerable;
-    	    
+    	    solver.vulnerable = results;
     	    lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1, list
 					));
       	 }
