@@ -30,6 +30,7 @@ public class ThomsonCalc extends Thread {
 		} catch (NoSuchAlgorithmException e1) {
 			e1.printStackTrace();
 		}
+		
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream("/sdcard/auxtable.dat");
@@ -40,7 +41,10 @@ public class ThomsonCalc extends Thread {
 			return;
 		}
 		
-		if ( router == null || router.length() != 6 ) 
+		if ( router == null)
+			return;
+		
+		if ( router.length() != 6 ) 
 		{
 			ret =  new String[]{"Invalid ESSID! It must have 6 characters."};
 			parent.list_key = ret;
@@ -60,55 +64,64 @@ public class ThomsonCalc extends Thread {
 		cp[1] = (byte) (char) 'P';
 		int offset = 0;
 		int progress = 0;
-		for (int y = 4; y <= 10; y++) {
-			for (int w = 1; w <= 52; w++) {
+		for (int y = 4; y <= 10; y++)
+		{
+			for (int w = 1; w <= 52; w++)
+			{
 				try {
 					fis.read(week);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				if ( progress >= 3 )
+				
+				// Proper progress bar
+				if (progress < 100f*(w + 52*(y-4))/364f)
 				{
 					parent.handler.sendEmptyMessage(2);
-					progress = 0;
+					progress++;
 				}
-				else
-					++progress;
+
+				if ( stopRequested )
+					return;
+				
 				offset = 0;
-				for (int a = 0; a < 36; a++) {
-					for (int b = 0; b < 36; b++) {
-						for (int c = 0; c < 36; c++) {
-							if ( stopRequested )
-								return;
-							offset += 3;
-							if (week[offset - 3 + 0] != routerESSID[0])
-								continue;
-							if (week[offset - 3 + 1] != routerESSID[1])
-								continue;
-							if (week[offset - 3 + 2] != routerESSID[2])
-								continue;
+				for (int i = 0; i < 36*36*36; i++)
+				{
+					
+					offset += 3;
+					if (week[offset - 3 + 0] != routerESSID[0])
+						continue;
+					
+					if (week[offset - 3 + 1] != routerESSID[1])
+						continue;
+					
+					if (week[offset - 3 + 2] != routerESSID[2])
+						continue;
+					
+					int a, b, c;
+					c = i % 36;
+					b = i/36 % 36;
+					a = i/(36*36) % 36;
+					
+					cp[2] = (byte) Character.forDigit((y / 10), 10);
+					cp[3] = (byte) Character.forDigit((y % 10), 10);
+					cp[4] = (byte) Character.forDigit((w / 10), 10);
+					cp[5] = (byte) Character.forDigit((w % 10), 10);
+					cp[6] = unkown.charectbytes0[a];
+					cp[7] = unkown.charectbytes1[a];
+					cp[8] = unkown.charectbytes0[b];
+					cp[9] = unkown.charectbytes1[b];
+					cp[10] = unkown.charectbytes0[c];
+					cp[11] = unkown.charectbytes1[c];
 
-							cp[2] = (byte) Character.forDigit((y / 10), 10);
-							cp[3] = (byte) Character.forDigit((y % 10), 10);
-							cp[4] = (byte) Character.forDigit((w / 10), 10);
-							cp[5] = (byte) Character.forDigit((w % 10), 10);
-							cp[6] = unkown.charectbytes0[a];
-							cp[7] = unkown.charectbytes1[a];
-							cp[8] = unkown.charectbytes0[b];
-							cp[9] = unkown.charectbytes1[b];
-							cp[10] = unkown.charectbytes0[c];
-							cp[11] = unkown.charectbytes1[c];
+					md.reset();
+					md.update(cp);
+					hash = md.digest();
 
-							md.reset();
-							md.update(cp);
-							hash = md.digest();
-
-							try {
-								pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
-							} catch (UnsupportedEncodingException e) {
-								e.printStackTrace();
-							}
-						}
+					try {
+						pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
 					}
 				}
 			}
