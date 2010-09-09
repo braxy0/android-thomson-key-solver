@@ -96,6 +96,7 @@ public class ThomsonSolver extends Activity {
 
 		registerReceiver(receiver, new IntentFilter(
 				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+		scan();
 
 	}
 	
@@ -110,6 +111,8 @@ public class ThomsonSolver extends Activity {
     
     private static final int PROGRESSBAR = 0; 
     private static final int KEY_LIST = 1;
+    private static final int MANUAL_CALC = 2;
+    
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
@@ -131,7 +134,6 @@ public class ThomsonSolver extends Activity {
             }
             case KEY_LIST: {
             	Dialog dialog = new Dialog(this);
-
             	dialog.setContentView(R.layout.results);
             	dialog.setTitle(ThomsonSolver.this.router);
           
@@ -146,20 +148,84 @@ public class ThomsonSolver extends Activity {
 
                           clipboard.setText(((TextView) view).getText());
         			}
-        		});
+            	});
             	list.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
 						list_key));
             	return dialog;
             }
+            case MANUAL_CALC: {
+            	Dialog dialog = new Dialog(this);
+            	dialog.setContentView(R.layout.manual);
+            	dialog.setTitle("Manual Input");
           
+            	final EditText edit = (EditText ) dialog.findViewById(R.id.manual_edittext);
+            	
+            	Button calc = ( Button ) dialog.findViewById(R.id.manual_calc);
+            	calc.setOnClickListener(new View.OnClickListener(){
+           		 public void onClick(View arg0) {
+                        try
+                        {
+                        	String essid;
+        					router = edit.getText().toString();
+        					
+        					if ( (essid = essidFilter(router))  == null )
+        					{
+        						  Toast.makeText( ThomsonSolver.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
+        						  return;
+        					}
+        					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
+        					ThomsonSolver.this.calculator.router = essid.toUpperCase();
+        					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
+        					ThomsonSolver.this.calculator.start();
+        					removeDialog(KEY_LIST);
+        					removeDialog(MANUAL_CALC);
+        					showDialog(PROGRESSBAR);
+                        	
+                        	
+                        } catch (Exception e) {
+								e.printStackTrace();
+							}
+                }
+           	});
+            	Button cancel = ( Button ) dialog.findViewById(R.id.manual_cancel);
+            	cancel.setOnClickListener(new View.OnClickListener(){
+              		 public void onClick(View arg0) {
+                         try
+                         {
+                        	 removeDialog(MANUAL_CALC);
+                         	
+                         	
+                         } catch (Exception e) {
+ 								e.printStackTrace();
+ 							}
+                 }
+            	});
+            	return dialog;
+            }
         }
         return null;
     }
     
+    public void onRestart(){
+    	try{ 
+    		super.onRestart();
+    		registerReceiver(receiver, new IntentFilter(
+    				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+
     @Override
 	public void onStop() {
-    	super.onStop();
-		unregisterReceiver(receiver);
+    	try{ 
+    		super.onStop();
+    		unregisterReceiver(receiver);
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
 	}
     
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -172,7 +238,7 @@ public class ThomsonSolver extends Activity {
     	try{
     		if ( !wifi.isWifiEnabled() )
     		{
-				  Toast.makeText( ThomsonSolver.this , "Wifi not activated!", Toast.LENGTH_SHORT).show();
+				  Toast.makeText( ThomsonSolver.this , "Wifi not activated! Please activate Wifi!", Toast.LENGTH_SHORT).show();
 				  return;
     		}
 	    	if ( wifi.startScan() )
@@ -191,6 +257,7 @@ public class ThomsonSolver extends Activity {
             scan();
 			return true;
         case R.id.manual_input:
+        	showDialog(MANUAL_CALC);
         	return true;
         default:
             return super.onOptionsItemSelected(item);
@@ -211,6 +278,8 @@ public class ThomsonSolver extends Activity {
     	    for (ScanResult result : results) {
     	    	  list.add(result.SSID);
     	    }
+			  Toast.makeText( ThomsonSolver.this , "Scanning Finished!", Toast.LENGTH_SHORT).show();
+
     	    solver.vulnerable = results;
     	    lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1, list
 					));
