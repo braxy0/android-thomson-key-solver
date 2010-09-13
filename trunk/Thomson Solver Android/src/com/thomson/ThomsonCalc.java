@@ -64,7 +64,7 @@ public class ThomsonCalc extends Thread {
 		cp[1] = (byte) (char) 'P';
 		int offset = 0;
 		int progress = 0;
-		for (int y = 4; y <= 10; y++)
+		for (int y = 4; y < 10; y++)
 		{
 			for (int w = 1; w <= 52; w++)
 			{
