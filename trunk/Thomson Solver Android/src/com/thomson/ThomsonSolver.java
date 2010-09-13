@@ -1,6 +1,5 @@
 package com.thomson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -11,11 +10,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,7 +68,11 @@ public class ThomsonSolver extends Activity {
 		setContentView(R.layout.main);
 		
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-	
+		if ( wifi.getWifiState() == wifi.WIFI_STATE_ENABLED 
+				|| wifi.getWifiState() == wifi.WIFI_STATE_ENABLING )
+			wifi_state = true;
+		else
+			wifi_state = false;
 		lv1 = (ListView) findViewById(R.id.ListView01);
 
 		lv1.setOnItemClickListener(new OnItemClickListener() {
@@ -94,11 +99,49 @@ public class ThomsonSolver extends Activity {
         if (receiver == null)
 			receiver = new WiFiScanReceiver(this);
 
-		registerReceiver(receiver, new IntentFilter(
-				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-		scan();
 
 	}
+	
+	
+    public void onStart() {
+    	try{ 
+    		super.onStart();
+    		registerReceiver(receiver, new IntentFilter(
+    				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    		getPrefs();
+    		if ( !wifi_state && wifi_on )
+    			wifi.setWifiEnabled(true);
+    		scan();
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    public void onRestart(){
+    	try{ 
+    		super.onRestart();
+    		registerReceiver(receiver, new IntentFilter(
+    				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+
+    @Override
+	public void onStop() {
+    	try{ 
+    		super.onStop();
+    		unregisterReceiver(receiver);
+    		if (  !wifi_state && wifi_off )
+    			wifi.setWifiEnabled(false);
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+	}
+    
 	
 	public String essidFilter( String essid ) {
 		if ( essid.contains("Thomson") && essid.length() == 13 )
@@ -112,7 +155,6 @@ public class ThomsonSolver extends Activity {
     private static final int PROGRESSBAR = 0; 
     private static final int KEY_LIST = 1;
     private static final int MANUAL_CALC = 2;
-    
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
@@ -206,28 +248,7 @@ public class ThomsonSolver extends Activity {
         return null;
     }
     
-    public void onRestart(){
-    	try{ 
-    		super.onRestart();
-    		registerReceiver(receiver, new IntentFilter(
-    				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    	}
-    	catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    }
 
-    @Override
-	public void onStop() {
-    	try{ 
-    		super.onStop();
-    		unregisterReceiver(receiver);
-    	}
-    	catch (Exception e) {
-    		e.printStackTrace();
-    	}
-	}
-    
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.wifi, menu);
@@ -236,7 +257,8 @@ public class ThomsonSolver extends Activity {
     
     public void scan(){
     	try{
-    		if ( !wifi.isWifiEnabled() )
+    		if ( wifi.getWifiState() == wifi.WIFI_STATE_ENABLED 
+    				|| wifi.getWifiState() == wifi.WIFI_STATE_ENABLING )
     		{
 				  Toast.makeText( ThomsonSolver.this , "Wifi not activated! Please activate Wifi!", Toast.LENGTH_SHORT).show();
 				  return;
@@ -259,32 +281,24 @@ public class ThomsonSolver extends Activity {
         case R.id.manual_input:
         	showDialog(MANUAL_CALC);
         	return true;
+        case R.id.pref:
+        	startActivity( new Intent(this , Preferences.class ));
+        	return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
     
-    private class WiFiScanReceiver extends BroadcastReceiver {
-    	  ThomsonSolver solver;
+    
 
-    	  public WiFiScanReceiver( ThomsonSolver wifiDemo) {
-    	    super();
-    	    this.solver = wifiDemo;
-    	  }
-
-    	  public void onReceive(Context c, Intent intent) {
-    	    List<ScanResult> results = solver.wifi.getScanResults();
-    	    List<String> list = new ArrayList<String>();
-    	    for (ScanResult result : results) {
-    	    	  list.add(result.SSID);
-    	    }
-			  Toast.makeText( ThomsonSolver.this , "Scanning Finished!", Toast.LENGTH_SHORT).show();
-
-    	    solver.vulnerable = results;
-    	    lv1.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1, list
-					));
-      	 }
-
+    boolean wifi_on;
+	boolean wifi_off;
+     
+	private void getPrefs() {
+	    SharedPreferences prefs = PreferenceManager
+	                    .getDefaultSharedPreferences(getBaseContext());
+	    wifi_on = prefs.getBoolean("wifion", false);
+	    wifi_off = prefs.getBoolean("wifioff", false);
+	    
     }
-
 }

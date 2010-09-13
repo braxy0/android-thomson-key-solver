@@ -6,9 +6,12 @@
               android:layout_height="fill_parent"
               android:padding="10dp"
               >
-    <ListView android:id="@+id/list_keys"
-              android:layout_width="wrap_content"
-              android:layout_height="fill_parent"
-              android:textColor="#FFF"
+    <ListView 	android:id="@+id/list_keys"
+              	android:layout_width="fill_parent"
+              	android:layout_height="fill_parent"
+              	android:textColor="#FFF"
+              	android:choiceMode="singleChoice"
+				android:headerDividersEnabled="false"
+				android:footerDividersEnabled="false"
               />
 </LinearLayout>

@@ -3,7 +3,10 @@
     <item android:id="@+id/wifi_scan"
           android:icon="@drawable/scan_refresh"
           android:title="@string/scan" />
-      <item android:id="@+id/manual_input"
+    <item android:id="@+id/manual_input"
           android:icon="@android:drawable/ic_menu_edit"
-          android:title="@string/manual" />    
+          android:title="@string/manual" />  
+    <item android:id="@+id/pref"
+          android:icon="@android:drawable/ic_menu_preferences"
+          android:title="@string/preferences" />
 </menu>

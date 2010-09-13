@@ -5,5 +5,8 @@
               android:orientation="vertical" >
     <ListView android:id="@+id/ListView01"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:choiceMode="singleChoice"
+			android:headerDividersEnabled="false"
+			android:footerDividersEnabled="false" />
 </LinearLayout>

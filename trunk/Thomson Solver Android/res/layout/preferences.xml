@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+                android:title="Auto Wifi">
+                <CheckBoxPreference
+                        android:title="@string/pref_wifion"
+                        android:defaultValue="false"
+                        android:summary="@string/pref_hint_wifion"
+                        android:key="wifion" />
+                 <CheckBoxPreference
+                        android:title="@string/pref_wifioff"
+                        android:defaultValue="false"
+                        android:summary="@string/pref_hint_wifioff"
+                        android:key="wifioff" />       
+        </PreferenceCategory>
+
+</PreferenceScreen>
