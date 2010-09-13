@@ -80,7 +80,7 @@ public class Main {
     	cp[0] = (byte) (char)'C';
     	cp[1] = (byte) (char)'P';
         int offset = 0;
-        for(int y = 4; y <= 10; y++)
+        for(int y = 4; y < 10; y++)
         {
             cp[2] = (byte) Character.forDigit((y / 10), 10);
             cp[3] = (byte) Character.forDigit((y % 10), 10);
