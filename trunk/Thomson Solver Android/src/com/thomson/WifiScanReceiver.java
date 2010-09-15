@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 
 class WiFiScanReceiver extends BroadcastReceiver {
@@ -25,7 +24,7 @@ class WiFiScanReceiver extends BroadcastReceiver {
 	    for (ScanResult result : results) {
 	    	  list.add(result.SSID);
 	    }
-		  Toast.makeText( solver , "Scanning Finished!", Toast.LENGTH_SHORT).show();
+		//  Toast.makeText( solver , "Scanning Finished!", Toast.LENGTH_SHORT).show();
 
 	    solver.vulnerable = results;
 	    solver.lv1.setAdapter(new ArrayAdapter<String>( solver, android.R.layout.simple_list_item_1, list

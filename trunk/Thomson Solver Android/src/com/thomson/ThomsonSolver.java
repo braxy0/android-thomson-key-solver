@@ -42,6 +42,7 @@ public class ThomsonSolver extends Activity {
 	BroadcastReceiver receiver;
 	List<ScanResult> vulnerable;
 	String router;
+	boolean activity_pref = false;
 	
 	Handler handler = new Handler() {
           public void handleMessage(Message msg) {
@@ -68,8 +69,8 @@ public class ThomsonSolver extends Activity {
 		setContentView(R.layout.main);
 		
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		if ( wifi.getWifiState() == wifi.WIFI_STATE_ENABLED 
-				|| wifi.getWifiState() == wifi.WIFI_STATE_ENABLING )
+		if ( wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED 
+				|| wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING )
 			wifi_state = true;
 		else
 			wifi_state = false;
@@ -118,23 +119,12 @@ public class ThomsonSolver extends Activity {
     	}
     }
     
-    public void onRestart(){
-    	try{ 
-    		super.onRestart();
-    		registerReceiver(receiver, new IntentFilter(
-    				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    	}
-    	catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    }
-
     @Override
 	public void onStop() {
     	try{ 
     		super.onStop();
     		unregisterReceiver(receiver);
-    		if (  !wifi_state && wifi_off )
+    		if (  (!wifi_state && wifi_off) && !activity_pref )
     			wifi.setWifiEnabled(false);
     	}
     	catch (Exception e) {
@@ -257,8 +247,8 @@ public class ThomsonSolver extends Activity {
     
     public void scan(){
     	try{
-    		if ( wifi.getWifiState() == wifi.WIFI_STATE_ENABLED 
-    				|| wifi.getWifiState() == wifi.WIFI_STATE_ENABLING )
+    		if ( wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLED 
+    				&& wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLING )
     		{
 				  Toast.makeText( ThomsonSolver.this , "Wifi not activated! Please activate Wifi!", Toast.LENGTH_SHORT).show();
 				  return;
@@ -282,6 +272,7 @@ public class ThomsonSolver extends Activity {
         	showDialog(MANUAL_CALC);
         	return true;
         case R.id.pref:
+        	activity_pref = true;
         	startActivity( new Intent(this , Preferences.class ));
         	return true;
         default:
@@ -299,6 +290,7 @@ public class ThomsonSolver extends Activity {
 	                    .getDefaultSharedPreferences(getBaseContext());
 	    wifi_on = prefs.getBoolean("wifion", false);
 	    wifi_off = prefs.getBoolean("wifioff", false);
+	    activity_pref = false;
 	    
     }
 }
