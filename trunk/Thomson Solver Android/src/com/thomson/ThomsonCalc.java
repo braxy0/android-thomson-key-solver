@@ -75,7 +75,7 @@ public class ThomsonCalc extends Thread {
 				}
 				
 				// Proper progress bar
-				if (progress < 100f*(w + 52*(y-4))/364f)
+				if (progress < 100f*(w + 52*(y-4))/312f)
 				{
 					parent.handler.sendEmptyMessage(2);
 					progress++;
