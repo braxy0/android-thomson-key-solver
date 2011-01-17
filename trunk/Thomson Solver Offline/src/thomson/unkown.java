@@ -14,6 +14,16 @@ public class unkown {
 		};
 
     static byte[][] charectbytes = {
+	        new byte[]{ '3', '0'},
+	        new byte[]{ '3', '1'},
+	        new byte[]{ '3', '2'},
+	        new byte[]{ '3', '3'},
+	        new byte[]{ '3', '4'},
+	        new byte[]{ '3', '5'},
+	        new byte[]{ '3', '6'},
+	        new byte[]{ '3', '7'},
+	        new byte[]{ '3', '8'},
+	        new byte[]{ '3', '9'},
             new byte[]{ '4', '1'},
             new byte[]{ '4', '2'},
             new byte[]{ '4', '3'},
@@ -40,15 +50,5 @@ public class unkown {
             new byte[]{ '5', '8'},
             new byte[]{ '5', '9'},
             new byte[]{ '5', 'A'},
-            new byte[]{ '3', '0'},
-            new byte[]{ '3', '1'},
-            new byte[]{ '3', '2'},
-            new byte[]{ '3', '3'},
-            new byte[]{ '3', '4'},
-            new byte[]{ '3', '5'},
-            new byte[]{ '3', '6'},
-            new byte[]{ '3', '7'},
-            new byte[]{ '3', '8'},
-            new byte[]{ '3', '9'},
         };
 }

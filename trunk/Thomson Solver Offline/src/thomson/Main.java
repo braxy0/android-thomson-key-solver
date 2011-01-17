@@ -5,17 +5,17 @@
 
 package thomson;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -23,16 +23,11 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-	static char charect[] = {
-		'A', 'B', 'C', 'D',
-		'E', 'F', 'G', 'H',
-		'I', 'J', 'K', 'L',
-		'M', 'N', 'O', 'P',
-        'Q', 'R', 'S', 'T',
-        'U', 'V', 'W', 'X',
-		'Y', 'Z', '0', '1',
-		'2', '3', '4', '5',
-		'6', '7', '8', '9'
+	static final String charect[] = {
+		"a", "b", "c", "d",
+		"e", "f", "0", "1",
+		"2", "3", "4", "5",
+		"6", "7", "8", "9"
 		};
 
   static final byte[] HEX_CHAR_TABLE = {
@@ -58,15 +53,25 @@ public class Main {
 	static MessageDigest md;
     public static void main(String[] args) throws UnsupportedEncodingException, IOException
     {
-    	
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream("auxtable.dat");
-        } catch (FileNotFoundException ex) {
-            System.out.println("Error!" + ex);
-            return;
+    	FileOutputStream fos;
+    	Map<String, FileOutputStream> filesMap = new HashMap<String, FileOutputStream>();
+        String file = "00.dat";
+        for(int a = 0; a < charect.length; a++)
+        {
+            for(int b = 0; b < charect.length; b++)
+            { 
+            	file = charect[a] + charect[b] + ".dat";
+				try {
+		            fos = new FileOutputStream("files/" + file);
+		            filesMap.put(file, fos);
+		        } catch (FileNotFoundException ex) {
+		            System.out.println("Error!" + ex);
+		            return;
+		        }
+            }
         }
-
+        
+        
         try {
             md = MessageDigest.getInstance("SHA1");
         } catch (NoSuchAlgorithmException e1) {
@@ -76,18 +81,21 @@ public class Main {
         long begin = System.currentTimeMillis();
         byte[] cp = new byte[12];
         byte[] hash = new byte[19];
-        byte[] week = new byte[3*36*36*36];
+        byte[] firstByte = new byte[1];
+        int sequenceNumber = 0;
+        byte [] ret = new byte [5];
     	cp[0] = (byte) (char)'C';
     	cp[1] = (byte) (char)'P';
+  
         int offset = 0;
         for(int y = 4; y < 10; y++)
         {
             cp[2] = (byte) Character.forDigit((y / 10), 10);
             cp[3] = (byte) Character.forDigit((y % 10), 10);
-            System.out.println("Done .. " + 100*(y-4)/7 + "%");
+            System.out.println("Done .. " + 100*(y-4)/6 + "%");
             for(int w = 1; w <= 52; w++)
             {
-                offset = 0;
+                
                 cp[4] = (byte) Character.forDigit((w / 10), 10);
                 cp[5] = (byte) Character.forDigit((w % 10), 10);
                 for(int a = 0; a < unkown.charectbytes.length; a++)
@@ -106,17 +114,21 @@ public class Main {
                             md.reset();
                             md.update(cp);
                             hash = md.digest();
-                            week[offset - 3 + 0] = hash[17];
-                            week[offset - 3 + 1] = hash[18];
-                            week[offset - 3 + 2] = hash[19];
+                            firstByte[0] = hash[17];
+                			ret[0] = hash[18];
+                			ret[1] = hash[19];
+                			ret[2] = (byte) ( (0xFF0000 & sequenceNumber) >> 16) ;
+                			ret[3] = (byte) ( (0xFF00 & sequenceNumber) >> 8) ;
+                			ret[4] =(byte) (0xFF & sequenceNumber);
+                			sequenceNumber++;
+                			filesMap.get(getHexString(firstByte)+".dat").write(ret);
                         }
                     }
                 }
-                fos.write(week);
             }
-        }        
+        }     
         long time = System.currentTimeMillis() - begin;
         System.out.println("Done .. 100%! It took " + time + " miliseconds.");
-        fos.close();
     }
+   
 }
