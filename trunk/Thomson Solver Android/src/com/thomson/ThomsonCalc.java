@@ -31,16 +31,6 @@ public class ThomsonCalc extends Thread {
 			e1.printStackTrace();
 		}
 		
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream("/sdcard/auxtable.dat");
-		} catch (FileNotFoundException e2) {
-			ret =  new String[]{"Aux Table not found on SDCard!"};
-			parent.list_key = ret;
-			parent.handler.sendEmptyMessage(1);
-			return;
-		}
-		
 		if ( router == null)
 			return;
 		
@@ -57,73 +47,72 @@ public class ThomsonCalc extends Thread {
 			routerESSID[i / 2] = (byte) ((Character.digit(router.charAt(i), 16) << 4)
 					+ Character.digit(router.charAt(i + 1), 16));
 
+		
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream("/sdcard/thomson/" + router.substring(0,2) + ".dat");
+		} catch (FileNotFoundException e2) {
+			ret =  new String[]{"Aux File not found on SDCard!" };
+			parent.list_key = ret;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
+		int bytesRead = 1;
+//		byte progress = 0;
 		byte[] cp = new byte[12];
 		byte[] hash = new byte[19];
-		byte[] week = new byte[3 * 36 * 36 * 36];
+		byte[] entry = new byte[300000];
+		short [] essid = new short[2];
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
-		int offset = 0;
-		int progress = 0;
-		for (int y = 4; y < 10; y++)
+		int a, b, c;
+		int year;
+		int week;
+		int sequenceNumber;
+		try {
+			if ( ( bytesRead = fis.read(entry) ) == -1 )
+				return;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		for( int offset = 0 ; offset < bytesRead ; offset += 5 )
 		{
-			for (int w = 1; w <= 52; w++)
-			{
-				try {
-					fis.read(week);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
-				// Proper progress bar
-				if (progress < 100f*(w + 52*(y-4))/312f)
-				{
-					parent.handler.sendEmptyMessage(2);
-					progress++;
-				}
+			if ( stopRequested )
+				return;
+			
+			essid[0] = (short) (0xFF &  (short)entry[offset + 0]);
+			essid[1] = (short) (0xFF & (short)entry[offset + 1]);
+			if (essid[0] != routerESSID[1])
+				continue;
+			
+			if (essid[1] != routerESSID[2])
+				continue;
+			sequenceNumber = ( (0xFF & (int)entry[offset + 2]) << 16 ) | 
+							( (0xFF & (int)entry[offset + 3])  << 8 ) | (0xFF & (int)entry[offset + 4]) ;
+			c = sequenceNumber % 36;
+			b = sequenceNumber/36 % 36;
+			a = sequenceNumber/(36*36) % 36;
+			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
+			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+			cp[2] = (byte) Character.forDigit((year / 10), 10);
+			cp[3] = (byte) Character.forDigit((year % 10), 10);
+			cp[4] = (byte) Character.forDigit((week / 10), 10);
+			cp[5] = (byte) Character.forDigit((week % 10), 10);
+			cp[6] = unkown.charectbytes0[a];
+			cp[7] = unkown.charectbytes1[a];
+			cp[8] = unkown.charectbytes0[b];
+			cp[9] = unkown.charectbytes1[b];
+			cp[10] = unkown.charectbytes0[c];
+			cp[11] = unkown.charectbytes1[c];
 
-				if ( stopRequested )
-					return;
-				
-				offset = 0;
-				for (int i = 0; i < 36*36*36; i++)
-				{
-					
-					offset += 3;
-					if (week[offset - 3 + 0] != routerESSID[0])
-						continue;
-					
-					if (week[offset - 3 + 1] != routerESSID[1])
-						continue;
-					
-					if (week[offset - 3 + 2] != routerESSID[2])
-						continue;
-					
-					int a, b, c;
-					c = i % 36;
-					b = i/36 % 36;
-					a = i/(36*36) % 36;
-					
-					cp[2] = (byte) Character.forDigit((y / 10), 10);
-					cp[3] = (byte) Character.forDigit((y % 10), 10);
-					cp[4] = (byte) Character.forDigit((w / 10), 10);
-					cp[5] = (byte) Character.forDigit((w % 10), 10);
-					cp[6] = unkown.charectbytes0[a];
-					cp[7] = unkown.charectbytes1[a];
-					cp[8] = unkown.charectbytes0[b];
-					cp[9] = unkown.charectbytes1[b];
-					cp[10] = unkown.charectbytes0[c];
-					cp[11] = unkown.charectbytes1[c];
+			md.reset();
+			md.update(cp);
+			hash = md.digest();
 
-					md.reset();
-					md.update(cp);
-					hash = md.digest();
-
-					try {
-						pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
-				}
+			try {
+				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
 			}
 		}
 		if(pwList.toArray().length == 0)

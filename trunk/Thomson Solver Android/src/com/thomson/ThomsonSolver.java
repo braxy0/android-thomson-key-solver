@@ -1,13 +1,11 @@
 package com.thomson;
 
 import java.util.List;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -49,17 +47,13 @@ public class ThomsonSolver extends Activity {
         	  
 			if ( msg.what == 0 )
 			{
-				removeDialog(PROGRESSBAR);
 				showDialog(KEY_LIST);
 			}
 			if ( msg.what == 1 )
 			{
-				removeDialog(PROGRESSBAR);
 				Toast.makeText( ThomsonSolver.this , list_key[0] , Toast.LENGTH_SHORT).show();
 			}
-			if ( msg.what == 2 )
-				  progressDialog.setProgress(progressDialog.getProgress() + 1);
-          }
+		}
 	};
 	
 	/** Called when the activity is first created. */
@@ -92,7 +86,6 @@ public class ThomsonSolver extends Activity {
 					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					ThomsonSolver.this.calculator.start();
 					removeDialog(KEY_LIST);
-					showDialog(PROGRESSBAR);
 			}
 		});
 		
@@ -142,28 +135,11 @@ public class ThomsonSolver extends Activity {
 	}
  
     
-    private static final int PROGRESSBAR = 0; 
     private static final int KEY_LIST = 1;
     private static final int MANUAL_CALC = 2;
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-            case PROGRESSBAR: {
-            	progressDialog = new ProgressDialog(ThomsonSolver.this);
-				progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-				progressDialog.setTitle("Working..");
-				progressDialog.setMessage("Calculating Keys...");
-				progressDialog.setCancelable(false);
-				progressDialog.setProgress(0);
-				progressDialog.setButton("Cancel", new DialogInterface.OnClickListener(){
-					public void onClick(DialogInterface dialog, int which) {
-                                ThomsonSolver.this.calculator.stopRequested = true;
-                				removeDialog(PROGRESSBAR);
-					}
-        });
-				progressDialog.setIndeterminate(false);
-                return progressDialog;
-            }
             case KEY_LIST: {
             	Dialog dialog = new Dialog(this);
             	dialog.setContentView(R.layout.results);
@@ -210,9 +186,7 @@ public class ThomsonSolver extends Activity {
         					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
         					ThomsonSolver.this.calculator.start();
         					removeDialog(KEY_LIST);
-        					removeDialog(MANUAL_CALC);
-        					showDialog(PROGRESSBAR);
-                        	
+        					removeDialog(MANUAL_CALC);                      	
                         	
                         } catch (Exception e) {
 								e.printStackTrace();
