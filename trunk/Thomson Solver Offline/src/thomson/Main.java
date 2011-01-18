@@ -14,13 +14,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map.Entry;
 
-/**
- *
- * @author luis
- */
 public class Main {
 
 	static final String charect[] = {
@@ -53,25 +48,9 @@ public class Main {
 	static MessageDigest md;
     public static void main(String[] args) throws UnsupportedEncodingException, IOException
     {
-    	FileOutputStream fos;
-    	Map<String, FileOutputStream> filesMap = new HashMap<String, FileOutputStream>();
-        String file = "00.dat";
-        for(int a = 0; a < charect.length; a++)
-        {
-            for(int b = 0; b < charect.length; b++)
-            { 
-            	file = charect[a] + charect[b] + ".dat";
-				try {
-		            fos = new FileOutputStream("files/" + file);
-		            filesMap.put(file, fos);
-		        } catch (FileNotFoundException ex) {
-		            System.out.println("Error!" + ex);
-		            return;
-		        }
-            }
-        }
+    	
         
-        
+    	FileManager files = new FileManager();
         try {
             md = MessageDigest.getInstance("SHA1");
         } catch (NoSuchAlgorithmException e1) {
@@ -121,14 +100,89 @@ public class Main {
                 			ret[3] = (byte) ( (0xFF00 & sequenceNumber) >> 8) ;
                 			ret[4] =(byte) (0xFF & sequenceNumber);
                 			sequenceNumber++;
-                			filesMap.get(getHexString(firstByte)+".dat").write(ret);
+                			files.sendFile(getHexString(firstByte)+".dat", ret);
                         }
                     }
                 }
             }
         }     
+        files.close();
         long time = System.currentTimeMillis() - begin;
         System.out.println("Done .. 100%! It took " + time + " miliseconds.");
     }
-   
+    private static class FileManager{
+	   	 	Map<String, FileOutput> filesMap;
+	   	 	public FileManager(){
+			   	filesMap = new HashMap<String, FileOutput>();
+		   	 	FileOutput fos;
+		        String file = "00.dat";
+		        for(int a = 0; a < charect.length; a++)
+		        {
+		            for(int b = 0; b < charect.length; b++)
+		            { 
+		            	file = charect[a] + charect[b] + ".dat";
+						try {
+				            fos = new FileOutput( file);
+				            filesMap.put(file, fos);
+				        } catch (FileNotFoundException ex) {
+				            System.out.println("Error!" + ex);
+				            return;
+				        }
+		            }
+		        }
+	   	 	}
+   	 	
+   	 		public void sendFile(String file , byte [] bytes ){
+	   	 		if ( !filesMap.containsKey(file) )
+	   	 			return;
+	   	 		
+	   	 		try {
+					filesMap.get(file).add(bytes);
+				} catch (IOException e) {
+					System.out.println("Error!" + e);
+		            return;
+				}
+   	 		}
+			
+			public void close(){
+				Iterator<Entry<String, FileOutput>> it = filesMap.entrySet().iterator();
+				while (it.hasNext()) {
+					Map.Entry<String, FileOutput> pairs = (Map.Entry<String, FileOutput>)it.next();
+					try {
+						pairs.getValue().close();
+					} catch (IOException e) {
+						System.out.println("Error!" + e);
+			            return;
+					}
+				}
+			}
+   	 		
+  
+   	 	private static class FileOutput{
+   	 		FileOutputStream fos;
+   	 		byte [] buffer;
+   	 		int offset;
+   	 		public FileOutput( String file ) throws FileNotFoundException{
+   	 			fos = new FileOutputStream(file);
+   	 			buffer = new byte[10000];
+   	 			offset = 0;
+   	 		}
+   	 		public void add ( byte [] bytes ) throws IOException{
+   	 			for ( int i = 0 ; i < bytes.length ; ++i  )
+   	 			{
+   	 				if ( offset >= buffer.length )
+   	 				{
+   	 					fos.write(buffer);
+   	 					offset = 0;
+   	 				}
+   	 				buffer[offset] = bytes[i];
+   	 				offset++;
+   	 			}
+   	 		}
+   	 		public void close() throws IOException{
+   	 			fos.write(buffer,  0 , offset);
+   	 			fos.close();
+   	 		}
+   	 	}
+   }
 }
