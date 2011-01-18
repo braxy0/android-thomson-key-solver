@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,13 +42,15 @@ public class ThomsonSolver extends Activity {
 	List<ScanResult> vulnerable;
 	String router;
 	boolean activity_pref = false;
-	
+	long begin;
 	Handler handler = new Handler() {
           public void handleMessage(Message msg) {
         	  
 			if ( msg.what == 0 )
 			{
 				showDialog(KEY_LIST);
+				begin = System.currentTimeMillis()-begin;
+				Log.d("ThomsonSolver", "Time to solve:" + begin);
 			}
 			if ( msg.what == 1 )
 			{
@@ -81,6 +84,8 @@ public class ThomsonSolver extends Activity {
 						  Toast.makeText( ThomsonSolver.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
 						  return;
 					}
+			        begin =  System.currentTimeMillis();
+
 					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 					ThomsonSolver.this.calculator.router = essid.toUpperCase();
 					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);

@@ -57,8 +57,7 @@ public class ThomsonCalc extends Thread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		int bytesRead = 1;
-//		byte progress = 0;
+		int bytesRead = 0;
 		byte[] cp = new byte[12];
 		byte[] hash = new byte[19];
 		byte[] entry = new byte[300000];
@@ -104,7 +103,6 @@ public class ThomsonCalc extends Thread {
 			cp[9] = unkown.charectbytes1[b];
 			cp[10] = unkown.charectbytes0[c];
 			cp[11] = unkown.charectbytes1[c];
-
 			md.reset();
 			md.update(cp);
 			hash = md.digest();
