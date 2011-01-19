@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.Menu;
@@ -160,10 +161,12 @@ public class ThomsonSolver extends Activity {
                                   (ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
 
                           clipboard.setText(((TextView) view).getText());
+                          startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
         			}
             	});
             	list.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
 						list_key));
+            	
             	return dialog;
             }
             case MANUAL_CALC: {
