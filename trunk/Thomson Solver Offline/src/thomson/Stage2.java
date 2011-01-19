@@ -16,9 +16,11 @@ public class Stage2 {
 		String file = "00.dat";
 		System.out.println("Ordering Entries in the Dictionary");
 		long begin = System.currentTimeMillis();
+		int progress = 0;
+		int c = 0;
         for(int a = 0; a < AlphabetCodes.charect.length; a++)
         {
-            for(int b = 0; b < AlphabetCodes.charect.length; b++)
+            for(int b = 0; b < AlphabetCodes.charect.length; b++, c++)
             { 
             	file = AlphabetCodes.charect[a] + AlphabetCodes.charect[b] + ".dat";
 				try {
@@ -55,7 +57,9 @@ public class Stage2 {
 						files.sendFile( file, it.next().toFile());
 					//	System.out.println(it.next());
 				count /= 5;
-				System.out.println("Counted " + count + " entries in " + file);
+				progress = (c *100)>>8;
+				System.out.println("Counted " + count + " entries in " + file +
+						           "  Total done: " + progress + "%");
             }
         }
         files.close();
@@ -78,7 +82,6 @@ public class Stage2 {
 
 		@Override
 		public int compareTo(DictEntry o) {
-			// TODO Auto-generated method stub
 			if ( ( this.hash[0] == o.hash[0] &&  this.hash[1] == o.hash[1] ) ||
 					( this.hash[0] > o.hash[0] ))
 				return 1;
@@ -96,9 +99,8 @@ public class Stage2 {
 		
 		public String toString(){
 			try {
-				return Stage1.getHexString(hash) + " " + number;
+				return AlphabetCodes.getHexString(hash) + " " + number;
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return "null";	

@@ -44,7 +44,7 @@ public class FileOutputManager {
 			}
    	 	}
 	 	
-	 		public void sendFile(String file , byte [] bytes ){
+	 	public void sendFile(String file , byte [] bytes ){
    	 		if ( !filesMap.containsKey(file) )
    	 			return;
    	 		
@@ -54,7 +54,18 @@ public class FileOutputManager {
 				System.out.println("Error!" + e);
 	            return;
 			}
-	 		}
+	 	}
+	 	
+	 	public void sendFile(String file , byte  bytes ){
+   	 		if ( !filesMap.containsKey(file) )
+   	 			return;
+   	 		try {
+				filesMap.get(file).add(bytes);
+			} catch (IOException e) {
+				System.out.println("Error!" + e);
+	            return;
+			}
+	 	}
 		
 		public void close(){
 			Iterator<Entry<String, FileOutput>> it = filesMap.entrySet().iterator();
@@ -90,6 +101,15 @@ public class FileOutputManager {
 	 				buffer[offset] = bytes[i];
 	 				offset++;
 	 			}
+	 		}
+	 		public void add ( byte bytes ) throws IOException{
+	 				if ( offset >= buffer.length )
+	 				{
+	 					fos.write(buffer);
+	 					offset = 0;
+	 				}
+	 				buffer[offset] = bytes;
+	 				offset++;
 	 		}
 	 		public void close() throws IOException{
 	 			fos.write(buffer,  0 , offset);

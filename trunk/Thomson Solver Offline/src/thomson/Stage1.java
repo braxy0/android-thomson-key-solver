@@ -11,28 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Stage1 {
-
-
-  static final byte[] HEX_CHAR_TABLE = {
-    (byte)'0', (byte)'1', (byte)'2', (byte)'3',
-    (byte)'4', (byte)'5', (byte)'6', (byte)'7',
-    (byte)'8', (byte)'9', (byte)'a', (byte)'b',
-    (byte)'c', (byte)'d', (byte)'e', (byte)'f'
-  };
-
-  public static String getHexString(byte[] raw)
-    throws UnsupportedEncodingException
-  {
-    byte[] hex = new byte[2 * raw.length];
-    int index = 0;
-
-    for (byte b : raw) {
-      int v = b & 0xFF;
-      hex[index++] = HEX_CHAR_TABLE[v >>> 4];
-      hex[index++] = HEX_CHAR_TABLE[v & 0xF];
-    }
-    return new String(hex, "ASCII");
-  }
 	static MessageDigest md;
     public static void main(String[] args) throws UnsupportedEncodingException, IOException
     {
@@ -47,7 +25,7 @@ public class Stage1 {
         long begin = System.currentTimeMillis();
         byte[] cp = new byte[12];
         byte[] hash = new byte[19];
-        byte[] firstByte = new byte[1];
+        byte firstByte ;
         int sequenceNumber = 0;
         byte [] ret = new byte [5];
     	cp[0] = (byte) (char)'C';
@@ -80,14 +58,14 @@ public class Stage1 {
                             md.reset();
                             md.update(cp);
                             hash = md.digest();
-                            firstByte[0] = hash[17];
+                            firstByte = hash[17];
                 			ret[0] = hash[18];
                 			ret[1] = hash[19];
                 			ret[2] = (byte) ( (0xFF0000 & sequenceNumber) >> 16) ;
                 			ret[3] = (byte) ( (0xFF00 & sequenceNumber) >> 8) ;
                 			ret[4] =(byte) (0xFF & sequenceNumber);
                 			sequenceNumber++;
-                			files.sendFile(getHexString(firstByte)+".dat", ret);
+                			files.sendFile(AlphabetCodes.getHexString(firstByte)+".dat", ret);
                         }
                     }
                 }
