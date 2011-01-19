@@ -1,5 +1,6 @@
 package com.thomson;
 
+import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
 import android.app.Dialog;
@@ -27,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -38,7 +40,7 @@ public class ThomsonSolver extends Activity {
 	ProgressDialog progressDialog;
 	ListView lv1;
 	ThomsonCalc calculator;
-	String [] list_key = null;
+	List<String> list_key = null;
 	BroadcastReceiver receiver;
 	List<ScanResult> vulnerable;
 	String router;
@@ -55,7 +57,7 @@ public class ThomsonSolver extends Activity {
 			}
 			if ( msg.what == 1 )
 			{
-				Toast.makeText( ThomsonSolver.this , list_key[0] , Toast.LENGTH_SHORT).show();
+				Toast.makeText( ThomsonSolver.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
 			}
 		}
 	};
@@ -73,12 +75,12 @@ public class ThomsonSolver extends Activity {
 		else
 			wifi_state = false;
 		lv1 = (ListView) findViewById(R.id.ListView01);
-
+		list_key = new ArrayList<String>();
 		lv1.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 					String essid;
-					router = ((TextView) view).getText().toString();
+					router = ((TextView)((RelativeLayout) view).getChildAt(1)).getText().toString();
 					
 					if ( (essid = essidFilter(router))  == null )
 					{

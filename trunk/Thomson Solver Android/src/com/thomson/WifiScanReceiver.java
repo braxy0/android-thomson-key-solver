@@ -7,8 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
-import android.widget.ArrayAdapter;
-
 
 class WiFiScanReceiver extends BroadcastReceiver {
 	  ThomsonSolver solver;
@@ -21,14 +19,17 @@ class WiFiScanReceiver extends BroadcastReceiver {
 	  public void onReceive(Context c, Intent intent) {
 	    List<ScanResult> results = solver.wifi.getScanResults();
 	    List<String> list = new ArrayList<String>();
+	    List<Integer> strength = new ArrayList<Integer>();
 	    for (ScanResult result : results) {
 	    	  list.add(result.SSID);
+	    	  strength.add(result.level);
 	    }
 		//  Toast.makeText( solver , "Scanning Finished!", Toast.LENGTH_SHORT).show();
 
 	    solver.vulnerable = results;
-	    solver.lv1.setAdapter(new ArrayAdapter<String>( solver, android.R.layout.simple_list_item_1, list
-				));
+	    WifiListAdapter adap= new WifiListAdapter(list , solver);
+	    adap.setStrenght(strength);
+	    solver.lv1.setAdapter(adap); 
 	 }
 
 }

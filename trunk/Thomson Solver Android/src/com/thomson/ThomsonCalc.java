@@ -1,5 +1,6 @@
 package com.thomson;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ThomsonCalc extends Thread {
 	
@@ -23,7 +25,7 @@ public class ThomsonCalc extends Thread {
 	
 	public void  run()
 	{
-		ArrayList<String> pwList = new ArrayList<String>();
+		List<String> pwList = new ArrayList<String>();
 
 		try {
 			md = MessageDigest.getInstance("SHA1");
@@ -36,8 +38,8 @@ public class ThomsonCalc extends Thread {
 		
 		if ( router.length() != 6 ) 
 		{
-			ret =  new String[]{"Invalid ESSID! It must have 6 characters."};
-			parent.list_key = ret;
+			pwList.add(new String("Invalid ESSID! It must have 6 characters." ));
+			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
@@ -49,18 +51,19 @@ public class ThomsonCalc extends Thread {
 
 		
 		FileInputStream fis;
+		int len=0;
 		try {
+			len = (int)(new File("/sdcard/thomson/" + router.substring(0,2) + ".dat").length());
 			fis = new FileInputStream("/sdcard/thomson/" + router.substring(0,2) + ".dat");
 		} catch (FileNotFoundException e2) {
-			ret =  new String[]{"Aux File not found on SDCard!" };
-			parent.list_key = ret;
+			pwList.add(new String("Dictionary not found on SDCard!" ));
+			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		int bytesRead = 0;
 		byte[] cp = new byte[12];
 		byte[] hash = new byte[19];
-		byte[] entry = new byte[300000];
+		byte[] entry = new byte[len];
 		short [] essid = new short[2];
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
@@ -69,12 +72,17 @@ public class ThomsonCalc extends Thread {
 		int week;
 		int sequenceNumber;
 		try {
-			if ( ( bytesRead = fis.read(entry) ) == -1 )
+			if ( fis.read(entry) == -1 )
+			{
+				pwList.add(new String("Error reading the dictionary!" ));
+				parent.list_key =  pwList;
+				parent.handler.sendEmptyMessage(1);
 				return;
+			}	
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		for( int offset = 0 ; offset < bytesRead ; offset += 5 )
+		for( int offset = 0 ; offset < len ; offset += 5 )
 		{
 			if ( stopRequested )
 				return;
@@ -115,17 +123,13 @@ public class ThomsonCalc extends Thread {
 		}
 		if(pwList.toArray().length == 0)
 		{
-			ret =  new String[]{"No matches were found! Try another ESSID"};
-			parent.list_key = ret;
+			pwList.add( new String("No matches were found! Try another ESSID"));
+			parent.list_key = pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
 
-		ret = new String[pwList.size()];
-		int i = 0;
-		for(String s: pwList)
-			ret[i++] = s;
-		parent.list_key = ret;
+		parent.list_key = pwList;
 		parent.handler.sendEmptyMessage(0);
 		return;
 		
