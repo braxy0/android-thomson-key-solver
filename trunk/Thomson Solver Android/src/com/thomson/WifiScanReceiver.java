@@ -18,17 +18,12 @@ class WiFiScanReceiver extends BroadcastReceiver {
 
 	  public void onReceive(Context c, Intent intent) {
 	    List<ScanResult> results = solver.wifi.getScanResults();
-	    List<String> list = new ArrayList<String>();
-	    List<Integer> strength = new ArrayList<Integer>();
+	    List<WifiNetwork> list = new ArrayList<WifiNetwork>();
 	    for (ScanResult result : results) {
-	    	  list.add(result.SSID);
-	    	  strength.add(result.level);
+	    	  list.add(new WifiNetwork(result.SSID, result.BSSID, result.level));
 	    }
-		//  Toast.makeText( solver , "Scanning Finished!", Toast.LENGTH_SHORT).show();
-
-	    solver.vulnerable = results;
+	    solver.vulnerable = list;
 	    WifiListAdapter adap= new WifiListAdapter(list , solver);
-	    adap.setStrenght(strength);
 	    solver.lv1.setAdapter(adap); 
 	 }
 

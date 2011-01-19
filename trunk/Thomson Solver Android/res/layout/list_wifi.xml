@@ -14,27 +14,45 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="1dip"
-        android:src="@android:drawable/btn_star" />
-
-    <TextView
-        android:id="@+id/wifiName"
-        android:layout_width="0dip"
-        android:layout_height="fill_parent" 
-		android:gravity="center_vertical"
-        android:layout_toRightOf="@id/icon"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-		android:textSize="9pt"
-        android:singleLine="true"
-        android:ellipsize="marquee" />
-  <ImageView
-        android:id="@+id/strenght"
+        android:src="@android:drawable/ic_delete" />
+     <TextView
+        android:id="@+id/wifiMAC"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-		android:layout_toRightOf="@id/wifiName"
+        android:layout_toRightOf="@id/icon"
+        android:layout_height="30dip" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:textColor="#545454"
+        android:singleLine="true" />   
+        <TextView
+        android:id="@+id/wifiName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_toRightOf="@id/icon"
+        android:layout_below="@id/wifiMAC"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="false"
+		android:textSize="20sp"
+        android:singleLine="true"       
+        android:layout_alignWithParentIfMissing="true"
+        /> 
+        <LinearLayout android:layout_toRightOf="@id/wifiName" 
+        android:gravity="right"  
+        android:layout_width="fill_parent"
+         android:layout_alignParentBottom="true"
+                 android:layout_alignParentTop="false"
+                         android:layout_height="50dip" 
+                         android:layout_marginRight="10dip"
+                 >
+        <ImageView
+        android:id="@+id/strenght"
+        android:gravity="center_vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-	    android:layout_marginLeft="0dip"
-        android:src="@android:drawable/ic_delete" />
-        
+	    android:src="@android:drawable/ic_dialog_alert" />
+        </LinearLayout>
+       
+
 </RelativeLayout>

@@ -43,10 +43,10 @@ public class ThomsonCalc extends Thread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		
-		byte[] routerESSID = new byte[3];
-		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(router.charAt(i), 16) << 4)
+		//the fisrt byte is not considered
+		byte[] routerESSID = new byte[2];
+		for (int i = 2; i < 6; i += 2)
+			routerESSID[i / 2 - 1] = (byte) ((Character.digit(router.charAt(i), 16) << 4)
 					+ Character.digit(router.charAt(i + 1), 16));
 
 		
@@ -64,7 +64,6 @@ public class ThomsonCalc extends Thread {
 		byte[] cp = new byte[12];
 		byte[] hash = new byte[19];
 		byte[] entry = new byte[len];
-		short [] essid = new short[2];
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
 		int a, b, c;
@@ -86,13 +85,11 @@ public class ThomsonCalc extends Thread {
 		{
 			if ( stopRequested )
 				return;
-			
-			essid[0] = (short) (0xFF &  (short)entry[offset + 0]);
-			essid[1] = (short) (0xFF & (short)entry[offset + 1]);
-			if (essid[0] != routerESSID[1])
+
+			if (entry[offset + 0] != routerESSID[0])
 				continue;
 			
-			if (essid[1] != routerESSID[2])
+			if (entry[offset + 1] != routerESSID[1])
 				continue;
 			sequenceNumber = ( (0xFF & (int)entry[offset + 2]) << 16 ) | 
 							( (0xFF & (int)entry[offset + 3])  << 8 ) | (0xFF & (int)entry[offset + 4]) ;

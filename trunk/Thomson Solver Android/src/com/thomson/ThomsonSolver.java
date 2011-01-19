@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,7 +41,7 @@ public class ThomsonSolver extends Activity {
 	ThomsonCalc calculator;
 	List<String> list_key = null;
 	BroadcastReceiver receiver;
-	List<ScanResult> vulnerable;
+	List<WifiNetwork> vulnerable;
 	String router;
 	boolean activity_pref = false;
 	long begin;
@@ -79,18 +78,23 @@ public class ThomsonSolver extends Activity {
 		lv1.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-					String essid;
-					router = ((TextView)((RelativeLayout) view).getChildAt(1)).getText().toString();
+					router = ((TextView)((RelativeLayout) view).getChildAt(2)).getText().toString();
 					
-					if ( (essid = essidFilter(router))  == null )
+					if ( !vulnerable.get(position).supported )
 					{
 						  Toast.makeText( ThomsonSolver.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
 						  return;
 					}
+					else
+						if (vulnerable.get(position).newThomson)
+						{
+							Toast.makeText( ThomsonSolver.this , "That is a new Thomson router which key can not be calculated!" , Toast.LENGTH_SHORT).show();
+							  return;
+						}
 			        begin =  System.currentTimeMillis();
 
 					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
-					ThomsonSolver.this.calculator.router = essid.toUpperCase();
+					ThomsonSolver.this.calculator.router = vulnerable.get(position).getEssid().toUpperCase();
 					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					ThomsonSolver.this.calculator.start();
 					removeDialog(KEY_LIST);
@@ -133,6 +137,7 @@ public class ThomsonSolver extends Activity {
     	}
 	}
     
+
 	
 	public String essidFilter( String essid ) {
 		if ( essid.contains("Thomson") && essid.length() == 13 )
@@ -141,7 +146,6 @@ public class ThomsonSolver extends Activity {
 			return new String ( essid.substring(10));		
 		return null;
 	}
- 
     
     private static final int KEY_LIST = 1;
     private static final int MANUAL_CALC = 2;

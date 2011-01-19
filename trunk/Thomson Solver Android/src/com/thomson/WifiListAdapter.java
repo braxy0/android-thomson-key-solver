@@ -13,45 +13,50 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class WifiListAdapter extends BaseAdapter {
-	private List<String> listESSID; 
+	private List<WifiNetwork> listNetworks; 
 	private Context context; 
-	private List<Integer> listStrength;
-	public WifiListAdapter(List<String> List, Context context) {
-        this.listESSID = List;
+	public WifiListAdapter(List<WifiNetwork> list, Context context) {
+		if ( list != null )
+			this.listNetworks = list;
+		else
+			this.listNetworks = new ArrayList<WifiNetwork>();
         this.context = context;
-        this.listStrength = new ArrayList<Integer>();
     }
 	
-	public void setStrenght( List<Integer> listStrength ){
-		this.listStrength = listStrength;
-	}
+	
 	@Override
 	public int getCount() {
-		return listESSID.size();
+		return listNetworks.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return listESSID.get(position);
+		return listNetworks.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return listESSID.get(position).hashCode();
+		return listNetworks.get(position).hashCode();
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		 RelativeLayout itemLayout;
-		 String wifi = listESSID.get(position);
-		 int strenght = listStrength.get(position);
+		 WifiNetwork wifi = listNetworks.get(position);
+	//	 int strenght = listNetworks.get(position).getLevel();
 	     itemLayout= (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.list_wifi, parent, false);
 	 
-	     TextView tvUser = (TextView) itemLayout.findViewById(R.id.wifiName);
-	     tvUser.setText(wifi);
-	     ImageView strenghtPic = (ImageView)itemLayout.findViewById(R.id.strenght);
-	     if ( strenght < 1 )
-	    	 strenghtPic.setImageDrawable(context.getResources().getDrawable(android.R.drawable.ic_delete));
+	     TextView ssid = (TextView) itemLayout.findViewById(R.id.wifiName);
+	     ssid.setText(wifi.ssid);
+	     
+	     TextView bssid = (TextView) itemLayout.findViewById(R.id.wifiMAC);
+	     bssid.setText(wifi.mac);
+	     
+	     ImageView icon = (ImageView)itemLayout.findViewById(R.id.icon);
+	     if ( wifi.supported && !wifi.newThomson)
+	    	 icon.setImageDrawable(context.getResources().getDrawable(android.R.drawable.ic_input_add));
+	     
+	     
 		return  itemLayout;
 	}
 
