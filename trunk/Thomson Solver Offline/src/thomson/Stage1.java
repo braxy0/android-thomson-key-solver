@@ -65,7 +65,7 @@ public class Stage1 {
                 			ret[3] = (byte) ( (0xFF00 & sequenceNumber) >> 8) ;
                 			ret[4] =(byte) (0xFF & sequenceNumber);
                 			sequenceNumber++;
-                			files.sendFile(AlphabetCodes.getHexString(firstByte)+".dat", ret);
+                			files.sendFile(AlphabetCodes.getHexString(firstByte)+".dat", ret , 5);
                         }
                     }
                 }

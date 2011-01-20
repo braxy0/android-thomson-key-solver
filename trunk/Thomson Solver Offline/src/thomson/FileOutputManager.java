@@ -44,17 +44,18 @@ public class FileOutputManager {
 			}
    	 	}
 	 	
-	 	public void sendFile(String file , byte [] bytes ){
+	 	public void sendFile(String file , byte [] bytes  , int len){
    	 		if ( !filesMap.containsKey(file) )
    	 			return;
    	 		
    	 		try {
-				filesMap.get(file).add(bytes);
+				filesMap.get(file).add(bytes , len);
 			} catch (IOException e) {
 				System.out.println("Error!" + e);
 	            return;
 			}
 	 	}
+
 	 	
 	 	public void sendFile(String file , byte  bytes ){
    	 		if ( !filesMap.containsKey(file) )
@@ -87,11 +88,11 @@ public class FileOutputManager {
 	 		int offset;
 	 		public FileOutput( String file ) throws FileNotFoundException{
 	 			fos = new FileOutputStream(file);
-	 			buffer = new byte[10000];
+	 			buffer = new byte[40960];
 	 			offset = 0;
 	 		}
-	 		public void add ( byte [] bytes ) throws IOException{
-	 			for ( int i = 0 ; i < bytes.length ; ++i  )
+	 		public void add ( byte [] bytes , int len ) throws IOException{
+	 			for ( int i = 0 ; i < len ; ++i  )
 	 			{
 	 				if ( offset >= buffer.length )
 	 				{

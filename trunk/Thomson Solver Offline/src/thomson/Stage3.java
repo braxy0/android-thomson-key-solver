@@ -4,9 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -17,13 +15,14 @@ public class Stage3 {
 	public static void main(String[] args) {
 		FileInputStream fis;
 		FileOutputManager files = new FileOutputManager();
-		List<Byte> file = new ArrayList<Byte>();
 		TableEntry entry = new TableEntry();
 		System.out.println("Creating secondary tables.");
 		long begin = System.currentTimeMillis();
 		String fileName = "56.dat";
 		int progress = 0;
 		int c = 0;
+		byte [] fileData = new  byte [300000];
+		byte [] outputData = new  byte [300000];
 		for(int a = 0; a < AlphabetCodes.charect.length; a++)
         {
             for(int b = 0; b < AlphabetCodes.charect.length; b++ , c++)
@@ -36,7 +35,7 @@ public class Stage3 {
 					return;
 				}
 				int count = 0;
-				byte [] fileData = new  byte [300000];
+				
 				try {
 					count = fis.read(fileData);
 					fis.close();
@@ -45,7 +44,6 @@ public class Stage3 {
 					System.out.println("Error!" + e);
 					return;
 				}
-				
 				byte currentEntry;
 				byte tmp;
 				int offset= 0;
@@ -54,10 +52,11 @@ public class Stage3 {
 				// 1byte for header and 3 for address
 				currentEntry = fileData[offset + 0];
 				entry.addEntry((short) (0xFF & currentEntry), address );
-				file.add(fileData[offset + 1]);
-				file.add(fileData[offset + 2]);
-				file.add(fileData[offset + 3]);
-				file.add(fileData[offset + 4]);
+				outputData[address + 0] = fileData[offset + 1];
+				outputData[address + 1] = fileData[offset + 2];
+				outputData[address + 2] = fileData[offset + 3];
+				outputData[address + 3] = fileData[offset + 4];
+				address += 4;
 				offset += 5;
 				while (offset < count ){
 					tmp = fileData[offset + 0];
@@ -66,23 +65,21 @@ public class Stage3 {
 						currentEntry = tmp;
 						entry.addEntry((short) (0xFF & currentEntry), address );
 					}
-					file.add(fileData[offset + 1]);
-					file.add(fileData[offset + 2]);
-					file.add(fileData[offset + 3]);
-					file.add(fileData[offset + 4]);
+					outputData[address + 0] = fileData[offset + 1];
+					outputData[address + 1] = fileData[offset + 2];
+					outputData[address + 2] = fileData[offset + 3];
+					outputData[address + 3] = fileData[offset + 4];
 					offset += 5;
 					address += 4;
 				}
-				entry.toFile(files, fileName);
-				
-				for ( Byte byt : file )
-					files.sendFile(fileName, byt);
-				file.clear();
+				entry.toFile(outputData);
+				files.sendFile(fileName, outputData , address);
 				progress = (c *100)>>8;
 				System.out.println("File " + fileName + " processed " +
-				           "  Total done: " + progress + "%");
+				           "  Total done: " + progress + "% " );
 			}
 		}
+        files.close();
 		long time = System.currentTimeMillis() - begin;
         System.out.println("Done .. 100%! It took " + time + " miliseconds.");
 	}
@@ -96,17 +93,17 @@ public class Stage3 {
 			map.put(secondByte, offset);
 		}
 		
-		public void toFile( FileOutputManager files  , String file){
+		public void toFile(byte [] outputData ){
 			Iterator<Entry<Short, Integer>> it = map.entrySet().iterator();
 			Entry<Short, Integer> entry;
-			byte [] entryData = new byte[4];
+			int offset = 0;
 			while (it.hasNext()){
 				entry = it.next();
-				entryData[0] = (byte) (0xFF & entry.getKey());
-				entryData[1] = (byte) ( (0xFF0000 & entry.getValue()) >> 16) ;
-				entryData[2] = (byte) ( (0xFF00 & entry.getValue()) >> 8) ;
-				entryData[3] =(byte) (0xFF & entry.getValue());
-				files.sendFile(file, entryData);
+				outputData[offset + 0] = (byte) (0xFF & entry.getKey());
+				outputData[offset + 1] = (byte) ( (0xFF0000 & entry.getValue()) >> 16) ;
+				outputData[offset + 2] = (byte) ( (0xFF00 & entry.getValue()) >> 8) ;
+				outputData[offset + 3] =(byte) (0xFF & entry.getValue());
+				offset += 4;
 			}
 		}
 		

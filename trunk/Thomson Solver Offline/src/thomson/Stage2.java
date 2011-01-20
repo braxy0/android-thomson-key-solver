@@ -18,6 +18,8 @@ public class Stage2 {
 		long begin = System.currentTimeMillis();
 		int progress = 0;
 		int c = 0;
+		byte [] fileData = new  byte [300000];
+		Set<DictEntry> entries = new TreeSet<DictEntry>();
         for(int a = 0; a < AlphabetCodes.charect.length; a++)
         {
             for(int b = 0; b < AlphabetCodes.charect.length; b++, c++)
@@ -29,10 +31,8 @@ public class Stage2 {
 		            System.out.println("Error!" + e);
 					return;
 				}
-				Set<DictEntry> entries = new TreeSet<DictEntry>();
 				byte [] entry = new  byte [5];
 				int count = 0;
-				byte [] fileData = new  byte [300000];
 				try {
 					count = fis.read(fileData);
 					fis.close();
@@ -54,7 +54,8 @@ public class Stage2 {
 				}
 				Iterator<DictEntry> it = entries.iterator();
 				while ( it.hasNext() )
-						files.sendFile( file, it.next().toFile());
+						files.sendFile( file, it.next().toFile() , 5);
+				entries.clear();
 				//System.out.println(it.next());				
 				count /= 5;
 				progress = (c *100)>>8;
@@ -74,9 +75,9 @@ public class Stage2 {
 			hash = new short [2];
 			hash[0] = (short) (0xFF & entry[0]);
 			hash[1] = (short) (0xFF & entry[1]);
-			number = ( (0xFF & (int)entry[2]) << 16 ) | 
-					 ( (0xFF & (int)entry[3])  << 8 ) |
-					   (0xFF & (int)entry[4]) ;
+			number = ( (0xFF & entry[2]) << 16 ) | 
+					 ( (0xFF & entry[3])  << 8 ) |
+					   (0xFF & entry[4]) ;
 
 		}
 
