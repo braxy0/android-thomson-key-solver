@@ -13,7 +13,7 @@ public class Stage2 {
 		
 		FileInputStream fis;
 		FileOutputManager files = new FileOutputManager();
-		String file = "00.dat";
+		String file;
 		System.out.println("Ordering Entries in the Dictionary");
 		long begin = System.currentTimeMillis();
 		int progress = 0;
@@ -55,7 +55,7 @@ public class Stage2 {
 				Iterator<DictEntry> it = entries.iterator();
 				while ( it.hasNext() )
 						files.sendFile( file, it.next().toFile());
-					//	System.out.println(it.next());
+				//System.out.println(it.next());				
 				count /= 5;
 				progress = (c *100)>>8;
 				System.out.println("Counted " + count + " entries in " + file +
@@ -67,13 +67,13 @@ public class Stage2 {
         System.out.println("Done .. 100%! It took " + time + " miliseconds.");
 	}
 	private static class DictEntry implements Comparable<DictEntry>{
-		byte [] hash;
+		short [] hash;
 		int number;
 		
 		public DictEntry(byte [] entry ){
-			hash = new byte [2];
-			hash[0] =  entry[0];
-			hash[1] =  entry[1];
+			hash = new short [2];
+			hash[0] = (short) (0xFF & entry[0]);
+			hash[1] = (short) (0xFF & entry[1]);
 			number = ( (0xFF & (int)entry[2]) << 16 ) | 
 					 ( (0xFF & (int)entry[3])  << 8 ) |
 					   (0xFF & (int)entry[4]) ;
@@ -108,8 +108,8 @@ public class Stage2 {
 		
 		public byte [] toFile(){
 			byte [] entry = new  byte [5];
-			entry[0] = hash[0];
-			entry[1] = hash[1];
+			entry[0] = (byte) (0xFF & hash[0]);
+			entry[1] = (byte) (0xFF & hash[1]);
 			entry[2] = (byte) ( (0xFF0000 & number) >> 16) ;
 			entry[3] = (byte) ( (0xFF00 & number) >> 8) ;
 			entry[4] =(byte) (0xFF & number);
