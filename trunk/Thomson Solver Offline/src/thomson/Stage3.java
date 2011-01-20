@@ -3,11 +3,7 @@ package thomson;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Map.Entry;
+
 
 
 public class Stage3 {
@@ -15,7 +11,7 @@ public class Stage3 {
 	public static void main(String[] args) {
 		FileInputStream fis;
 		FileOutputManager files = new FileOutputManager();
-		TableEntry entry = new TableEntry();
+		EntryTable entry = new EntryTable(3);
 		System.out.println("Creating secondary tables.");
 		long begin = System.currentTimeMillis();
 		String fileName = "56.dat";
@@ -82,40 +78,5 @@ public class Stage3 {
         files.close();
 		long time = System.currentTimeMillis() - begin;
         System.out.println("Done .. 100%! It took " + time + " miliseconds.");
-	}
-	private static class TableEntry{
-		Map<Short , Integer > map;
-		public TableEntry(){
-			map = new TreeMap<Short, Integer>();
-		}
-		
-		public void addEntry( short secondByte , int offset){
-			map.put(secondByte, offset);
-		}
-		
-		public void toFile(byte [] outputData ){
-			Iterator<Entry<Short, Integer>> it = map.entrySet().iterator();
-			Entry<Short, Integer> entry;
-			int offset = 0;
-			while (it.hasNext()){
-				entry = it.next();
-				outputData[offset + 0] = (byte) (0xFF & entry.getKey());
-				outputData[offset + 1] = (byte) ( (0xFF0000 & entry.getValue()) >> 16) ;
-				outputData[offset + 2] = (byte) ( (0xFF00 & entry.getValue()) >> 8) ;
-				outputData[offset + 3] =(byte) (0xFF & entry.getValue());
-				offset += 4;
-			}
-		}
-		
-		@SuppressWarnings("unused")
-		public void printAll() throws UnsupportedEncodingException{
-			Iterator<Entry<Short, Integer>> it = map.entrySet().iterator();
-			Entry<Short, Integer> entry;
-			while (it.hasNext()){
-				entry = it.next();
-				System.out.println(AlphabetCodes.getHexString((byte) (0xFF &entry.getKey())) + 
-						": " + entry.getValue());
-			}
-		}
-	}
+	}		
 }

@@ -67,9 +67,15 @@ public class AlphabetCodes {
 		"8", "9", "a", "b",
 		"c", "d", "e", "f", 
 		};
+	
+	static final int charectCode[] = {
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15, 
+		};
 
-
-    static byte[][] charectbytes = {
+    static final byte[][] charectbytes = {
 	        new byte[]{ '3', '0'},
 	        new byte[]{ '3', '1'},
 	        new byte[]{ '3', '2'},

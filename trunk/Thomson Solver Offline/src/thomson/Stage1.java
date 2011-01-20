@@ -30,7 +30,8 @@ public class Stage1 {
         byte [] ret = new byte [5];
     	cp[0] = (byte) (char)'C';
     	cp[1] = (byte) (char)'P';
-  
+		System.out.println("Calculating possibles ESSID's.");
+
         int offset = 0;
         for(int y = 4; y < 10; y++)
         {
