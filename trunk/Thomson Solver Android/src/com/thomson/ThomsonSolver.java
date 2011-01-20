@@ -40,7 +40,8 @@ public class ThomsonSolver extends Activity {
 	ListView lv1;
 	ThomsonCalc calculator;
 	List<String> list_key = null;
-	BroadcastReceiver receiver;
+	BroadcastReceiver scanFinished;
+	//BroadcastReceiver stateChanged; TODO
 	List<WifiNetwork> vulnerable;
 	String router;
 	boolean activity_pref = false;
@@ -53,6 +54,8 @@ public class ThomsonSolver extends Activity {
 				showDialog(KEY_LIST);
 				begin = System.currentTimeMillis()-begin;
 				Log.d("ThomsonSolver", "Time to solve:" + begin);
+				ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
+
 			}
 			if ( msg.what == 1 )
 			{
@@ -93,7 +96,6 @@ public class ThomsonSolver extends Activity {
 						}
 			        begin =  System.currentTimeMillis();
 
-					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 					ThomsonSolver.this.calculator.router = vulnerable.get(position).getEssid().toUpperCase();
 					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					ThomsonSolver.this.calculator.start();
@@ -101,10 +103,9 @@ public class ThomsonSolver extends Activity {
 			}
 		});
 		
-     
-        if (receiver == null)
-			receiver = new WiFiScanReceiver(this);
-
+    	scanFinished = new WiFiScanReceiver(this);
+        
+        ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 
 	}
 	
@@ -112,7 +113,7 @@ public class ThomsonSolver extends Activity {
     public void onStart() {
     	try{ 
     		super.onStart();
-    		registerReceiver(receiver, new IntentFilter(
+    		registerReceiver(scanFinished, new IntentFilter(
     				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     		getPrefs();
     		if ( !wifi_state && wifi_on )
@@ -128,9 +129,9 @@ public class ThomsonSolver extends Activity {
 	public void onStop() {
     	try{ 
     		super.onStop();
-    		unregisterReceiver(receiver);
-    		if (  (!wifi_state && wifi_off) && !activity_pref )
-    			wifi.setWifiEnabled(false);
+    		unregisterReceiver(scanFinished);
+    		removeDialog(KEY_LIST);
+			removeDialog(MANUAL_CALC); 
     	}
     	catch (Exception e) {
     		e.printStackTrace();
@@ -195,7 +196,6 @@ public class ThomsonSolver extends Activity {
         						  Toast.makeText( ThomsonSolver.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
         						  return;
         					}
-        					ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
         					ThomsonSolver.this.calculator.router = essid.toUpperCase();
         					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
         					ThomsonSolver.this.calculator.start();
@@ -271,14 +271,11 @@ public class ThomsonSolver extends Activity {
     
 
     boolean wifi_on;
-	boolean wifi_off;
      
 	private void getPrefs() {
 	    SharedPreferences prefs = PreferenceManager
 	                    .getDefaultSharedPreferences(getBaseContext());
 	    wifi_on = prefs.getBoolean("wifion", false);
-	    wifi_off = prefs.getBoolean("wifioff", false);
 	    activity_pref = false;
-	    
     }
 }

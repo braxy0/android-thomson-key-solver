@@ -1,6 +1,5 @@
 package com.thomson;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,12 +16,24 @@ public class ThomsonCalc extends Thread {
 	String router;
 	ThomsonSolver parent;
 	boolean stopRequested = false;
-
+	// Working variables. Here to save speed as this
+	// thread is created much sooner than needed.
+	byte[] cp;
+	byte[] hash;
+	byte[] entry;
+	int a, b, c;
+	int year;
+	int week;
+	int sequenceNumber;
+	byte[] routerESSID;
 	public ThomsonCalc( ThomsonSolver par )
 	{
 		this.parent = par;
+		this.cp = new byte[12];
+		this.hash = new byte[19];
+		this.entry = new byte[300000];
+		this.routerESSID = new byte[2];
 	}
-	
 	public void  run()
 	{
 		List<String> pwList = new ArrayList<String>();
@@ -44,16 +55,15 @@ public class ThomsonCalc extends Thread {
 			return;
 		}
 		//the fisrt byte is not considered
-		byte[] routerESSID = new byte[2];
+		
 		for (int i = 2; i < 6; i += 2)
 			routerESSID[i / 2 - 1] = (byte) ((Character.digit(router.charAt(i), 16) << 4)
 					+ Character.digit(router.charAt(i + 1), 16));
 
 		
 		FileInputStream fis;
-		int len=0;
+	
 		try {
-			len = (int)(new File("/sdcard/thomson/" + router.substring(0,2) + ".dat").length());
 			fis = new FileInputStream("/sdcard/thomson/" + router.substring(0,2) + ".dat");
 		} catch (FileNotFoundException e2) {
 			pwList.add(new String("Dictionary not found on SDCard!" ));
@@ -61,15 +71,9 @@ public class ThomsonCalc extends Thread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		byte[] cp = new byte[12];
-		byte[] hash = new byte[19];
-		byte[] entry = new byte[len];
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
-		int a, b, c;
-		int year;
-		int week;
-		int sequenceNumber;
+		//TODO add size of table detection
 		try {
 			if ( fis.read(entry) == -1 )
 			{
@@ -81,18 +85,47 @@ public class ThomsonCalc extends Thread {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		for( int offset = 0 ; offset < len ; offset += 5 )
+		int offset = 0;
+		int len=0;
+		if ( entry[( 0xFF &routerESSID[0] )<<2] == routerESSID[0] )
+		{
+			int i = ( 0xFF &routerESSID[0] )<<2;
+			offset =( (0xFF & entry[i + 1]) << 16 ) | 
+					( (0xFF & entry[i + 2])  << 8 ) | (0xFF & entry[i + 3]);
+			len =   ( (0xFF & entry[i + 5]) << 16 ) | 
+					( (0xFF & entry[i + 6])  << 8 ) | (0xFF & entry[i + 7]);
+		}
+		else /*When the total of entries is not 256, the condition above may fail
+		 		, if that happens we do a linear search*/
+			for( int i = 0 ; i < 1024 ; i += 4 )
+			{
+				if (entry[i + 0] == routerESSID[0])
+				{
+					offset =( (0xFF & entry[i + 1]) << 16 ) | 
+							( (0xFF & entry[i + 2])  << 8 ) | (0xFF & entry[i + 3]);
+					len =   ( (0xFF & entry[i + 5]) << 16 ) | 
+							( (0xFF & entry[i + 6])  << 8 ) | (0xFF & entry[i + 7]);
+					break;
+				}
+			}
+		/* routerESSID[0] not found in the table*/
+		if ( offset == 0 )
+		{
+			pwList.add( new String("No matches were found! Try another ESSID"));
+			parent.list_key = pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
+		for(  ; offset < len ; offset += 4 )
 		{
 			if ( stopRequested )
 				return;
 
-			if (entry[offset + 0] != routerESSID[0])
+			if ( entry[offset] != routerESSID[1])
 				continue;
 			
-			if (entry[offset + 1] != routerESSID[1])
-				continue;
-			sequenceNumber = ( (0xFF & (int)entry[offset + 2]) << 16 ) | 
-							( (0xFF & (int)entry[offset + 3])  << 8 ) | (0xFF & (int)entry[offset + 4]) ;
+			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 
+							( (0xFF & entry[offset + 2])  << 8 ) | (0xFF & entry[offset + 3]) ;
 			c = sequenceNumber % 36;
 			b = sequenceNumber/36 % 36;
 			a = sequenceNumber/(36*36) % 36;

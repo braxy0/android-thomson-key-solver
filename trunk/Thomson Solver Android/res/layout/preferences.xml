@@ -7,11 +7,7 @@
                         android:defaultValue="false"
                         android:summary="@string/pref_hint_wifion"
                         android:key="wifion" />
-                 <CheckBoxPreference
-                        android:title="@string/pref_wifioff"
-                        android:defaultValue="false"
-                        android:summary="@string/pref_hint_wifioff"
-                        android:key="wifioff" />       
+
         </PreferenceCategory>
 
 </PreferenceScreen>
