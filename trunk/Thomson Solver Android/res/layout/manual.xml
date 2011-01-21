@@ -9,17 +9,17 @@
     <EditText android:id="@+id/manual_edittext"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"/>
-    <Button android:id="@+id/manual_calc"
+    <Button android:id="@+id/bt_manual_calc"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"	
 				android:layout_below="@id/manual_edittext"
 				android:layout_alignParentRight="true"
 				android:layout_marginLeft="10dip"
-				android:text="@string/manual_calc" />
-	<Button android:id="@+id/manual_cancel"
+				android:text="@string/bt_manual_calc" />
+	<Button android:id="@+id/bt_manual_cancel"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" 
-				android:layout_toLeftOf="@id/manual_calc"
-				android:layout_alignTop="@id/manual_calc"
-				android:text="@string/cancel" />
+				android:layout_toLeftOf="@id/bt_manual_calc"
+				android:layout_alignTop="@id/bt_manual_calc"
+				android:text="@string/bt_manual_cancel" />
 </RelativeLayout>

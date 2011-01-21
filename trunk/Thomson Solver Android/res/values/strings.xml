@@ -5,11 +5,23 @@
     <string name="scan">Scan</string>
     <string name="manual">Manual Input</string>
     <string name="preferences">Preferences</string>
-	<string name="cancel">Cancel</string>
-	<string name="manual_calc">Calculate</string>
+	<string name="bt_manual_cancel">Cancel</string>
+	<string name="bt_manual_calc">Calculate</string>
 	<string name="manual_label">Input your ESSID here:</string>
 	<string name="pref_hint_wifion">Turn the Wifi on Automatically</string>
 	<string name="pref_hint_wifioff">Turn the Wifi off Automatically</string>
 	<string name="pref_wifion">Auto Wifi On</string>
 	<string name="pref_wifioff">Auto Wifi Off</string>
+<string name="bt_share">Share Keys</string>
+<string name="pref_folder_select">Folder Select</string>
+<string name="pref_folder_select_des">Select the folder of the dictionary</string>
+<string name="bt_choose">Open</string>
+<string name="bt_choose_back">Up</string>
+<string name="pref_1section">General Options</string>
+<string name="pref_2section">About</string>
+<string name="pref_donate">Donate</string>
+<string name="pref_donate_why">Buy me a coffee if you liked this application</string>
+<string name="pref_about">About ThomsonSolver</string>
+<string name="pref_about_desc">Router Keygen calculates default passwords for several common routers.</string>
+<string name="bt_close">Close</string>
 </resources>

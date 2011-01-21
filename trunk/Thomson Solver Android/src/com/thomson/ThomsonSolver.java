@@ -1,6 +1,7 @@
 package com.thomson;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import android.app.Activity;
 import android.app.Dialog;
@@ -98,6 +99,7 @@ public class ThomsonSolver extends Activity {
 			        if ( ThomsonSolver.this.calculator.getState() != Thread.State.NEW )
 			        	ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 					ThomsonSolver.this.calculator.router = vulnerable.get(position).getEssid().toUpperCase();
+					ThomsonSolver.this.calculator.folder = folderSelect;
 					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					ThomsonSolver.this.calculator.start();
 					removeDialog(KEY_LIST);
@@ -105,7 +107,6 @@ public class ThomsonSolver extends Activity {
 		});
 		
     	scanFinished = new WiFiScanReceiver(this);
-        
         ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 
 	}
@@ -120,6 +121,8 @@ public class ThomsonSolver extends Activity {
     		if ( !wifi_state && wifi_on )
     			wifi.setWifiEnabled(true);
     		scan();
+    		removeDialog(KEY_LIST);
+			removeDialog(MANUAL_CALC); 
     	}
     	catch (Exception e) {
     		e.printStackTrace();
@@ -174,6 +177,20 @@ public class ThomsonSolver extends Activity {
             	});
             	list.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
 						list_key));
+            	Button share = ( Button ) dialog.findViewById(R.id.bt_share);
+            	share.setOnClickListener(new View.OnClickListener(){
+             		 public void onClick(View arg0) {
+             			Intent i = new Intent(Intent.ACTION_SEND);
+             			i.setType("text/plain");
+             			i.putExtra(Intent.EXTRA_SUBJECT, router + "Keys");
+             			Iterator<String> it = list_key.iterator();
+             			String message = "Keys:\n";
+             			while ( it.hasNext() )
+             				message += it.next() + "\n"; 
+             			i.putExtra(Intent.EXTRA_TEXT, message);
+             			startActivity(Intent.createChooser(i, "Share Keys"));
+                }
+           	});
             	
             	return dialog;
             }
@@ -184,7 +201,7 @@ public class ThomsonSolver extends Activity {
           
             	final EditText edit = (EditText ) dialog.findViewById(R.id.manual_edittext);
             	
-            	Button calc = ( Button ) dialog.findViewById(R.id.manual_calc);
+            	Button calc = ( Button ) dialog.findViewById(R.id.bt_manual_calc);
             	calc.setOnClickListener(new View.OnClickListener(){
            		 public void onClick(View arg0) {
                         try
@@ -197,7 +214,11 @@ public class ThomsonSolver extends Activity {
         						  Toast.makeText( ThomsonSolver.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
         						  return;
         					}
+
+        			        if ( ThomsonSolver.this.calculator.getState() != Thread.State.NEW )
+        			        	ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
         					ThomsonSolver.this.calculator.router = essid.toUpperCase();
+        					ThomsonSolver.this.calculator.folder = folderSelect;
         					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
         					ThomsonSolver.this.calculator.start();
         					removeDialog(KEY_LIST);
@@ -208,7 +229,7 @@ public class ThomsonSolver extends Activity {
 							}
                 }
            	});
-            	Button cancel = ( Button ) dialog.findViewById(R.id.manual_cancel);
+            	Button cancel = ( Button ) dialog.findViewById(R.id.bt_manual_cancel);
             	cancel.setOnClickListener(new View.OnClickListener(){
               		 public void onClick(View arg0) {
                          try
@@ -221,6 +242,7 @@ public class ThomsonSolver extends Activity {
  							}
                  }
             	});
+         
             	return dialog;
             }
         }
@@ -272,11 +294,12 @@ public class ThomsonSolver extends Activity {
     
 
     boolean wifi_on;
-     
+    String folderSelect;
 	private void getPrefs() {
 	    SharedPreferences prefs = PreferenceManager
 	                    .getDefaultSharedPreferences(getBaseContext());
 	    wifi_on = prefs.getBoolean("wifion", false);
+	    folderSelect = prefs.getString("folderSelect","/sdcard/thomson");
 	    activity_pref = false;
     }
 }

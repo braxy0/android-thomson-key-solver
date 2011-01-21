@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
-                android:title="Auto Wifi">
+                android:title="@string/pref_1section">
                 <CheckBoxPreference
                         android:title="@string/pref_wifion"
                         android:defaultValue="false"
                         android:summary="@string/pref_hint_wifion"
-                        android:key="wifion" />
-
+                        android:key="wifion" />        
+		        <Preference
+		                android:title="@string/pref_folder_select"
+		                android:summary="@string/pref_folder_select_des"
+		                android:key="folderSelect" />
         </PreferenceCategory>
-
+        <PreferenceCategory
+                android:title="@string/pref_2section">
+                <Preference
+                android:title="@string/pref_donate"
+                android:summary="@string/pref_donate_why"
+                android:key="donate" />
+                <Preference
+                android:title="@string/pref_about"
+                android:key="about" />
+           </PreferenceCategory>
 </PreferenceScreen>

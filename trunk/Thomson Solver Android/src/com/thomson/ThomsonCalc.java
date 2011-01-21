@@ -1,5 +1,6 @@
 package com.thomson;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -27,6 +28,7 @@ public class ThomsonCalc extends Thread {
 	int week;
 	int sequenceNumber;
 	byte[] routerESSID;
+	String folder;
 	public ThomsonCalc( ThomsonSolver par )
 	{
 		this.parent = par;
@@ -64,7 +66,7 @@ public class ThomsonCalc extends Thread {
 		
 		RandomAccessFile fis;
 		try {
-			fis = new RandomAccessFile("/sdcard/thomson/thomson.dic", "r");
+			fis = new RandomAccessFile(folder + File.separator + "thomson.dic", "r");
 		} catch (FileNotFoundException e2) {
 			pwList.add(new String("Dictionary not found on SDCard!" ));
 			parent.list_key =  pwList;
