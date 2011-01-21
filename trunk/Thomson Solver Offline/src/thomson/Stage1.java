@@ -5,14 +5,13 @@
 
 package thomson;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Stage1 {
 	static MessageDigest md;
-    public static void main(String[] args) throws UnsupportedEncodingException, IOException
+    public static void main(String[] args)
     {
     	FileOutputManager files = new FileOutputManager();
     	files.initAllFiles();
@@ -66,7 +65,9 @@ public class Stage1 {
                 			ret[3] = (byte) ( (0xFF00 & sequenceNumber) >> 8) ;
                 			ret[4] =(byte) (0xFF & sequenceNumber);
                 			sequenceNumber++;
-                			files.sendFile(AlphabetCodes.getHexString(firstByte)+".dat", ret , 5);
+                			try {
+								files.sendFile(AlphabetCodes.getHexString(firstByte)+".dat", ret , 5);
+							} catch (UnsupportedEncodingException e) {}
                         }
                     }
                 }
