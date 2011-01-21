@@ -1,4 +1,4 @@
-package com.thomson;
+package org.exobel.routerkeygen;
 import java.io.UnsupportedEncodingException;
 
 public class StringUtils {

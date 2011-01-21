@@ -1,4 +1,4 @@
-package com.thomson;
+package org.exobel.routerkeygen;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,12 +10,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThomsonCalc extends Thread {
+public class KeygenThread extends Thread {
 	
 	MessageDigest md;
 	String [] ret;
 	String router;
-	ThomsonSolver parent;
+	RouterKeygen parent;
 	boolean stopRequested = false;
 	// Working variables. Here to save speed as this
 	// thread is created much sooner than needed.
@@ -29,7 +29,7 @@ public class ThomsonCalc extends Thread {
 	int sequenceNumber;
 	byte[] routerESSID;
 	String folder;
-	public ThomsonCalc( ThomsonSolver par )
+	public KeygenThread( RouterKeygen par )
 	{
 		this.parent = par;
 		this.cp = new byte[12];

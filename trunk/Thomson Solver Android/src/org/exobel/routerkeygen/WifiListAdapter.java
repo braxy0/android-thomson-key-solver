@@ -1,8 +1,7 @@
-package com.thomson;
+package org.exobel.routerkeygen;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

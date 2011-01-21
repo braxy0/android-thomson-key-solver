@@ -1,4 +1,4 @@
-package com.thomson;
+package org.exobel.routerkeygen;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,13 +33,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ThomsonSolver extends Activity {
+
+
+public class RouterKeygen extends Activity {
 
 	WifiManager wifi;
 	boolean wifi_state;
 	ProgressDialog progressDialog;
 	ListView lv1;
-	ThomsonCalc calculator;
+	KeygenThread calculator;
 	List<String> list_key = null;
 	BroadcastReceiver scanFinished;
 	//BroadcastReceiver stateChanged; TODO
@@ -54,13 +56,13 @@ public class ThomsonSolver extends Activity {
 			{
 				showDialog(KEY_LIST);
 				begin = System.currentTimeMillis()-begin;
-				Log.d("ThomsonSolver", "Time to solve:" + begin);
-				ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
+				Log.d("RouterKeygen", "Time to solve:" + begin);
+				RouterKeygen.this.calculator = new KeygenThread(RouterKeygen.this);
 
 			}
 			if ( msg.what == 1 )
 			{
-				Toast.makeText( ThomsonSolver.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
+				Toast.makeText( RouterKeygen.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
 			}
 		}
 	};
@@ -86,31 +88,37 @@ public class ThomsonSolver extends Activity {
 					
 					if ( !vulnerable.get(position).supported )
 					{
-						  Toast.makeText( ThomsonSolver.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
+						  Toast.makeText( RouterKeygen.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
 						  return;
 					}
 					else
 						if (vulnerable.get(position).newThomson)
 						{
-							Toast.makeText( ThomsonSolver.this , "That is a new Thomson router which key can not be calculated!" , Toast.LENGTH_SHORT).show();
+							Toast.makeText( RouterKeygen.this , "That is a new Thomson router which key can not be calculated!" , Toast.LENGTH_SHORT).show();
 							  return;
 						}
 			        begin =  System.currentTimeMillis();
-			        if ( ThomsonSolver.this.calculator.getState() != Thread.State.NEW )
-			        	ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
-					ThomsonSolver.this.calculator.router = vulnerable.get(position).getEssid().toUpperCase();
-					ThomsonSolver.this.calculator.folder = folderSelect;
-					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
-					ThomsonSolver.this.calculator.start();
+			        if ( RouterKeygen.this.calculator.getState() != Thread.State.NEW )
+			        	RouterKeygen.this.calculator = new KeygenThread(RouterKeygen.this);
+					RouterKeygen.this.calculator.router = vulnerable.get(position).getEssid().toUpperCase();
+					RouterKeygen.this.calculator.folder = folderSelect;
+					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
+					RouterKeygen.this.calculator.start();
 					removeDialog(KEY_LIST);
 			}
 		});
 		
     	scanFinished = new WiFiScanReceiver(this);
-        ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
+        RouterKeygen.this.calculator = new KeygenThread(RouterKeygen.this);
 
 	}
-	
+	protected void onSaveInstanceState (Bundle outState){
+		
+	}
+
+	protected void onRestoreInstanceState (Bundle savedInstanceState){
+		
+	}
 	
     public void onStart() {
     	try{ 
@@ -160,7 +168,7 @@ public class ThomsonSolver extends Activity {
             case KEY_LIST: {
             	Dialog dialog = new Dialog(this);
             	dialog.setContentView(R.layout.results);
-            	dialog.setTitle(ThomsonSolver.this.router);
+            	dialog.setTitle(RouterKeygen.this.router);
           
             	ListView list = (ListView) dialog.findViewById(R.id.list_keys);
             	list.setOnItemClickListener(new OnItemClickListener() {
@@ -175,7 +183,7 @@ public class ThomsonSolver extends Activity {
                           startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
         			}
             	});
-            	list.setAdapter(new ArrayAdapter<String>(ThomsonSolver.this, android.R.layout.simple_list_item_1,
+            	list.setAdapter(new ArrayAdapter<String>(RouterKeygen.this, android.R.layout.simple_list_item_1,
 						list_key));
             	Button share = ( Button ) dialog.findViewById(R.id.bt_share);
             	share.setOnClickListener(new View.OnClickListener(){
@@ -211,16 +219,16 @@ public class ThomsonSolver extends Activity {
         					
         					if ( (essid = essidFilter(router))  == null )
         					{
-        						  Toast.makeText( ThomsonSolver.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
+        						  Toast.makeText( RouterKeygen.this , "That essid is not a Thomson one!" , Toast.LENGTH_SHORT).show();
         						  return;
         					}
 
-        			        if ( ThomsonSolver.this.calculator.getState() != Thread.State.NEW )
-        			        	ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
-        					ThomsonSolver.this.calculator.router = essid.toUpperCase();
-        					ThomsonSolver.this.calculator.folder = folderSelect;
-        					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
-        					ThomsonSolver.this.calculator.start();
+        			        if ( RouterKeygen.this.calculator.getState() != Thread.State.NEW )
+        			        	RouterKeygen.this.calculator = new KeygenThread(RouterKeygen.this);
+        					RouterKeygen.this.calculator.router = essid.toUpperCase();
+        					RouterKeygen.this.calculator.folder = folderSelect;
+        					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
+        					RouterKeygen.this.calculator.start();
         					removeDialog(KEY_LIST);
         					removeDialog(MANUAL_CALC);                      	
                         	
@@ -261,13 +269,13 @@ public class ThomsonSolver extends Activity {
     		if ( wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLED 
     				&& wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLING )
     		{
-				  Toast.makeText( ThomsonSolver.this , "Wifi not activated! Please activate Wifi!", Toast.LENGTH_SHORT).show();
+				  Toast.makeText( RouterKeygen.this , "Wifi not activated! Please activate Wifi!", Toast.LENGTH_SHORT).show();
 				  return;
     		}
 	    	if ( wifi.startScan() )
-				  Toast.makeText( ThomsonSolver.this , "Scanning Started", Toast.LENGTH_SHORT).show();
+				  Toast.makeText( RouterKeygen.this , "Scanning Started", Toast.LENGTH_SHORT).show();
 			else
-				  Toast.makeText( ThomsonSolver.this , "Scanning Failed!", Toast.LENGTH_SHORT).show();
+				  Toast.makeText( RouterKeygen.this , "Scanning Failed!", Toast.LENGTH_SHORT).show();
     	}catch (Exception e) {
 			e.printStackTrace();
 		}

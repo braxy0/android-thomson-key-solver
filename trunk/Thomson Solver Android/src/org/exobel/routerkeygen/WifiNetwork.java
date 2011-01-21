@@ -1,4 +1,4 @@
-package com.thomson;
+package org.exobel.routerkeygen;
 
 public class WifiNetwork implements Comparable<WifiNetwork>{
 	String ssid;

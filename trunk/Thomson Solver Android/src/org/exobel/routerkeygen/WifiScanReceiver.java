@@ -1,4 +1,4 @@
-package com.thomson;
+package org.exobel.routerkeygen;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,9 +12,9 @@ import android.content.Intent;
 import android.net.wifi.ScanResult;
 
 class WiFiScanReceiver extends BroadcastReceiver {
-	  ThomsonSolver solver;
+	  RouterKeygen solver;
 
-	  public WiFiScanReceiver( ThomsonSolver wifiDemo) {
+	  public WiFiScanReceiver( RouterKeygen wifiDemo) {
 	    super();
 	    this.solver = wifiDemo;
 	  }
