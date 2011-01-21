@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/wifi_scan"
-          android:icon="@drawable/scan_refresh"
+          android:icon="@drawable/ic_menu_refresh"
           android:title="@string/scan" />
     <item android:id="@+id/manual_input"
           android:icon="@android:drawable/ic_menu_edit"

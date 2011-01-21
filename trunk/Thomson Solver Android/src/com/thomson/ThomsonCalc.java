@@ -1,8 +1,8 @@
 package com.thomson;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,6 +21,7 @@ public class ThomsonCalc extends Thread {
 	byte[] cp;
 	byte[] hash;
 	byte[] entry;
+	byte[] table;
 	int a, b, c;
 	int year;
 	int week;
@@ -31,8 +32,9 @@ public class ThomsonCalc extends Thread {
 		this.parent = par;
 		this.cp = new byte[12];
 		this.hash = new byte[19];
-		this.entry = new byte[300000];
-		this.routerESSID = new byte[2];
+		this.table= new byte[1282];
+		this.entry = new byte[3000];
+		this.routerESSID = new byte[3];
 	}
 	public void  run()
 	{
@@ -54,17 +56,15 @@ public class ThomsonCalc extends Thread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		//the fisrt byte is not considered
 		
-		for (int i = 2; i < 6; i += 2)
-			routerESSID[i / 2 - 1] = (byte) ((Character.digit(router.charAt(i), 16) << 4)
+		for (int i = 0; i < 6; i += 2)
+			routerESSID[i / 2] = (byte) ((Character.digit(router.charAt(i), 16) << 4)
 					+ Character.digit(router.charAt(i + 1), 16));
 
 		
-		FileInputStream fis;
-	
+		RandomAccessFile fis;
 		try {
-			fis = new FileInputStream("/sdcard/thomson/" + router.substring(0,2) + ".dat");
+			fis = new RandomAccessFile("/sdcard/thomson/thomson.dic", "r");
 		} catch (FileNotFoundException e2) {
 			pwList.add(new String("Dictionary not found on SDCard!" ));
 			parent.list_key =  pwList;
@@ -73,9 +73,9 @@ public class ThomsonCalc extends Thread {
 		}
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
-		//TODO add size of table detection
+		
 		try {
-			if ( fis.read(entry) == -1 )
+			if ( fis.read(table) == -1 )
 			{
 				pwList.add(new String("Error reading the dictionary!" ));
 				parent.list_key =  pwList;
@@ -85,43 +85,57 @@ public class ThomsonCalc extends Thread {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		int totalOffset = 0;
 		int offset = 0;
-		int len=0;
-		if ( entry[( 0xFF &routerESSID[0] )<<2] == routerESSID[0] )
+		if ( table[( 0xFF &routerESSID[0] )*5 + 2 ] == routerESSID[0] )
 		{
-			int i = ( 0xFF &routerESSID[0] )<<2;
-			offset =( (0xFF & entry[i + 1]) << 16 ) | 
-					( (0xFF & entry[i + 2])  << 8 ) | (0xFF & entry[i + 3]);
-			len =   ( (0xFF & entry[i + 5]) << 16 ) | 
-					( (0xFF & entry[i + 6])  << 8 ) | (0xFF & entry[i + 7]);
+			int i = ( 0xFF &routerESSID[0] )*5 + 2;
+			offset =( (0xFF & table[i + 1]) << 24 ) | ( (0xFF & table[i + 2])  << 16 ) |
+					( (0xFF & table[i + 3])  << 8 ) | (0xFF & table[i + 4]);
 		}
-		else /*When the total of entries is not 256, the condition above may fail
-		 		, if that happens we do a linear search*/
-			for( int i = 0 ; i < 1024 ; i += 4 )
+		totalOffset += offset;
+		try {
+			fis.seek(totalOffset);
+			if ( fis.read(table,0,1024) == -1 )
 			{
-				if (entry[i + 0] == routerESSID[0])
-				{
-					offset =( (0xFF & entry[i + 1]) << 16 ) | 
-							( (0xFF & entry[i + 2])  << 8 ) | (0xFF & entry[i + 3]);
-					len =   ( (0xFF & entry[i + 5]) << 16 ) | 
-							( (0xFF & entry[i + 6])  << 8 ) | (0xFF & entry[i + 7]);
-					break;
-				}
-			}
-		/* routerESSID[0] not found in the table*/
-		if ( offset == 0 )
-		{
-			pwList.add( new String("No matches were found! Try another ESSID"));
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(1);
-			return;
+				pwList.add(new String("Error reading the dictionary!" ));
+				parent.list_key =  pwList;
+				parent.handler.sendEmptyMessage(1);
+				return;
+			}	
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-		for(  ; offset < len ; offset += 4 )
+		int lenght = 0;
+		if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
+		{
+			int i = ( 0xFF &routerESSID[1] )*4;
+			offset =( (0xFF & table[i + 1])  << 16 ) |
+					( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
+			lenght =  ( (0xFF & table[i + 5])  << 16 ) |
+					( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
+			
+		}
+		totalOffset += offset;
+		try {
+			fis.seek(totalOffset );
+			if ( fis.read(entry,0, lenght - offset) == -1 )
+			{
+				pwList.add(new String("Error reading the dictionary!" ));
+				parent.list_key =  pwList;
+				parent.handler.sendEmptyMessage(1);
+				return;
+			}	
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		lenght -= offset;
+		for( offset = 0 ; offset < lenght ; offset += 4 )
 		{
 			if ( stopRequested )
 				return;
 
-			if ( entry[offset] != routerESSID[1])
+			if ( entry[offset] != routerESSID[2])
 				continue;
 			
 			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 

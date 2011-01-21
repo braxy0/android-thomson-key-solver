@@ -76,7 +76,7 @@ public class ThomsonSolver extends Activity {
 			wifi_state = true;
 		else
 			wifi_state = false;
-		lv1 = (ListView) findViewById(R.id.ListView01);
+		lv1 = (ListView) findViewById(R.id.ListWifi);
 		list_key = new ArrayList<String>();
 		lv1.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -95,7 +95,8 @@ public class ThomsonSolver extends Activity {
 							  return;
 						}
 			        begin =  System.currentTimeMillis();
-
+			        if ( ThomsonSolver.this.calculator.getState() != Thread.State.NEW )
+			        	ThomsonSolver.this.calculator = new ThomsonCalc(ThomsonSolver.this);
 					ThomsonSolver.this.calculator.router = vulnerable.get(position).getEssid().toUpperCase();
 					ThomsonSolver.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					ThomsonSolver.this.calculator.start();

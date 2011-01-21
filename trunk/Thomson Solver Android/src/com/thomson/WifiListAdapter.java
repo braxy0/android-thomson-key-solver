@@ -43,7 +43,7 @@ public class WifiListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		 RelativeLayout itemLayout;
 		 WifiNetwork wifi = listNetworks.get(position);
-	//	 int strenght = listNetworks.get(position).getLevel();
+		 int strenght = listNetworks.get(position).getLevel();
 	     itemLayout= (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.list_wifi, parent, false);
 	 
 	     TextView ssid = (TextView) itemLayout.findViewById(R.id.wifiName);
@@ -54,9 +54,15 @@ public class WifiListAdapter extends BaseAdapter {
 	     
 	     ImageView icon = (ImageView)itemLayout.findViewById(R.id.icon);
 	     if ( wifi.supported && !wifi.newThomson)
-	    	 icon.setImageDrawable(context.getResources().getDrawable(android.R.drawable.ic_input_add));
+	    	 icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_possible));
 	     
+	     ImageView networkS = (ImageView)itemLayout.findViewById(R.id.strenght);
 	     
+	     if ( strenght >= -55 )
+	    	 networkS.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_wifi_verystrong));
+	     else
+	    	 if ( strenght >= -70 )
+	    		 networkS.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_wifi_medium));
 		return  itemLayout;
 	}
 

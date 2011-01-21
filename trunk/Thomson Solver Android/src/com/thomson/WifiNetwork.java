@@ -1,6 +1,6 @@
 package com.thomson;
 
-public class WifiNetwork {
+public class WifiNetwork implements Comparable<WifiNetwork>{
 	String ssid;
 	String mac;
 	String ssidSubpart;
@@ -43,6 +43,15 @@ public class WifiNetwork {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public int compareTo(WifiNetwork another) {
+		if ( another.level == this.level && this.ssid.equals(another.ssid) && this.mac.equals(another.mac) )
+			return 0;
+		if ( this.supported && !this.newThomson )
+			return -1;
+		return 1;
 	}
 	
 	
