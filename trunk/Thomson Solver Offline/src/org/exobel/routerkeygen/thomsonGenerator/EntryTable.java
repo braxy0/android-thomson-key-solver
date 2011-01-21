@@ -1,4 +1,4 @@
-package thomson;
+package org.exobel.routerkeygen.thomsonGenerator;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;

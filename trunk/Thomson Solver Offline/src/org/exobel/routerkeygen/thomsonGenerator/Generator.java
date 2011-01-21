@@ -1,4 +1,4 @@
-package thomson;
+package org.exobel.routerkeygen.thomsonGenerator;
 
 public class Generator {
 

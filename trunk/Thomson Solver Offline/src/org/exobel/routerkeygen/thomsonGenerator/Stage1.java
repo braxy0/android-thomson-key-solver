@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package thomson;
+package org.exobel.routerkeygen.thomsonGenerator;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

@@ -1,4 +1,4 @@
-package thomson;
+package org.exobel.routerkeygen.thomsonGenerator;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,7 +54,7 @@ public class Stage4 {
 		}
 		FileOutputStream fos;
 		try {
-			fos = new FileOutputStream("thomson.dic");
+			fos = new FileOutputStream("org.exobel.routerkeygen.thomsonGenerator.dic");
 		} catch (FileNotFoundException e) {
 			System.out.println("Error!" + e);
 			return;
