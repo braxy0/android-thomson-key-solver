@@ -30,8 +30,7 @@ class WiFiScanReceiver extends BroadcastReceiver {
 	    while( it.hasNext())
 	    	list.add(it.next());
 	    solver.vulnerable = list;
-	    WifiListAdapter adap= new WifiListAdapter(list , solver);
-	    solver.lv1.setAdapter(adap); 
+	    solver.lv1.setAdapter(new WifiListAdapter(list , solver)); 
 	 }
 
 }

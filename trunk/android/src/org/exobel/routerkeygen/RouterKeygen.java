@@ -3,6 +3,9 @@ package org.exobel.routerkeygen;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -57,8 +60,6 @@ public class RouterKeygen extends Activity {
 				showDialog(KEY_LIST);
 				begin = System.currentTimeMillis()-begin;
 				Log.d("RouterKeygen", "Time to solve:" + begin);
-				RouterKeygen.this.calculator = new KeygenThread(RouterKeygen.this);
-
 			}
 			if ( msg.what == 1 )
 			{
@@ -98,10 +99,9 @@ public class RouterKeygen extends Activity {
 							  return;
 						}
 			        begin =  System.currentTimeMillis();
-			        if ( RouterKeygen.this.calculator.getState() != Thread.State.NEW )
-			        	RouterKeygen.this.calculator = new KeygenThread(RouterKeygen.this);
-					RouterKeygen.this.calculator.router = vulnerable.get(position).getEssid().toUpperCase();
-					RouterKeygen.this.calculator.folder = folderSelect;
+			        RouterKeygen.this.calculator = new ThomsonKeygen(RouterKeygen.this);
+					RouterKeygen.this.calculator.router = vulnerable.get(position);
+					((ThomsonKeygen)RouterKeygen.this.calculator).folder = folderSelect;
 					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					RouterKeygen.this.calculator.start();
 					removeDialog(KEY_LIST);
@@ -113,11 +113,29 @@ public class RouterKeygen extends Activity {
 
 	}
 	protected void onSaveInstanceState (Bundle outState){
-		
+		Iterator<WifiNetwork> it = vulnerable.iterator();
+		while ( it.hasNext() )
+		{
+			WifiNetwork list = it.next();
+			outState.putSerializable(list.ssid, list);	
+		}
+		removeDialog(MANUAL_CALC);
+		removeDialog(KEY_LIST);
 	}
 
 	protected void onRestoreInstanceState (Bundle savedInstanceState){
-		
+		Iterator<String> it = savedInstanceState.keySet().iterator();
+	    Set<WifiNetwork> set = new TreeSet<WifiNetwork>();
+		if (  vulnerable == null )
+			vulnerable = new ArrayList<WifiNetwork>();
+		while ( it.hasNext() )
+		{
+			 set.add((WifiNetwork) savedInstanceState.getSerializable(it.next()));
+		}
+		Iterator<WifiNetwork> it2 = set.iterator();
+	    while( it2.hasNext())
+	    	vulnerable.add(it2.next());
+		lv1.setAdapter(new WifiListAdapter(vulnerable , this));
 	}
 	
     public void onStart() {
@@ -223,10 +241,9 @@ public class RouterKeygen extends Activity {
         						  return;
         					}
 
-        			        if ( RouterKeygen.this.calculator.getState() != Thread.State.NEW )
-        			        	RouterKeygen.this.calculator = new KeygenThread(RouterKeygen.this);
-        					RouterKeygen.this.calculator.router = essid.toUpperCase();
-        					RouterKeygen.this.calculator.folder = folderSelect;
+        			        RouterKeygen.this.calculator = new ThomsonKeygen(RouterKeygen.this);
+        					RouterKeygen.this.calculator.router = new WifiNetwork(essid.toUpperCase() , "" , 0);
+        					((ThomsonKeygen)RouterKeygen.this.calculator).folder = folderSelect;
         					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
         					RouterKeygen.this.calculator.start();
         					removeDialog(KEY_LIST);
@@ -243,8 +260,6 @@ public class RouterKeygen extends Activity {
                          try
                          {
                         	 removeDialog(MANUAL_CALC);
-                         	
-                         	
                          } catch (Exception e) {
  								e.printStackTrace();
  							}

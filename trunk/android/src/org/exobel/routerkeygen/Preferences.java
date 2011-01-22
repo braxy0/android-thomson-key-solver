@@ -34,7 +34,6 @@ public class Preferences extends PreferenceActivity {
                 addPreferencesFromResource(R.layout.preferences);
                 findPreference("donate").setOnPreferenceClickListener(
                         new OnPreferenceClickListener() {
-                            @Override
                             public boolean onPreferenceClick(Preference preference) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setData(Uri.parse(PUB_DONATE));
@@ -46,7 +45,6 @@ public class Preferences extends PreferenceActivity {
                         });
                 findPreference("about").setOnPreferenceClickListener(
                         new OnPreferenceClickListener() {
-                            @Override
                             public boolean onPreferenceClick(Preference preference) {
                                 showDialog(DIALOG_ABOUT);
                                 return true;

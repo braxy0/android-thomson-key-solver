@@ -23,22 +23,18 @@ public class WifiListAdapter extends BaseAdapter {
     }
 	
 	
-	@Override
 	public int getCount() {
 		return listNetworks.size();
 	}
 
-	@Override
 	public Object getItem(int position) {
 		return listNetworks.get(position);
 	}
 
-	@Override
 	public long getItemId(int position) {
 		return listNetworks.get(position).hashCode();
 	}
 
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		 RelativeLayout itemLayout;
 		 WifiNetwork wifi = listNetworks.get(position);
