@@ -25,7 +25,6 @@ public class ThomsonKeygen extends KeygenThread {
 	int week;
 	int sequenceNumber;
 	byte[] routerESSID;
-	String folder;
 	
 	public ThomsonKeygen(RouterKeygen par) {
 		super(par);
@@ -64,7 +63,7 @@ public class ThomsonKeygen extends KeygenThread {
 		
 		RandomAccessFile fis;
 		try {
-			fis = new RandomAccessFile(folder + File.separator + "thomson.dic", "r");
+			fis = new RandomAccessFile(parent.folderSelect + File.separator + "thomson.dic", "r");
 		} catch (FileNotFoundException e2) {
 			pwList.add(new String("Dictionary not found on SDCard!" ));
 			parent.list_key =  pwList;

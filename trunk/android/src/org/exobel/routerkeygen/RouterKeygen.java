@@ -101,7 +101,6 @@ public class RouterKeygen extends Activity {
 			        begin =  System.currentTimeMillis();
 			        RouterKeygen.this.calculator = new ThomsonKeygen(RouterKeygen.this);
 					RouterKeygen.this.calculator.router = vulnerable.get(position);
-					((ThomsonKeygen)RouterKeygen.this.calculator).folder = folderSelect;
 					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					RouterKeygen.this.calculator.start();
 					removeDialog(KEY_LIST);
@@ -243,7 +242,6 @@ public class RouterKeygen extends Activity {
 
         			        RouterKeygen.this.calculator = new ThomsonKeygen(RouterKeygen.this);
         					RouterKeygen.this.calculator.router = new WifiNetwork(essid.toUpperCase() , "" , 0);
-        					((ThomsonKeygen)RouterKeygen.this.calculator).folder = folderSelect;
         					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
         					RouterKeygen.this.calculator.start();
         					removeDialog(KEY_LIST);

@@ -19,6 +19,7 @@ public class KeygenThread extends Thread {
 
 	}
 	
+	@SuppressWarnings("unused")
 	private byte[] makeSHA1Hash(byte[] input) {
 		md.update(input);
 		return md.digest();
