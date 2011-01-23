@@ -7,11 +7,13 @@
               android:padding="10dp"
               android:gravity="center"
               >
-    <ListView 	android:id="@+id/list_keys"
+    <ListView
+                android:id="@+id/list_keys"
               	android:layout_width="wrap_content"
               	android:layout_height="wrap_content"
 				android:headerDividersEnabled="false"
 				android:footerDividersEnabled="false"
+				android:gravity="center"
               />
      <Button android:id="@+id/bt_share"
                 android:layout_width="wrap_content"

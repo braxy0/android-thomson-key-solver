@@ -7,8 +7,6 @@ import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ThomsonKeygen extends KeygenThread {
 
@@ -25,7 +23,7 @@ public class ThomsonKeygen extends KeygenThread {
 	int week;
 	int sequenceNumber;
 	byte[] routerESSID;
-	
+
 	public ThomsonKeygen(RouterKeygen par) {
 		super(par);
 		this.cp = new byte[12];
@@ -37,8 +35,6 @@ public class ThomsonKeygen extends KeygenThread {
 
 	public void  run()
 	{
-		List<String> pwList = new ArrayList<String>();
-
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
@@ -48,17 +44,17 @@ public class ThomsonKeygen extends KeygenThread {
 		if ( router == null)
 			return;
 		
-		if ( router.ssid.length() != 6 ) 
+		if ( router.getEssid().length() != 6 ) 
 		{
-			pwList.add(new String("Invalid ESSID! It must have 6 characters." ));
+			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
 		
 		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(router.ssid.charAt(i), 16) << 4)
-					+ Character.digit(router.ssid.charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(router.getEssid().charAt(i), 16) << 4)
+					+ Character.digit(router.getEssid().charAt(i + 1), 16));
 
 		
 		RandomAccessFile fis;
@@ -76,7 +72,7 @@ public class ThomsonKeygen extends KeygenThread {
 		try {
 			if ( fis.read(table) == -1 )
 			{
-				pwList.add(new String("Error reading the dictionary!" ));
+				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
 				return;
@@ -97,7 +93,7 @@ public class ThomsonKeygen extends KeygenThread {
 			fis.seek(totalOffset);
 			if ( fis.read(table,0,1024) == -1 )
 			{
-				pwList.add(new String("Error reading the dictionary!" ));
+				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
 				return;
@@ -120,7 +116,7 @@ public class ThomsonKeygen extends KeygenThread {
 			fis.seek(totalOffset );
 			if ( fis.read(entry,0, lenght - offset) == -1 )
 			{
-				pwList.add(new String("Error reading the dictionary!" ));
+				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
 				return;
@@ -148,12 +144,12 @@ public class ThomsonKeygen extends KeygenThread {
 			cp[3] = (byte) Character.forDigit((year % 10), 10);
 			cp[4] = (byte) Character.forDigit((week / 10), 10);
 			cp[5] = (byte) Character.forDigit((week % 10), 10);
-			cp[6] = unkown.charectbytes0[a];
-			cp[7] = unkown.charectbytes1[a];
-			cp[8] = unkown.charectbytes0[b];
-			cp[9] = unkown.charectbytes1[b];
-			cp[10] = unkown.charectbytes0[c];
-			cp[11] = unkown.charectbytes1[c];
+			cp[6] = charectbytes0[a];
+			cp[7] = charectbytes1[a];
+			cp[8] = charectbytes0[b];
+			cp[9] = charectbytes1[b];
+			cp[10] = charectbytes0[c];
+			cp[11] = charectbytes1[c];
 			md.reset();
 			md.update(cp);
 			hash = md.digest();
@@ -166,7 +162,7 @@ public class ThomsonKeygen extends KeygenThread {
 		}
 		if(pwList.toArray().length == 0)
 		{
-			pwList.add( new String("No matches were found! Try another ESSID"));
+			pwList.add(parent.getResources().getString(R.string.msg_errnomatches));
 			parent.list_key = pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;
@@ -177,6 +173,82 @@ public class ThomsonKeygen extends KeygenThread {
 		return;
 		
 	}
-	
+    static byte[] charectbytes0 = {
+        '3',
+        '3',
+        '3',
+        '3',
+        '3',
+        '3',
+        '3',
+        '3',
+        '3',
+        '3',
+    	'4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '4',
+        '5',
+        '5',
+        '5',
+        '5',
+        '5',
+        '5',
+        '5',
+        '5',
+        '5',
+        '5',
+        '5',
+        };
+    
+    static byte[] charectbytes1 = {
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        'A',
+        };
 
 }

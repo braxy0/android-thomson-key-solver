@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="calc">Calculate Possible Keys!</string>
+    
     <string name="app_name">Router Keygen</string>
-    <string name="scan">Scan</string>
-    <string name="manual">Manual Input</string>
-    <string name="preferences">Preferences</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_manual">Manual Input</string>
+    <string name="menu_preferences">Preferences</string>
 	<string name="bt_manual_cancel">Cancel</string>
 	<string name="bt_manual_calc">Calculate</string>
-	<string name="manual_label">Input your ESSID here:</string>
+	<string name="lb_manual">Input your ESSID here:</string>
 	<string name="pref_hint_wifion">Turn the Wifi on Automatically</string>
 	<string name="pref_hint_wifioff">Turn the Wifi off Automatically</string>
 	<string name="pref_wifion">Auto Wifi On</string>
@@ -24,4 +24,21 @@
 <string name="pref_about">About ThomsonSolver</string>
 <string name="pref_about_desc">Router Keygen calculates default passwords for several common routers.</string>
 <string name="bt_close">Close</string>
+<string name="msg_newthomson">That is a new Thomson router which key can not be calculated!</string>
+<string name="msg_unspported">That ESSID is not supported!</string>
+<string name="share_msg_begin">Keys</string>
+<string name="share_title">Share Keys</string>
+<string name="msg_nowifidetected">No WIFI networks detected!</string>
+<string name="msg_copied">  was copied to clipboard!</string>
+<string name="msg_nowifi">Wifi not activated! Please activate Wifi!</string>
+<string name="msg_scanstarted">Scanning Started</string>
+<string name="msg_scanfailed">Scanning Failed!</string>
+<string name="msg_wifienabling">Enabling Wifi</string>
+<string name="msg_wifibroken">Failed to activate Wifi</string>
+<string name="msg_shortessid6">Invalid ESSID! It must have 6 characters.</string>
+<string name="msg_errordict">Error reading the dictionary!</string>
+<string name="msg_errnomatches">No matches were found!</string>
+<string name="msg_shortessid5">Invalid ESSID! It must have 6 characters.</string>
+<string name="msg_dlinknomac">D-Link key cannot be generated without MAC address</string>
+<string name="msg_dlinkerror">Error in the calculation of the D-Link key</string>
 </resources>

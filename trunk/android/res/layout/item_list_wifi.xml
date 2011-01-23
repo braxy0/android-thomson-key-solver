@@ -32,7 +32,7 @@
         android:layout_below="@id/wifiMAC"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="false"
-		android:textSize="20sp"
+        android:textSize="20sp"
         android:singleLine="true"       
         android:layout_alignWithParentIfMissing="true"
         /> 
@@ -44,13 +44,13 @@
         android:layout_height="50dip" 
         android:layout_marginRight="10dip"
         >
-	        <ImageView
-	        android:id="@+id/strenght"
-	        android:gravity="center_vertical"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-	        android:layout_alignParentTop="true"
-	        android:layout_alignParentBottom="true"
-		    android:src="@drawable/ic_wifi_weak" />
+            <ImageView
+            android:id="@+id/strenght"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_wifi_weak" />
         </LinearLayout>
 </RelativeLayout>

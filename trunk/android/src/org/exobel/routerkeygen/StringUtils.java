@@ -3,6 +3,37 @@ import java.io.UnsupportedEncodingException;
 
 public class StringUtils {
     
+	static public String dectoString( int mac){
+		String ret = "";
+		while ( mac > 0 ){
+			switch (mac %10){
+				case 0: ret = "Zero" + ret;
+						break;
+				case 1: ret = "One" + ret;
+						break;
+				case 2: ret = "Two" + ret;
+						break;
+				case 3: ret = "Three" + ret;
+						break;
+				case 4: ret = "Four" + ret;
+						break;
+				case 5: ret = "Five" + ret ;
+						break;
+				case 6: ret = "Six" + ret;
+						break;	
+				case 7: ret = "Seven" + ret;
+						break;
+				case 8: ret = "Eight" + ret;
+						break;	
+				case 9: ret = "Nine" + ret;
+						break;		
+			}
+			mac /=10;
+		}
+		return ret;
+	}
+
+	
   static final byte[] HEX_CHAR_TABLE = {
     (byte)'0', (byte)'1', (byte)'2', (byte)'3',
     (byte)'4', (byte)'5', (byte)'6', (byte)'7',

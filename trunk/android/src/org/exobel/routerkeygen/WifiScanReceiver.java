@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
+import android.widget.Toast;
 
 class WiFiScanReceiver extends BroadcastReceiver {
 	  RouterKeygen solver;
@@ -30,7 +31,13 @@ class WiFiScanReceiver extends BroadcastReceiver {
 	    while( it.hasNext())
 	    	list.add(it.next());
 	    solver.vulnerable = list;
-	    solver.lv1.setAdapter(new WifiListAdapter(list , solver)); 
+	    if (  list.isEmpty() )
+	    {
+			Toast.makeText( solver , solver.getResources().getString(R.string.msg_nowifidetected) ,
+					Toast.LENGTH_SHORT).show();
+	    }
+	    solver.scanResuls.setAdapter(new WifiListAdapter(list , solver)); 
+		solver.unregisterReceiver(this);    
 	 }
 
 }

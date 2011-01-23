@@ -39,7 +39,7 @@ public class WifiListAdapter extends BaseAdapter {
 		 RelativeLayout itemLayout;
 		 WifiNetwork wifi = listNetworks.get(position);
 		 int strenght = listNetworks.get(position).getLevel();
-	     itemLayout= (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.list_wifi, parent, false);
+	     itemLayout= (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.item_list_wifi, parent, false);
 	 
 	     TextView ssid = (TextView) itemLayout.findViewById(R.id.wifiName);
 	     ssid.setText(wifi.ssid);
