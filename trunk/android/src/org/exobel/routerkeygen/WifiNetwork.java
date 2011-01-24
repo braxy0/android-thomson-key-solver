@@ -59,7 +59,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.THOMSON;
 			return true;
 		}
-		if (  ssid.contains("Dlink-") && ssid.length() == 12 )
+		if (  ssid.contains("DLink-") && ssid.length() == 12 )
 		{
 			ssidSubpart = new String ( ssid.substring(ssid.length()-6));
 			type = TYPE.DLINK;
@@ -81,7 +81,10 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.EIRCOM;
 			return true;
 		}
-		if ( ssid.length() == 5  )/*This is highly generic but this seems the only rule.*/
+		if ( ssid.length() == 5  && ( mac.contains("00:1F:90") || 
+				mac.contains("00:18:01") || mac.contains("00:20:E0") ||
+				mac.contains("00:0F:B3") || mac.contains("00:1E:A7") ||
+				mac.contains("00:15:05") || mac.contains("00:24:7B") ) )
 		{
 			ssidSubpart = ssid;
 			type = TYPE.VERIZON;
