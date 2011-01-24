@@ -19,8 +19,8 @@
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    inkscape:export-filename="/home/ruka/Área de Trabalho/WiFih.png"
-   inkscape:export-xdpi="11.463216"
-   inkscape:export-ydpi="11.463216">
+   inkscape:export-xdpi="429.04599"
+   inkscape:export-ydpi="429.04599">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -130,7 +130,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
