@@ -24,6 +24,12 @@ class WiFiScanReceiver extends BroadcastReceiver {
 	    List<ScanResult> results = solver.wifi.getScanResults();
 	    List<WifiNetwork> list = new ArrayList<WifiNetwork>();
 	    Set<WifiNetwork> set = new TreeSet<WifiNetwork>();
+
+	    for (int i = 0; i < results.size() - 1; ++i)
+	    	for (int j = i+1; j < results.size(); ++j)
+		    	if(results.get(i).SSID.equals(results.get(j).SSID))
+		    		results.remove(j--);
+	    
 	    for (ScanResult result : results) {
 	    	  set.add(new WifiNetwork(result.SSID, result.BSSID, result.level));
 	    }

@@ -14,7 +14,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	
 	TYPE type;
 	static enum TYPE {THOMSON , DLINK , DISCUS , VERIZON , EIRCOM};
-	public WifiNetwork(String ssid, String mac,int level){
+	public WifiNetwork(String ssid, String mac, int level){
 		this.ssid = ssid;
 		this.mac = mac.toUpperCase();
 		this.level  = level;
