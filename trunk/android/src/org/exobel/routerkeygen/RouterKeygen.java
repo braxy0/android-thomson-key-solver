@@ -205,14 +205,12 @@ public class RouterKeygen extends Activity {
              			startActivity(Intent.createChooser(i, message));
                 }
            	});
-            	
             	return dialog;
             }
             case MANUAL_CALC: {
             	Dialog dialog = new Dialog(this);
             	dialog.setContentView(R.layout.manual);
             	dialog.setTitle("Manual Input");
-          
             	final EditText edit = (EditText ) dialog.findViewById(R.id.manual_edittext);
             	
             	Button calc = ( Button ) dialog.findViewById(R.id.bt_manual_calc);
