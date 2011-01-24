@@ -18,8 +18,8 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		this.ssid = ssid;
 		this.mac = mac.toUpperCase();
 		this.level  = level;
-		this.supported =  essidFilter();
 		this.newThomson = false;
+		this.supported =  essidFilter();
 	}
 	
 	public int getLevel(){
@@ -39,6 +39,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		 		mac.substring(6, 8) + mac.substring(9, 11) + 
 				mac.substring(12, 14) + mac.substring(15, 17);
 	}
+	
 	private boolean essidFilter() {
 		if ( ( ssid.contains("BTHomeHub") && ssid.length() == 15 )  ||
 		     ( ssid.contains("Thomson") && ssid.length() == 13 )    ||
@@ -53,9 +54,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		{
 			ssidSubpart = new String (ssid.substring(ssid.length()-6));
 			if ( !mac.equals("") )
-				if (ssidSubpart.charAt(0) == mac.charAt(9) &&  ssidSubpart.charAt(1) == mac.charAt(10) &&
-				      ssidSubpart.charAt(2) == mac.charAt(12) &&  ssidSubpart.charAt(3) == mac.charAt(13) &&	
-				      ssidSubpart.charAt(4) == mac.charAt(15) &&  ssidSubpart.charAt(5) == mac.charAt(16))
+				if ( ssidSubpart.equals(getMacEnd()) )
 					newThomson = true;
 			type = TYPE.THOMSON;
 			return true;

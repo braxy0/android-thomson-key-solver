@@ -14,6 +14,7 @@ public class Stage2 {
 		FileInputStream fis;
 		FileOutputManager files = new FileOutputManager();
 		String file;
+    	System.out.println("Stage2");
 		System.out.println("Ordering Entries in the Dictionary");
 		long begin = System.currentTimeMillis();
 		int progress = 0;

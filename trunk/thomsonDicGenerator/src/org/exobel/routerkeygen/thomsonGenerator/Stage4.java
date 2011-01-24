@@ -10,6 +10,7 @@ public class Stage4 {
 	public static void main(String[] args) {
 		FileInputStream fis;
 		EntryTable entry = new EntryTable(4);
+    	System.out.println("Stage3");
 		System.out.println("Creating main table and assembling the final file.");
 		long begin = System.currentTimeMillis();
 		String fileName = "56.dat";
@@ -54,7 +55,7 @@ public class Stage4 {
 		}
 		FileOutputStream fos;
 		try {
-			fos = new FileOutputStream("org.exobel.routerkeygen.thomsonGenerator.dic");
+			fos = new FileOutputStream("thomson.dic");
 		} catch (FileNotFoundException e) {
 			System.out.println("Error!" + e);
 			return;

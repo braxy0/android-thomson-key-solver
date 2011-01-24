@@ -138,10 +138,14 @@ public class RouterKeygen extends Activity {
 		super.onStart();
 		getPrefs();
 		if ( wifi_on )
+		{
 			if ( !wifi.setWifiEnabled(true))
 				Toast.makeText( RouterKeygen.this , 
 				  RouterKeygen.this.getResources().getString(R.string.msg_wifibroken),
-				  Toast.LENGTH_SHORT).show();;
+				  Toast.LENGTH_SHORT).show();
+			else
+				wifi_state = true;
+		}
 		scan();
     }
     
@@ -272,8 +276,7 @@ public class RouterKeygen extends Activity {
     public void scan(){
     		registerReceiver(scanFinished, new IntentFilter(
     				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    		if ( wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLED 
-    				&& wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLING )
+    		if ( !wifi_state && !wifi_on )
     		{
 				  Toast.makeText( RouterKeygen.this , 
 						  RouterKeygen.this.getResources().getString(R.string.msg_nowifi),
@@ -322,7 +325,7 @@ public class RouterKeygen extends Activity {
 	private void getPrefs() {
 	    SharedPreferences prefs = PreferenceManager
 	                    .getDefaultSharedPreferences(getBaseContext());
-	    wifi_on = prefs.getBoolean("wifion", false);
+	    wifi_on = prefs.getBoolean("wifion", true);
 	    folderSelect = prefs.getString("folderSelect","/sdcard/thomson");
     }
 	

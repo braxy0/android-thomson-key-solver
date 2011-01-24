@@ -12,6 +12,7 @@ public class Stage3 {
 		FileInputStream fis;
 		FileOutputManager files = new FileOutputManager();
 		EntryTable entry = new EntryTable(3);
+    	System.out.println("Stage3");
 		System.out.println("Creating secondary tables.");
 		long begin = System.currentTimeMillis();
 		String fileName = "56.dat";

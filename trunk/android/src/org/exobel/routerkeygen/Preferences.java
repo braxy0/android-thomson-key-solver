@@ -27,7 +27,7 @@ import android.widget.Toast;
 public class Preferences extends PreferenceActivity {
 	
 	 private static final String PUB_DONATE = 
-         "market://details?id=net.androgames.level.donate";
+         "market://details?id=org.exobel.routerkeygen.donate";
         @Override
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -67,7 +67,7 @@ public class Preferences extends PreferenceActivity {
         private static final String TAG = "ThomsonPreferences";
         private String[] mFileList;
         private File mPath = new File(Environment.getExternalStorageDirectory() + File.separator);
-        private String mChosenFile = "";
+        private String mChosenFile = File.separator;
         Stack<String> directoryTree = new Stack<String>();
         private static final int DIALOG_LOAD_FOLDER = 1000;
         private static final int DIALOG_ABOUT = 1001;
@@ -117,13 +117,13 @@ public class Preferences extends PreferenceActivity {
 				                    showDialog(DIALOG_LOAD_FOLDER);
 				            	}
 				            });
-        				if ( mChosenFile.equals(""))
+        				if ( !mChosenFile.equals(File.separator))
 				            builder.setNegativeButton(R.string.bt_choose_back,new OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 											if ( !directoryTree.empty())
 												mChosenFile = directoryTree.pop();
 											else
-												mChosenFile = "";
+												mChosenFile = File.separator;
 						                    removeDialog(DIALOG_LOAD_FOLDER);
 						                    showDialog(DIALOG_LOAD_FOLDER);
 										}
@@ -139,6 +139,7 @@ public class Preferences extends PreferenceActivity {
                                         Toast.LENGTH_SHORT).show();
 									}
 						});
+			            
 			            break;
         		case DIALOG_ABOUT:
         				builder.setTitle("About Router Keygen"); 

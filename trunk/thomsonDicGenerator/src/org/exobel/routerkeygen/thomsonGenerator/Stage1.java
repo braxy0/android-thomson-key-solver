@@ -29,6 +29,7 @@ public class Stage1 {
         byte [] ret = new byte [5];
     	cp[0] = (byte) (char)'C';
     	cp[1] = (byte) (char)'P';
+    	System.out.println("Stage1");
 		System.out.println("Calculating possibles ESSID's.");
 
         int offset = 0;
