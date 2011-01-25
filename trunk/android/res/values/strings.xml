@@ -48,4 +48,6 @@
 <string name="bt_ok">Ok</string>
 <string name="msg_welcome_title">Router Keygen</string>
 <string name="msg_welcome_text">Thank you for trying Router Keygen. If you like this application, please consider buying the Donate version. The link is on the preference menu. Your donation will motivate the authors to improve on this great open-source tool.</string>
+<string name="pref_download_des">Dictionary needed for Thomson keys</string>
+<string name="pref_download">Download Dictionary</string>
 </resources>

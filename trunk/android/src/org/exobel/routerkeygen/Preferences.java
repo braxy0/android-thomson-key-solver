@@ -28,10 +28,22 @@ public class Preferences extends PreferenceActivity {
 	
 	 private static final String PUB_DONATE = 
          "market://details?id=org.exobel.routerkeygen.donate";
-        @Override
+	 private static final String PUB_DOWNLOAD = 
+         "http://code.google.com/p/android-thomson-key-solver/downloads/detail?name=RouterKeygen.dic";
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 addPreferencesFromResource(R.layout.preferences);
+                findPreference("download").setOnPreferenceClickListener(
+                        new OnPreferenceClickListener() {
+                            public boolean onPreferenceClick(Preference preference) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(PUB_DOWNLOAD));
+                                try {
+                                    Preferences.this.startActivity(intent);
+                                } catch (ActivityNotFoundException anfe) {}
+                                return true;
+                            }
+                        });
                 findPreference("donate").setOnPreferenceClickListener(
                         new OnPreferenceClickListener() {
                             public boolean onPreferenceClick(Preference preference) {

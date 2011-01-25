@@ -71,13 +71,9 @@ public class RouterKeygen extends Activity {
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		
 		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		    // second argument is the default to use if the preference can't be found
 		Boolean welcomeScreenShown = mPrefs.getBoolean( welcomeScreenShownPref, false);
 		
 		if (!welcomeScreenShown) {
-		    // here you can launch another activity if you like
-		// the code below will display a popup
 		
 			String whatsNewTitle = getResources().getString(R.string.msg_welcome_title);
 			String whatsNewText = getResources().getString(R.string.msg_welcome_text);

@@ -15,6 +15,10 @@
         <PreferenceCategory
                 android:title="@string/pref_2section">
                 <Preference
+                android:title="@string/pref_download"
+                android:summary="@string/pref_download_des"
+                android:key="download" />
+                <Preference
                 android:title="@string/pref_donate"
                 android:summary="@string/pref_donate_why"
                 android:key="donate" />
