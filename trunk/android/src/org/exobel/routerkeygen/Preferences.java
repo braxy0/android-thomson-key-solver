@@ -133,17 +133,25 @@ public class Preferences extends PreferenceActivity {
 								SharedPreferences customSharedPreference = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		                        SharedPreferences.Editor editor = customSharedPreference
 		                                        .edit();
+		                        
 		                        editor.putString("folderSelect",mPath.toString());
 		                        editor.commit();
-		                        Toast.makeText(getBaseContext(),mPath.toString(),
-                                        Toast.LENGTH_SHORT).show();
+		                        String path = mPath.toString();
+		                        mPath = new File(path +  File.separator + "RouterKeygen.dic");
+		                        if ( !mPath.exists() )
+		                        	Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_notfound) + " " + path,
+	                                        Toast.LENGTH_SHORT).show();
+		                        else
+		                        	Toast.makeText(getBaseContext(),mPath.toString() +  " " + getResources().getString(R.string.pref_msg_found),
+	                                        Toast.LENGTH_SHORT).show();
 									}
 						});
 			            
 			            break;
         		case DIALOG_ABOUT:
-        				builder.setTitle("About Router Keygen"); 
-        				builder.setMessage(R.string.pref_about_desc);builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
+        				builder.setTitle(R.string.pref_about); 
+        				builder.setMessage(R.string.pref_about_desc);
+        				builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 										removeDialog(DIALOG_ABOUT);
 										

@@ -3,9 +3,11 @@ package org.exobel.routerkeygen;
 import java.util.Iterator;
 import java.util.List;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -58,7 +60,8 @@ public class RouterKeygen extends Activity {
 			}
 		}
 	};
-	
+	final String welcomeScreenShownPref = "welcomeScreenShown";
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,28 @@ public class RouterKeygen extends Activity {
 		setContentView(R.layout.main);
 		
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		
+		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		    // second argument is the default to use if the preference can't be found
+		Boolean welcomeScreenShown = mPrefs.getBoolean( welcomeScreenShownPref, false);
+		
+		if (!welcomeScreenShown) {
+		    // here you can launch another activity if you like
+		// the code below will display a popup
+		
+			String whatsNewTitle = getResources().getString(R.string.msg_welcome_title);
+			String whatsNewText = getResources().getString(R.string.msg_welcome_text);
+			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(whatsNewTitle).setMessage(whatsNewText).setPositiveButton(
+			        R.string.bt_ok, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int which) {
+			                dialog.dismiss();
+			            }
+			        }).show();
+			SharedPreferences.Editor editor = mPrefs.edit();
+			editor.putBoolean(welcomeScreenShownPref, true);
+			editor.commit(); // Very important to save the preference
+		}
 		
 
 		scanResuls = (ListView) findViewById(R.id.ListWifi);
