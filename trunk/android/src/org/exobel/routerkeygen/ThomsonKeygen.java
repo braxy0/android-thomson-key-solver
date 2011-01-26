@@ -1,5 +1,6 @@
 package org.exobel.routerkeygen;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import android.os.Environment;
 
 public class ThomsonKeygen extends KeygenThread {
 
@@ -23,24 +25,26 @@ public class ThomsonKeygen extends KeygenThread {
 	int week;
 	int sequenceNumber;
 	byte[] routerESSID;
-
-	public ThomsonKeygen(RouterKeygen par) {
+	boolean thomson3g;
+	final String onlineDict = "http://android-thomson-key-solver.googlecode.com/svn/trunk/webdic/";
+	public ThomsonKeygen(RouterKeygen par ,boolean thomson3g ) {
 		super(par);
 		this.cp = new byte[12];
 		this.hash = new byte[19];
 		this.table= new byte[1282];
 		this.entry = new byte[3000];
 		this.routerESSID = new byte[3];
-	}
-
-	public void  run()
-	{
+		this.thomson3g = thomson3g;
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
 			e1.printStackTrace();
 		}
+	}
+
+	public void  run(){
 		
+
 		if ( router == null)
 			return;
 		
@@ -56,7 +60,97 @@ public class ThomsonKeygen extends KeygenThread {
 			routerESSID[i / 2] = (byte) ((Character.digit(router.getEssid().charAt(i), 16) << 4)
 					+ Character.digit(router.getEssid().charAt(i + 1), 16));
 
+		if ( !thomson3g )
+			localCalc();
+		else
+			internetCalc();
+
 		
+	}
+	private void internetCalc(){
+		
+		if ( router == null)
+			return;
+		
+		if ( router.getEssid().length() != 6 ) 
+		{
+			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
+		ThomsonHttpRetriever client = new ThomsonHttpRetriever();
+		ByteArrayInputStream onlineFile = (ByteArrayInputStream) client.retrieveStream(onlineDict +  
+											router.getEssid().substring(0, 2) + "/" + router.getEssid().substring(2, 4)
+											+ ".dat");
+	
+		int len = onlineFile.available();
+		
+		entry = new byte[len];
+		cp[0] = (byte) (char) 'C';
+		cp[1] = (byte) (char) 'P';
+		try {
+			onlineFile.read(entry);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		for (int offset = 0; offset < len ; offset += 4 )
+		{
+			if ( stopRequested )
+				return;
+
+			if ( entry[offset] != routerESSID[2])
+				continue;
+			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 
+			( (0xFF & entry[offset + 2])  << 8 ) | (0xFF & entry[offset + 3]) ;
+			c = sequenceNumber % 36;
+			b = sequenceNumber/36 % 36;
+			a = sequenceNumber/(36*36) % 36;
+			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
+			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+			cp[2] = (byte) Character.forDigit((year / 10), 10);
+			cp[3] = (byte) Character.forDigit((year % 10), 10);
+			cp[4] = (byte) Character.forDigit((week / 10), 10);
+			cp[5] = (byte) Character.forDigit((week % 10), 10);
+			cp[6] = charectbytes0[a];
+			cp[7] = charectbytes1[a];
+			cp[8] = charectbytes0[b];
+			cp[9] = charectbytes1[b];
+			cp[10] = charectbytes0[c];
+			cp[11] = charectbytes1[c];
+			md.reset();
+			md.update(cp);
+			hash = md.digest();
+			
+			try {
+				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		if(pwList.toArray().length == 0)
+		{
+			pwList.add(parent.getResources().getString(R.string.msg_errnomatches));
+			parent.list_key = pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
+		parent.list_key = pwList;
+		parent.handler.sendEmptyMessage(0);
+		return;
+	}
+
+	private void localCalc(){
+
+		
+		if ( !Environment.getExternalStorageState().equals("mounted")  && 
+		     !Environment.getExternalStorageState().equals("mounted_ro")	)
+		{
+			pwList.add(parent.getResources().getString(R.string.msg_dictnotfound));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
 		RandomAccessFile fis;
 		try {
 			fis = new RandomAccessFile(parent.folderSelect + File.separator + "RouterKeygen.dic", "r");
@@ -171,84 +265,23 @@ public class ThomsonKeygen extends KeygenThread {
 		parent.list_key = pwList;
 		parent.handler.sendEmptyMessage(0);
 		return;
-		
 	}
     static byte[] charectbytes0 = {
-        '3',
-        '3',
-        '3',
-        '3',
-        '3',
-        '3',
-        '3',
-        '3',
-        '3',
-        '3',
-    	'4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '4',
-        '5',
-        '5',
-        '5',
-        '5',
-        '5',
-        '5',
-        '5',
-        '5',
-        '5',
-        '5',
-        '5',
+        '3','3','3','3','3','3',
+        '3','3','3','3','4','4',
+        '4','4','4','4','4','4',
+        '4','4','4','4','4','4',
+        '4','5','5','5','5','5',
+        '5','5','5','5','5','5',
         };
     
     static byte[] charectbytes1 = {
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        'A',
+        '0','1','2','3','4','5',
+        '6','7','8','9','1','2',
+        '3','4','5','6','7','8',
+        '9','A','B','C','D','E',
+        'F','0','1','2','3','4',
+        '5','6','7','8','9','A',
         };
 
 }

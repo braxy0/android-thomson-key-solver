@@ -6,6 +6,18 @@ public class Generator {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		for(int i = 0; i < args.length; ++i)
+        {
+            if(args[i].equalsIgnoreCase("onlinedic"))
+            {
+                Stage1.main(args);
+        		Stage2.main(args);
+                StageWebdic.main(args);
+                System.out.println("Thomson wEBDictionary created. It is on the folder named webdic.");
+            	System.out.println("Any other file *.dat in the folder can be eliminated.");
+                return;
+            }
+        }
 		Stage1.main(args);
 		Stage2.main(args);
 		Stage3.main(args);

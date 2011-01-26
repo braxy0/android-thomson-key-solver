@@ -55,7 +55,18 @@ public class FileOutputManager {
 	            return;
 			}
 	 	}
-
+	 	
+	 	public void sendFile(String file , byte [] bytes ){
+   	 		if ( !filesMap.containsKey(file) )
+   	 			return;
+   	 		
+   	 		try {
+				filesMap.get(file).add(bytes );
+			} catch (IOException e) {
+				System.out.println("Error!" + e);
+	            return;
+			}
+	 	}
 	 	
 	 	public void sendFile(String file , byte  bytes ){
    	 		if ( !filesMap.containsKey(file) )
@@ -80,6 +91,10 @@ public class FileOutputManager {
 				}
 			}
 		}
+		
+		public void clearAll(){
+			this.filesMap.clear();
+		}
 	 		
 
 	 	private static class FileOutput{
@@ -103,6 +118,19 @@ public class FileOutputManager {
 	 				offset++;
 	 			}
 	 		}
+	 		public void add ( byte [] bytes ) throws IOException{
+	 			for ( int i = 0 ; i < bytes.length ; ++i  )
+	 			{
+	 				if ( offset >= buffer.length )
+	 				{
+	 					fos.write(buffer);
+	 					offset = 0;
+	 				}
+	 				buffer[offset] = bytes[i];
+	 				offset++;
+	 			}
+	 		}
+	 		
 	 		public void add ( byte bytes ) throws IOException{
 	 				if ( offset >= buffer.length )
 	 				{

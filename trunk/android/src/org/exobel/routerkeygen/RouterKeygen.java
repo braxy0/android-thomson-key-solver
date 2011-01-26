@@ -1,10 +1,15 @@
 package org.exobel.routerkeygen;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+
+import org.exobel.routerkeygen.WifiNetwork.TYPE;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +18,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -50,9 +56,10 @@ public class RouterKeygen extends Activity {
         	  
 			if ( msg.what == 0 )
 			{
-				showDialog(KEY_LIST);
+				removeDialog(PROGRESSBAR);
 				begin = System.currentTimeMillis()-begin;
 				Log.d(TAG, "Time to solve:" + begin);
+				showDialog(KEY_LIST);
 			}
 			if ( msg.what == 1 )
 			{
@@ -85,7 +92,7 @@ public class RouterKeygen extends Activity {
 			        }).show();
 			SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putBoolean(welcomeScreenShownPref, true);
-			editor.commit(); // Very important to save the preference
+			editor.commit();
 		}
 		
 
@@ -114,7 +121,7 @@ public class RouterKeygen extends Activity {
 			        switch( vulnerable.get(position).type )
 			        {
 			        	case THOMSON: RouterKeygen.this.calculator = 
-			        						new ThomsonKeygen(RouterKeygen.this);
+			        						new ThomsonKeygen(RouterKeygen.this , thomson3g);
 			        				  		break;
 			        	case DISCUS: RouterKeygen.this.calculator = 
     										new DiscusKeygen(RouterKeygen.this);
@@ -133,6 +140,8 @@ public class RouterKeygen extends Activity {
 					RouterKeygen.this.calculator.router = vulnerable.get(position);
 					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					RouterKeygen.this.calculator.start();
+					if (  vulnerable.get(position).type == TYPE.THOMSON && thomson3g )
+						showDialog(PROGRESSBAR);
 					removeDialog(KEY_LIST);
 			}
 		});
@@ -158,7 +167,7 @@ public class RouterKeygen extends Activity {
     public void onStart() {
 		super.onStart();
 		getPrefs();
-		if ( wifi_on )
+		if ( wifiOn )
 		{
 			if ( !wifi.setWifiEnabled(true))
 				Toast.makeText( RouterKeygen.this , 
@@ -182,12 +191,28 @@ public class RouterKeygen extends Activity {
     		e.printStackTrace();
     	}
 	}
-    
- 
+	ProgressDialog progressDialog;
+    private static final int PROGRESSBAR = 0; 
     private static final int KEY_LIST = 1;
     private static final int MANUAL_CALC = 2;
-    protected Dialog onCreateDialog(int id) {
+    protected Dialog onCreateDialog(int id ) {
         switch (id) {
+        case PROGRESSBAR: {
+            				progressDialog = new ProgressDialog(RouterKeygen.this);
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progressDialog.setTitle("Thomson 3G Lookup");
+                            progressDialog.setMessage("Fetching Keys...");
+                            progressDialog.setCancelable(false);
+                            progressDialog.setProgress(0);
+                            progressDialog.setButton("Cancel", new DialogInterface.OnClickListener(){
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    	RouterKeygen.this.calculator.stopRequested = true;
+                                            removeDialog(PROGRESSBAR);
+                                    }
+    });
+                            progressDialog.setIndeterminate(false);
+            return progressDialog;
+        }
             case KEY_LIST: {
             	Dialog dialog = new Dialog(this);
         		dialog.setContentView(R.layout.results);
@@ -249,7 +274,7 @@ public class RouterKeygen extends Activity {
         					switch( wifi.type )
         			        {
         			        	case THOMSON: RouterKeygen.this.calculator = 
-        			        						new ThomsonKeygen(RouterKeygen.this);
+        			        						new ThomsonKeygen(RouterKeygen.this , thomson3g);
         			        				  break;
         			        	case DISCUS: RouterKeygen.this.calculator = 
             										new DiscusKeygen(RouterKeygen.this);
@@ -268,7 +293,10 @@ public class RouterKeygen extends Activity {
         					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
         					RouterKeygen.this.calculator.start();
         					removeDialog(KEY_LIST);
-        					removeDialog(MANUAL_CALC);                      	
+        					removeDialog(MANUAL_CALC);
+        					if (  wifi.type == TYPE.THOMSON && thomson3g )
+        						showDialog(PROGRESSBAR);
+                   	
                         	
                 }
            	});
@@ -295,7 +323,7 @@ public class RouterKeygen extends Activity {
     public void scan(){
     		registerReceiver(scanFinished, new IntentFilter(
     				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    		if ( !wifi_state && !wifi_on )
+    		if ( !wifi_state && !wifiOn )
     		{
 				  Toast.makeText( RouterKeygen.this , 
 						  RouterKeygen.this.getResources().getString(R.string.msg_nowifi),
@@ -339,13 +367,20 @@ public class RouterKeygen extends Activity {
     
     
 
-    boolean wifi_on;
+    boolean wifiOn;
+    boolean thomson3g;
     String folderSelect;
+	final String folderSelectPref = "folderSelect";
+	final String wifiOnPref = "wifion";
+	final String thomson3gPref = "thomson3g";
 	private void getPrefs() {
 	    SharedPreferences prefs = PreferenceManager
 	                    .getDefaultSharedPreferences(getBaseContext());
-	    wifi_on = prefs.getBoolean("wifion", true);
-	    folderSelect = prefs.getString("folderSelect","/sdcard/thomson");
+	    wifiOn = prefs.getBoolean(wifiOnPref , true);
+	    thomson3g = prefs.getBoolean(thomson3gPref, false);
+	    folderSelect = prefs.getString(folderSelectPref, 
+	    		Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
+	    		"thomson");
     }
 	
 	

@@ -43,7 +43,10 @@ class WiFiScanReceiver extends BroadcastReceiver {
 					Toast.LENGTH_SHORT).show();
 	    }
 	    solver.scanResuls.setAdapter(new WifiListAdapter(list , solver)); 
-		solver.unregisterReceiver(this);    
+	    try{
+		solver.unregisterReceiver(this);   
+	    }catch(Exception e ){}
+	    
 	 }
 
 }

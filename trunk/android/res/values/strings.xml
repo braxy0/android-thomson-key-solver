@@ -8,8 +8,8 @@
 	<string name="bt_manual_cancel">Cancel</string>
 	<string name="bt_manual_calc">Calculate</string>
 	<string name="lb_manual">Input your ESSID here:</string>
-	<string name="pref_hint_wifion">Turn the Wifi on Automatically</string>
-	<string name="pref_hint_wifioff">Turn the Wifi off Automatically</string>
+	<string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
+	<string name="pref_hintoff_wifion">Do not activate the Wifi Automatically</string>
 	<string name="pref_wifion">Auto Wifi On</string>
 	<string name="pref_wifioff">Auto Wifi Off</string>
 <string name="bt_share">Share Keys</string>
@@ -50,4 +50,7 @@
 <string name="msg_welcome_text">Thank you for trying Router Keygen. If you like this application, please consider buying the Donate version. The link is on the preference menu. Your donation will motivate the authors to improve on this great open-source tool.</string>
 <string name="pref_download_des">Dictionary needed for Thomson keys</string>
 <string name="pref_download">Download Dictionary</string>
+<string name="pref_thomson3g">Use 3G for Thomson</string>
+<string name="pref_hinton_thomson3g">Fetching keys from internet</string>
+<string name="pref_hintoff_thomson3g">Using dictionary to generate keys.</string>
 </resources>

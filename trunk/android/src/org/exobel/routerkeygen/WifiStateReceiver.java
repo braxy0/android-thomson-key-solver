@@ -13,20 +13,22 @@ public class WifiStateReceiver extends BroadcastReceiver {
 		this.wifi = wifi;
 	}
 	@Override
-	public void onReceive(Context arg0, Intent arg1) {
+	public void onReceive(Context context, Intent arg1) {
 		if ( wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED  )
 		{
 			wifi.startScan();
-    		arg0.unregisterReceiver(this);
-    		Toast.makeText( arg0 ,
-					arg0.getResources().getString(R.string.msg_scanstarted),
+			try{
+    		context.unregisterReceiver(this);
+			}catch(Exception e ){}
+    		Toast.makeText( context ,
+					context.getResources().getString(R.string.msg_scanstarted),
 					Toast.LENGTH_SHORT).show();
     		return;
 		}
 		if ( wifi.getWifiState() != WifiManager.WIFI_STATE_ENABLING )
 		{
-			Toast.makeText( arg0 , 
-					  arg0.getResources().getString(R.string.msg_nowifi),
+			Toast.makeText( context , 
+					  context.getResources().getString(R.string.msg_nowifi),
 					  Toast.LENGTH_SHORT).show();
 			return;
 		}
