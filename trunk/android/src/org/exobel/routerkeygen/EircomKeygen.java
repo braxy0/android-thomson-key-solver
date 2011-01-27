@@ -14,7 +14,10 @@ public class EircomKeygen extends KeygenThread {
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
-			e1.printStackTrace();
+			pwList.add(parent.getResources().getString(R.string.msg_nosha1));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
 		}
 		byte [] routerMAC = new byte[4];
 		routerMAC[0] = 1;

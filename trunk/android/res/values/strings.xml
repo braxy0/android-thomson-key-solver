@@ -53,4 +53,9 @@
 <string name="pref_thomson3g">Use 3G for Thomson</string>
 <string name="pref_hinton_thomson3g">Fetching keys from internet</string>
 <string name="pref_hintoff_thomson3g">Using dictionary to generate keys.</string>
+<string name="msg_nosdcard">SD card is not mounted!</string>
+<string name="msg_nomd5">This phone cannot process a MD5 hash.</string>
+<string name="msg_nosha1">This phone cannot process a SHA1 hash.</string>
+<string name="msg_nosha256">This phone cannot process a SHA256 hash.</string>
+<string name="msg_errpirelli">The MAC address is invalid.</string>
 </resources>

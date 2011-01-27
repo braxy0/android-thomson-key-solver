@@ -35,11 +35,6 @@ public class ThomsonKeygen extends KeygenThread {
 		this.entry = new byte[3000];
 		this.routerESSID = new byte[3];
 		this.thomson3g = thomson3g;
-		try {
-			md = MessageDigest.getInstance("SHA1");
-		} catch (NoSuchAlgorithmException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	public void  run(){
@@ -47,7 +42,14 @@ public class ThomsonKeygen extends KeygenThread {
 
 		if ( router == null)
 			return;
-		
+		try {
+			md = MessageDigest.getInstance("SHA1");
+		} catch (NoSuchAlgorithmException e1) {
+			pwList.add(parent.getResources().getString(R.string.msg_nosha1));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
 		if ( router.getEssid().length() != 6 ) 
 		{
 			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
@@ -83,7 +85,13 @@ public class ThomsonKeygen extends KeygenThread {
 		ByteArrayInputStream onlineFile = (ByteArrayInputStream) client.retrieveStream(onlineDict +  
 											router.getEssid().substring(0, 2) + "/" + router.getEssid().substring(2, 4)
 											+ ".dat");
-	
+		if ( onlineFile == null )
+		{
+			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
 		int len = onlineFile.available();
 		
 		entry = new byte[len];
@@ -146,7 +154,7 @@ public class ThomsonKeygen extends KeygenThread {
 		if ( !Environment.getExternalStorageState().equals("mounted")  && 
 		     !Environment.getExternalStorageState().equals("mounted_ro")	)
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_dictnotfound));
+			pwList.add(parent.getResources().getString(R.string.msg_nosdcard));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;

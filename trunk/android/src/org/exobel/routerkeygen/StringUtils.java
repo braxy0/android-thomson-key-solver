@@ -54,4 +54,18 @@ public class StringUtils {
     }
     return new String(hex, "ASCII");
   }
+  public static String getHexString(short[] raw) 
+  throws UnsupportedEncodingException 
+{
+  byte[] hex = new byte[2 * raw.length];
+  int index = 0;
+
+  for (short b : raw) {
+    int v = b & 0xFF;
+    hex[index++] = HEX_CHAR_TABLE[v >>> 4];
+    hex[index++] = HEX_CHAR_TABLE[v & 0xF];
+  }
+  return new String(hex, "ASCII");
+}
+  
 }

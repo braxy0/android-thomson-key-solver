@@ -53,10 +53,10 @@ public class RouterKeygen extends Activity {
 	static final String TAG = "RouterKeygen";
 	Handler handler = new Handler() {
           public void handleMessage(Message msg) {
-        	  
+        	if ( thomson3g )
+				removeDialog(PROGRESSBAR);
 			if ( msg.what == 0 )
 			{
-				removeDialog(PROGRESSBAR);
 				begin = System.currentTimeMillis()-begin;
 				Log.d(TAG, "Time to solve:" + begin);
 				showDialog(KEY_LIST);
@@ -64,6 +64,7 @@ public class RouterKeygen extends Activity {
 			if ( msg.what == 1 )
 			{
 				Toast.makeText( RouterKeygen.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
+				
 			}
 		}
 	};
@@ -135,6 +136,9 @@ public class RouterKeygen extends Activity {
 				  		case VERIZON: RouterKeygen.this.calculator = 
 											new VerizonKeygen(RouterKeygen.this);
 				  							break;
+				  		case PIRELLI: RouterKeygen.this.calculator = 
+				  						new PirelliKeygen(RouterKeygen.this);
+  										break;
 			        }
 			        
 					RouterKeygen.this.calculator.router = vulnerable.get(position);
@@ -288,6 +292,9 @@ public class RouterKeygen extends Activity {
         			        	case VERIZON: RouterKeygen.this.calculator = 
 													new VerizonKeygen(RouterKeygen.this);
 						  							break;
+        				  		case PIRELLI: RouterKeygen.this.calculator = 
+						  							new PirelliKeygen(RouterKeygen.this);
+													break;
         			        }
         					RouterKeygen.this.calculator.router = wifi;
         					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
