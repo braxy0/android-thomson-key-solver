@@ -20,6 +20,7 @@ public class StageWebdic {
 		System.out.println("Stage3");
 		System.out.println("Refactoring dat files for webdic.");
 		(new File("webdic")).mkdir();
+		int progress = 0;
 		for(int a = 0; a < AlphabetCodes.charect.length; a++)
         {
            for(int b = 0; b < AlphabetCodes.charect.length; b++ )
@@ -56,18 +57,20 @@ public class StageWebdic {
 					outputData[1] = fileData[offset + 2];
 					outputData[2] = fileData[offset + 3];
 					outputData[3] = fileData[offset + 4];
-					offset += 5;
 					try {
 						files.sendFile("webdic" + File.separator + prefixfileName + File.separator + 
 								AlphabetCodes.getHexString(fileData[offset + 0]) + ".dat",outputData );
-					} catch (UnsupportedEncodingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					} catch (UnsupportedEncodingException e) {}
+					offset += 5;
+
 				}
 				files.close();
 				files.clearAll();
             }
+           progress++;
+           System.out.print("Proccessed ");
+           System.out.print(( progress * 100 )>> 4);
+           System.out.println("%");
         }
 		long time = System.currentTimeMillis() - begin;
         System.out.println("Done .. 100%! It took " + time + " miliseconds.");
