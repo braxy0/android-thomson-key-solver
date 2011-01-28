@@ -58,4 +58,6 @@
 <string name="msg_nosha1">This phone cannot process a SHA1 hash.</string>
 <string name="msg_nosha256">This phone cannot process a SHA256 hash.</string>
 <string name="msg_errpirelli">The MAC address is invalid.</string>
+<string name="msg_errthomson3g">Error connecting with the web service.</string>
+<string name="msg_erralicenotsupported">This Alice series is not yet supported!</string>
 </resources>

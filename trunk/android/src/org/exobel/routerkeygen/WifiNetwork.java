@@ -13,7 +13,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	int level;
 	
 	TYPE type;
-	static enum TYPE {THOMSON , DLINK , DISCUS , VERIZON , EIRCOM , PIRELLI};
+	static enum TYPE {THOMSON , DLINK , DISCUS , VERIZON , EIRCOM , PIRELLI , ALICE};
 	public WifiNetwork(String ssid, String mac, int level){
 		this.ssid = ssid;
 		this.mac = mac.toUpperCase();
@@ -99,7 +99,16 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 				type = TYPE.PIRELLI;
 				return true;
 			}
-		
+		if ( ( ssid.contains("Alice-96") || ssid.contains("Alice-93") || 
+			   ssid.contains("Alice-56") || ssid.contains("Alice-55") || 
+			   ssid.contains("Alice-54") || ssid.contains("Alice-48") ||
+			   ssid.contains("Alice-46") || ssid.contains("Alice-37")  )
+			   && ssid.length() == 14 )
+		{
+			ssidSubpart = new String ( ssid.substring(ssid.length()-8));
+			type = TYPE.ALICE;
+			return true;
+		}
 		return false;
 	}
 	

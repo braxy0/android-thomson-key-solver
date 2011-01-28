@@ -1,9 +1,9 @@
 package org.exobel.routerkeygen;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -26,7 +26,8 @@ public class ThomsonKeygen extends KeygenThread {
 	int sequenceNumber;
 	byte[] routerESSID;
 	boolean thomson3g;
-	final String onlineDict = "http://android-thomson-key-solver.googlecode.com/svn/trunk/webdic/";
+	int len = 0;
+	final String onlineDict = "http://paginas.fe.up.pt/~ei10139/webdic/";
 	public ThomsonKeygen(RouterKeygen par ,boolean thomson3g ) {
 		super(par);
 		this.cp = new byte[12];
@@ -38,8 +39,6 @@ public class ThomsonKeygen extends KeygenThread {
 	}
 
 	public void  run(){
-		
-
 		if ( router == null)
 			return;
 		try {
@@ -62,46 +61,14 @@ public class ThomsonKeygen extends KeygenThread {
 			routerESSID[i / 2] = (byte) ((Character.digit(router.getEssid().charAt(i), 16) << 4)
 					+ Character.digit(router.getEssid().charAt(i + 1), 16));
 
+		
 		if ( !thomson3g )
 			localCalc();
 		else
 			internetCalc();
 
-		
-	}
-	private void internetCalc(){
-		
-		if ( router == null)
-			return;
-		
-		if ( router.getEssid().length() != 6 ) 
-		{
-			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
-			return;
-		}
-		ThomsonHttpRetriever client = new ThomsonHttpRetriever();
-		ByteArrayInputStream onlineFile = (ByteArrayInputStream) client.retrieveStream(onlineDict +  
-											router.getEssid().substring(0, 2) + "/" + router.getEssid().substring(2, 4)
-											+ ".dat");
-		if ( onlineFile == null )
-		{
-			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
-			return;
-		}
-		int len = onlineFile.available();
-		
-		entry = new byte[len];
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
-		try {
-			onlineFile.read(entry);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		for (int offset = 0; offset < len ; offset += 4 )
 		{
 			if ( stopRequested )
@@ -147,6 +114,25 @@ public class ThomsonKeygen extends KeygenThread {
 		parent.handler.sendEmptyMessage(0);
 		return;
 	}
+	private void internetCalc(){
+
+		ThomsonHttpRetriever client = new ThomsonHttpRetriever();
+		InputStream onlineFile =  client.retrieveStream(onlineDict +  
+											router.getEssid().substring(0, 2) + "/" + router.getEssid().substring(2, 4)
+											+ ".dat");	
+		if ( onlineFile == null )
+		{
+			pwList.add(parent.getResources().getString(R.string.msg_errthomson3g));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
+		try {
+			len = onlineFile.read(entry);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void localCalc(){
 
@@ -168,9 +154,7 @@ public class ThomsonKeygen extends KeygenThread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		cp[0] = (byte) (char) 'C';
-		cp[1] = (byte) (char) 'P';
-		
+
 		try {
 			if ( fis.read(table) == -1 )
 			{
@@ -179,19 +163,15 @@ public class ThomsonKeygen extends KeygenThread {
 				parent.handler.sendEmptyMessage(1);
 				return;
 			}	
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		int totalOffset = 0;
-		int offset = 0;
-		if ( table[( 0xFF &routerESSID[0] )*5 + 2 ] == routerESSID[0] )
-		{
-			int i = ( 0xFF &routerESSID[0] )*5 + 2;
-			offset =( (0xFF & table[i + 1]) << 24 ) | ( (0xFF & table[i + 2])  << 16 ) |
-					( (0xFF & table[i + 3])  << 8 ) | (0xFF & table[i + 4]);
-		}
-		totalOffset += offset;
-		try {
+			int totalOffset = 0;
+			int offset = 0;
+			if ( table[( 0xFF &routerESSID[0] )*5 + 2 ] == routerESSID[0] )
+			{
+				int i = ( 0xFF &routerESSID[0] )*5 + 2;
+				offset =( (0xFF & table[i + 1]) << 24 ) | ( (0xFF & table[i + 2])  << 16 ) |
+						( (0xFF & table[i + 3])  << 8 ) | (0xFF & table[i + 4]);
+			}
+			totalOffset += offset;
 			fis.seek(totalOffset);
 			if ( fis.read(table,0,1024) == -1 )
 			{
@@ -200,21 +180,17 @@ public class ThomsonKeygen extends KeygenThread {
 				parent.handler.sendEmptyMessage(1);
 				return;
 			}	
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		int lenght = 0;
-		if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
-		{
-			int i = ( 0xFF &routerESSID[1] )*4;
-			offset =( (0xFF & table[i + 1])  << 16 ) |
-					( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
-			lenght =  ( (0xFF & table[i + 5])  << 16 ) |
-					( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
-			
-		}
-		totalOffset += offset;
-		try {
+			int lenght = 0;
+			if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
+			{
+				int i = ( 0xFF &routerESSID[1] )*4;
+				offset =( (0xFF & table[i + 1])  << 16 ) |
+						( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
+				lenght =  ( (0xFF & table[i + 5])  << 16 ) |
+						( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
+				
+			}
+			totalOffset += offset;
 			fis.seek(totalOffset );
 			if ( fis.read(entry,0, lenght - offset) == -1 )
 			{
@@ -222,57 +198,10 @@ public class ThomsonKeygen extends KeygenThread {
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
 				return;
-			}	
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		lenght -= offset;
-		for( offset = 0 ; offset < lenght ; offset += 4 )
-		{
-			if ( stopRequested )
-				return;
-
-			if ( entry[offset] != routerESSID[2])
-				continue;
-			
-			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 
-							( (0xFF & entry[offset + 2])  << 8 ) | (0xFF & entry[offset + 3]) ;
-			c = sequenceNumber % 36;
-			b = sequenceNumber/36 % 36;
-			a = sequenceNumber/(36*36) % 36;
-			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
-			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
-			cp[2] = (byte) Character.forDigit((year / 10), 10);
-			cp[3] = (byte) Character.forDigit((year % 10), 10);
-			cp[4] = (byte) Character.forDigit((week / 10), 10);
-			cp[5] = (byte) Character.forDigit((week % 10), 10);
-			cp[6] = charectbytes0[a];
-			cp[7] = charectbytes1[a];
-			cp[8] = charectbytes0[b];
-			cp[9] = charectbytes1[b];
-			cp[10] = charectbytes0[c];
-			cp[11] = charectbytes1[c];
-			md.reset();
-			md.update(cp);
-			hash = md.digest();
-
-			try {
-				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
 			}
-		}
-		if(pwList.toArray().length == 0)
-		{
-			pwList.add(parent.getResources().getString(R.string.msg_errnomatches));
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(1);
-			return;
-		}
-
-		parent.list_key = pwList;
-		parent.handler.sendEmptyMessage(0);
-		return;
+			lenght -= offset;
+			len = lenght;	
+		} catch (IOException e1) {}
 	}
     static byte[] charectbytes0 = {
         '3','3','3','3','3','3',

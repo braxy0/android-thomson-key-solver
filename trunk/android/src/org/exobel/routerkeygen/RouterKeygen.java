@@ -77,7 +77,8 @@ public class RouterKeygen extends Activity {
 		setContentView(R.layout.main);
 		
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		
+		wifi_state = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED ||  
+						wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
 		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		Boolean welcomeScreenShown = mPrefs.getBoolean( welcomeScreenShownPref, false);
 		
@@ -139,6 +140,9 @@ public class RouterKeygen extends Activity {
 				  		case PIRELLI: RouterKeygen.this.calculator = 
 				  						new PirelliKeygen(RouterKeygen.this);
   										break;
+				  		case ALICE:	 RouterKeygen.this.calculator = 
+										new AliceKeygen(RouterKeygen.this);
+  										break;	
 			        }
 			        
 					RouterKeygen.this.calculator.router = vulnerable.get(position);
@@ -295,6 +299,10 @@ public class RouterKeygen extends Activity {
         				  		case PIRELLI: RouterKeygen.this.calculator = 
 						  							new PirelliKeygen(RouterKeygen.this);
 													break;
+        				  		case ALICE:	 RouterKeygen.this.calculator = 
+		  											new AliceKeygen(RouterKeygen.this);
+        				  							break;				
+													
         			        }
         					RouterKeygen.this.calculator.router = wifi;
         					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
