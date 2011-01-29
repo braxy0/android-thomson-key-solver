@@ -12,7 +12,7 @@ public class DlinkKeygen extends KeygenThread {
 		 
 		if ( router.mac.equals("") ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_dlinknomac));
+			pwList.add(parent.getResources().getString(R.string.msg_nomac));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;

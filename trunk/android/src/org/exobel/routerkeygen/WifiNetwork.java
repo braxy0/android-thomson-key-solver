@@ -8,16 +8,22 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	String ssid;
 	String mac;
 	String ssidSubpart;
+	String encryption;
 	boolean supported;
 	boolean newThomson;
 	int level;
 	
 	TYPE type;
-	static enum TYPE {THOMSON , DLINK , DISCUS , VERIZON , EIRCOM , PIRELLI , ALICE};
-	public WifiNetwork(String ssid, String mac, int level){
+	static enum TYPE {
+		THOMSON , DLINK , DISCUS , VERIZON ,
+		EIRCOM , PIRELLI , TELSEY , ALICE};
+	public WifiNetwork(String ssid, String mac, int level , String enc){
 		this.ssid = ssid;
 		this.mac = mac.toUpperCase();
 		this.level  = level;
+		this.encryption = enc;
+		if ( this.encryption.equals(""))
+			this.encryption = "Open";
 		this.newThomson = false;
 		this.supported =  essidFilter();
 	}
@@ -41,16 +47,16 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	}
 	
 	private boolean essidFilter() {
-		if ( ( ssid.contains("BTHomeHub") && ssid.length() == 15 )  ||
-		     ( ssid.contains("Thomson") && ssid.length() == 13 )    ||
-		     ( ssid.contains("SpeedTouch") && ssid.length() == 16 ) ||
-		     ( ssid.contains("O2Wireless") && ssid.length() == 16 ) ||
-		     ( ssid.contains("Orange") && ssid.length() == 12 ) || 
-		     ( ssid.contains("Infinitum") && ssid.length() == 15 )  ||
-		     ( ssid.contains("BigPond") && ssid.length() == 13 )  ||
-		     ( ssid.contains("Otenet") && ssid.length() == 12 ) ||
-		     ( ssid.contains("BBox") && ssid.length() == 10 ) ||
-		     ( ssid.contains("DMax") && ssid.length() == 10 ))
+		if ( ( ssid.startsWith("BTHomeHub") && ssid.length() == 15 )  ||
+		     ( ssid.startsWith("Thomson") && ssid.length() == 13 )    ||
+		     ( ssid.startsWith("SpeedTouch") && ssid.length() == 16 ) ||
+		     ( ssid.startsWith("O2Wireless") && ssid.length() == 16 ) ||
+		     ( ssid.startsWith("Orange") && ssid.length() == 12 ) || 
+		     ( ssid.startsWith("Infinitum") && ssid.length() == 15 )  ||
+		     ( ssid.startsWith("BigPond") && ssid.length() == 13 )  ||
+		     ( ssid.startsWith("Otenet") && ssid.length() == 12 ) ||
+		     ( ssid.startsWith("BBox") && ssid.length() == 10 ) ||
+		     ( ssid.startsWith("DMax") && ssid.length() == 10 ))
 		{
 			ssidSubpart = new String (ssid.substring(ssid.length()-6));
 			if ( !mac.equals("") )
@@ -59,21 +65,21 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.THOMSON;
 			return true;
 		}
-		if (  ssid.contains("DLink-") && ssid.length() == 12 )
+		if (  ssid.startsWith("DLink-") && ssid.length() == 12 )
 		{
 			ssidSubpart = new String ( ssid.substring(ssid.length()-6));
 			type = TYPE.DLINK;
 			return true;
 		}
-		if ( ( ssid.contains("Discus-") && ssid.length() == 13 ) ||
-			( ssid.contains("Discus--") && ssid.length() == 14 )	)
+		if ( ( ssid.startsWith("Discus-") && ssid.length() == 13 ) ||
+			( ssid.startsWith("Discus--") && ssid.length() == 14 )	)
 		{
 			ssidSubpart = new String ( ssid.substring(ssid.length()-6));
 			type = TYPE.DISCUS;
 			return true;
 		}
-		if ( ( ssid.contains("Eircom") && ssid.length() >= 14 ) ||
-		     ( ssid.contains("eircom") && ssid.length() >= 14 )	)
+		if ( ( ssid.startsWith("Eircom") && ssid.length() >= 14 ) ||
+		     ( ssid.startsWith("eircom") && ssid.length() >= 14 )	)
 		{
 			ssidSubpart = new String ( ssid.substring(ssid.length()-8));
 			if ( mac.equals("") )
@@ -90,19 +96,29 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.VERIZON;
 			return true;
 		}
-		if ( ( ssid.contains("FASTWEB-1-") && ssid.length() == 22 ) ||
-		     ( ssid.contains("FASTWEB-2-") && ssid.length() == 22 )	)
+		if ( ( ssid.startsWith("FASTWEB-1-001CA2") && ssid.length() == 22 ) ||
+		     ( ssid.startsWith("FASTWEB-1-001DBX") && ssid.length() == 22 )	)
 			{
 				ssidSubpart = new String ( ssid.substring(ssid.length()-12));
 				if ( mac.equals("") )
-					calcPirelliMAC();
+					calcFastwebMAC();
 				type = TYPE.PIRELLI;
 				return true;
 			}
-		if ( ( ssid.contains("Alice-96") || ssid.contains("Alice-93") || 
-			   ssid.contains("Alice-56") || ssid.contains("Alice-55") || 
-			   ssid.contains("Alice-54") || ssid.contains("Alice-48") ||
-			   ssid.contains("Alice-46") || ssid.contains("Alice-37")  )
+		/* Still not working
+		 * if ( ( ssid.startsWith("FASTWEB-1-00036F") && ssid.length() == 22 ) ||
+			     ( ssid.startsWith("FASTWEB-1-002196") && ssid.length() == 22 )	)
+				{
+					ssidSubpart = new String ( ssid.substring(ssid.length()-12));
+					if ( mac.equals("") )
+						calcFastwebMAC();
+					type = TYPE.TELSEY;
+					return true;
+				}*/
+		if ( ( ssid.startsWith("Alice-96") || ssid.startsWith("Alice-93") || 
+			   ssid.startsWith("Alice-56") || ssid.startsWith("Alice-55") || 
+			   ssid.startsWith("Alice-54") || ssid.startsWith("Alice-48") ||
+			   ssid.startsWith("Alice-46") || ssid.startsWith("Alice-37")  )
 			   && ssid.length() == 14 )
 		{
 			ssidSubpart = new String ( ssid.substring(ssid.length()-8));
@@ -112,7 +128,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		return false;
 	}
 	
-	public void calcPirelliMAC(){
+	public void calcFastwebMAC(){
 		this.mac = ssidSubpart.substring(0,2) + ":" + ssidSubpart.substring(2,4) + ":" + 
 				   ssidSubpart.substring(4,6) + ":" + ssidSubpart.substring(6,8) + ":" +
 				   ssidSubpart.substring(8,10) + ":" + ssidSubpart.substring(10,12);

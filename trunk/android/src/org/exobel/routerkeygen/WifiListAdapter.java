@@ -22,7 +22,6 @@ public class WifiListAdapter extends BaseAdapter {
         this.context = context;
     }
 	
-	
 	public int getCount() {
 		return listNetworks.size();
 	}

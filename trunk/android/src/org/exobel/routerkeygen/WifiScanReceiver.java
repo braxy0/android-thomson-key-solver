@@ -31,7 +31,7 @@ class WiFiScanReceiver extends BroadcastReceiver {
 		    		results.remove(j--);
 	    
 	    for (ScanResult result : results) {
-	    	  set.add(new WifiNetwork(result.SSID, result.BSSID, result.level));
+	    	  set.add(new WifiNetwork(result.SSID, result.BSSID, result.level , result.capabilities));
 	    }
 	    Iterator<WifiNetwork> it = set.iterator();
 	    while( it.hasNext())

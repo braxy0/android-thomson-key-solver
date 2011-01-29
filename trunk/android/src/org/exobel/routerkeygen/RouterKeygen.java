@@ -75,8 +75,7 @@ public class RouterKeygen extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
-		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		wifi = (WifiManager) getBaseContext().getSystemService(Context.WIFI_SERVICE);
 		wifi_state = wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED ||  
 						wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
 		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -140,6 +139,9 @@ public class RouterKeygen extends Activity {
 				  		case PIRELLI: RouterKeygen.this.calculator = 
 				  						new PirelliKeygen(RouterKeygen.this);
   										break;
+				  		case TELSEY: RouterKeygen.this.calculator = 
+	  									new TelseyKeygen(RouterKeygen.this);
+										break;				
 				  		case ALICE:	 RouterKeygen.this.calculator = 
 										new AliceKeygen(RouterKeygen.this);
   										break;	
@@ -271,7 +273,7 @@ public class RouterKeygen extends Activity {
             	calc.setOnClickListener(new View.OnClickListener(){
            		 public void onClick(View arg0) {
         					router = edit.getText().toString().trim();
-        					WifiNetwork wifi = new WifiNetwork(router , "" , 0);
+        					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"");
         					if ( !wifi.supported )
         					{
         						  Toast.makeText( RouterKeygen.this , 
@@ -298,6 +300,9 @@ public class RouterKeygen extends Activity {
 						  							break;
         				  		case PIRELLI: RouterKeygen.this.calculator = 
 						  							new PirelliKeygen(RouterKeygen.this);
+													break;
+        				  		case TELSEY: RouterKeygen.this.calculator = 
+				  									new TelseyKeygen(RouterKeygen.this);
 													break;
         				  		case ALICE:	 RouterKeygen.this.calculator = 
 		  											new AliceKeygen(RouterKeygen.this);

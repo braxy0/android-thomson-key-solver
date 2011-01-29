@@ -61,50 +61,50 @@ public class AliceKeygen extends KeygenThread {
 					+ Character.digit(router.getMac().charAt(i + 1), 16));
 		String serialStr = "";
 		int Q = 0, k = 0 ;
-		if (  router.ssid.contains("Alice-96") )
+		if (  router.ssid.startsWith("Alice-96") )
 		{
 			Q = 96017051;
 			k = 13;
 			serialStr  = "69102X";
 			return;
 		}
-		else if (  router.ssid.contains("Alice-93") 	)
+		else if (  router.ssid.startsWith("Alice-93") 	)
 		{
 			Q = 92398366;
 			k = 13;
 			serialStr  = "69101X";
 		}
-		else if ( router.ssid.contains("Alice-56")	)
+		else if ( router.ssid.startsWith("Alice-56")	)
 		{
 			Q = 54808800;
 			k = 13;
 			serialStr  = "67902X";
 		}
-		else if ( router.ssid.contains("Alice-55") )
+		else if ( router.ssid.startsWith("Alice-55") )
 		{
 			Q = 55164449;
 			k = 8;
 			serialStr  = "67904X";
 		}
-		else if ( router.ssid.contains("Alice-54") )
+		else if ( router.ssid.startsWith("Alice-54") )
 		{
 			Q = 52420689;
 			k = 8;
 			serialStr  = "67903X";	
 		}
-		else if ( router.ssid.contains("Alice-48") )
+		else if ( router.ssid.startsWith("Alice-48") )
 		{
 			Q = 47896103;
 			k = 8;	
 			serialStr  = "67903X";
 		}
-		else if ( router.ssid.contains("Alice-46") )
+		else if ( router.ssid.startsWith("Alice-46") )
 		{
 			Q = 39015145;
 			k = 13;	
 			serialStr = "67902X";
 		}
-		else if ( router.ssid.contains("Alice-37") )
+		else if ( router.ssid.startsWith("Alice-37") )
 		{
 			Q = 33175048;
 			k = 13;	
