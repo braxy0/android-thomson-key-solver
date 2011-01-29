@@ -62,10 +62,15 @@ public class ThomsonKeygen extends KeygenThread {
 
 		
 		if ( !thomson3g )
-			localCalc();
+		{
+			if (!localCalc() )
+				return;
+		}
 		else
-			internetCalc();
-
+		{
+			if (!internetCalc())
+				return;
+		}
 		cp[0] = (byte) (char) 'C';
 		cp[1] = (byte) (char) 'P';
 		for (int offset = 0; offset < len ; offset += 4 )
@@ -113,7 +118,7 @@ public class ThomsonKeygen extends KeygenThread {
 		parent.handler.sendEmptyMessage(0);
 		return;
 	}
-	private void internetCalc(){
+	private boolean internetCalc(){
 
 		ThomsonHttpRetriever client = new ThomsonHttpRetriever();
 		InputStream onlineFile =  client.retrieveStream(onlineDict +  
@@ -124,7 +129,7 @@ public class ThomsonKeygen extends KeygenThread {
 			pwList.add(parent.getResources().getString(R.string.msg_errthomson3g));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
-			return;
+			return false;
 		}
 		this.entry = new byte[2000];
 		try {
@@ -132,9 +137,10 @@ public class ThomsonKeygen extends KeygenThread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return true;
 	}
 
-	private void localCalc(){
+	private boolean localCalc(){
 
 		
 		if ( !Environment.getExternalStorageState().equals("mounted")  && 
@@ -143,7 +149,7 @@ public class ThomsonKeygen extends KeygenThread {
 			pwList.add(parent.getResources().getString(R.string.msg_nosdcard));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
-			return;
+			return false;
 		}
 		RandomAccessFile fis;
 		try {
@@ -152,7 +158,7 @@ public class ThomsonKeygen extends KeygenThread {
 			pwList.add(parent.getResources().getString(R.string.msg_dictnotfound));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
-			return;
+			return false;
 		}
 
 		try {
@@ -161,7 +167,7 @@ public class ThomsonKeygen extends KeygenThread {
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
-				return;
+				return false;
 			}	
 			int totalOffset = 0;
 			int offset = 0;
@@ -178,7 +184,7 @@ public class ThomsonKeygen extends KeygenThread {
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
-				return;
+				return false;
 			}	
 			int lenght = 0;
 			if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
@@ -198,11 +204,12 @@ public class ThomsonKeygen extends KeygenThread {
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
-				return;
+				return false;
 			}
 			lenght -= offset;
 			len = lenght;	
 		} catch (IOException e1) {}
+		return true;
 	}
     static byte[] charectbytes0 = {
         '3','3','3','3','3','3',
