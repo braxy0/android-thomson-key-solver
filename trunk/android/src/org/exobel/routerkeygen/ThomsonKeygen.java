@@ -33,7 +33,6 @@ public class ThomsonKeygen extends KeygenThread {
 		this.cp = new byte[12];
 		this.hash = new byte[19];
 		this.table= new byte[1282];
-		this.entry = new byte[3000];
 		this.routerESSID = new byte[3];
 		this.thomson3g = thomson3g;
 	}
@@ -127,6 +126,7 @@ public class ThomsonKeygen extends KeygenThread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
+		this.entry = new byte[2000];
 		try {
 			len = onlineFile.read(entry);
 		} catch (IOException e) {
@@ -192,6 +192,7 @@ public class ThomsonKeygen extends KeygenThread {
 			}
 			totalOffset += offset;
 			fis.seek(totalOffset );
+			this.entry = new byte[lenght - offset];
 			if ( fis.read(entry,0, lenght - offset) == -1 )
 			{
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
