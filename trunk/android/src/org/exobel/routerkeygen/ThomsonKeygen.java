@@ -121,9 +121,10 @@ public class ThomsonKeygen extends KeygenThread {
 	private boolean internetCalc(){
 
 		ThomsonHttpRetriever client = new ThomsonHttpRetriever();
-		InputStream onlineFile =  client.retrieveStream(onlineDict +  
-											router.getEssid().substring(0, 2) + "/" + router.getEssid().substring(2, 4)
-											+ ".dat");	
+		InputStream onlineFile =  client.retrieveStream(
+									onlineDict +  
+									router.getEssid().substring(0, 2).toLowerCase() + "/" + 
+									router.getEssid().substring(2, 4).toLowerCase() + ".dat");	
 		if ( onlineFile == null )
 		{
 			pwList.add(parent.getResources().getString(R.string.msg_errthomson3g));
