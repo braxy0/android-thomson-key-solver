@@ -71,42 +71,7 @@ public class ThomsonKeygen extends KeygenThread {
 			if (!internetCalc())
 				return;
 		}
-		cp[0] = (byte) (char) 'C';
-		cp[1] = (byte) (char) 'P';
-		for (int offset = 0; offset < len ; offset += 4 )
-		{
-			if ( stopRequested )
-				return;
 
-			if ( entry[offset] != routerESSID[2])
-				continue;
-			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 
-			( (0xFF & entry[offset + 2])  << 8 ) | (0xFF & entry[offset + 3]) ;
-			c = sequenceNumber % 36;
-			b = sequenceNumber/36 % 36;
-			a = sequenceNumber/(36*36) % 36;
-			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
-			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
-			cp[2] = (byte) Character.forDigit((year / 10), 10);
-			cp[3] = (byte) Character.forDigit((year % 10), 10);
-			cp[4] = (byte) Character.forDigit((week / 10), 10);
-			cp[5] = (byte) Character.forDigit((week % 10), 10);
-			cp[6] = charectbytes0[a];
-			cp[7] = charectbytes1[a];
-			cp[8] = charectbytes0[b];
-			cp[9] = charectbytes1[b];
-			cp[10] = charectbytes0[c];
-			cp[11] = charectbytes1[c];
-			md.reset();
-			md.update(cp);
-			hash = md.digest();
-			
-			try {
-				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}
 		if(pwList.toArray().length == 0)
 		{
 			pwList.add(parent.getResources().getString(R.string.msg_errnomatches));
@@ -138,6 +103,42 @@ public class ThomsonKeygen extends KeygenThread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		cp[0] = (byte) (char) 'C';
+		cp[1] = (byte) (char) 'P';
+		for (int offset = 0; offset < len ; offset += 4 )
+		{
+			if ( stopRequested )
+				return false;
+
+			if ( entry[offset] != routerESSID[2])
+				continue;
+			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 
+			( (0xFF & entry[offset + 2])  << 8 ) | (0xFF & entry[offset + 3]) ;
+			c = sequenceNumber % 36;
+			b = sequenceNumber/36 % 36;
+			a = sequenceNumber/(36*36) % 36;
+			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
+			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+			cp[2] = (byte) Character.forDigit((year / 10), 10);
+			cp[3] = (byte) Character.forDigit((year % 10), 10);
+			cp[4] = (byte) Character.forDigit((week / 10), 10);
+			cp[5] = (byte) Character.forDigit((week % 10), 10);
+			cp[6] = charectbytes0[a];
+			cp[7] = charectbytes1[a];
+			cp[8] = charectbytes0[b];
+			cp[9] = charectbytes1[b];
+			cp[10] = charectbytes0[c];
+			cp[11] = charectbytes1[c];
+			md.reset();
+			md.update(cp);
+			hash = md.digest();
+			
+			try {
+				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 		return true;
 	}
 
@@ -161,7 +162,7 @@ public class ThomsonKeygen extends KeygenThread {
 			parent.handler.sendEmptyMessage(1);
 			return false;
 		}
-
+		int version = 0;
 		try {
 			if ( fis.read(table) == -1 )
 			{
@@ -169,7 +170,8 @@ public class ThomsonKeygen extends KeygenThread {
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
 				return false;
-			}	
+			}
+			version = table[0] << 8 | table[1];
 			int totalOffset = 0;
 			int offset = 0;
 			if ( table[( 0xFF &routerESSID[0] )*5 + 2 ] == routerESSID[0] )
@@ -210,7 +212,90 @@ public class ThomsonKeygen extends KeygenThread {
 			lenght -= offset;
 			len = lenght;	
 		} catch (IOException e1) {}
+		if ( version == 1 )
+			firstDic();
+		if ( version == 2 )
+			secondDic();
 		return true;
+	}
+	private void secondDic(){
+		cp[0] = (byte) (char) 'C';
+		cp[1] = (byte) (char) 'P';
+		for (int offset = 0; offset < len ; offset += 3 )
+		{
+			if ( stopRequested )
+				return;
+			sequenceNumber = ( (0xFF & entry[offset + 0]) << 16 ) | 
+			( (0xFF & entry[offset + 1])  << 8 ) | (0xFF & entry[offset + 2]) ;
+			c = sequenceNumber % 36;
+			b = sequenceNumber/36 % 36;
+			a = sequenceNumber/(36*36) % 36;
+			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
+			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+			cp[2] = (byte) Character.forDigit((year / 10), 10);
+			cp[3] = (byte) Character.forDigit((year % 10), 10);
+			cp[4] = (byte) Character.forDigit((week / 10), 10);
+			cp[5] = (byte) Character.forDigit((week % 10), 10);
+			cp[6] = charectbytes0[a];
+			cp[7] = charectbytes1[a];
+			cp[8] = charectbytes0[b];
+			cp[9] = charectbytes1[b];
+			cp[10] = charectbytes0[c];
+			cp[11] = charectbytes1[c];
+			md.reset();
+			md.update(cp);
+			hash = md.digest();
+			if ( hash[19] != routerESSID[2])
+				continue;
+			if ( hash[18] != routerESSID[1])
+				continue;
+			if ( hash[17] != routerESSID[0])
+				continue;
+			
+			try {
+				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	private void firstDic(){
+		cp[0] = (byte) (char) 'C';
+		cp[1] = (byte) (char) 'P';
+		for (int offset = 0; offset < len ; offset += 4 )
+		{
+			if ( stopRequested )
+				return;
+
+			if ( entry[offset] != routerESSID[2])
+				continue;
+			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 
+			( (0xFF & entry[offset + 2])  << 8 ) | (0xFF & entry[offset + 3]) ;
+			c = sequenceNumber % 36;
+			b = sequenceNumber/36 % 36;
+			a = sequenceNumber/(36*36) % 36;
+			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
+			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
+			cp[2] = (byte) Character.forDigit((year / 10), 10);
+			cp[3] = (byte) Character.forDigit((year % 10), 10);
+			cp[4] = (byte) Character.forDigit((week / 10), 10);
+			cp[5] = (byte) Character.forDigit((week % 10), 10);
+			cp[6] = charectbytes0[a];
+			cp[7] = charectbytes1[a];
+			cp[8] = charectbytes0[b];
+			cp[9] = charectbytes1[b];
+			cp[10] = charectbytes0[c];
+			cp[11] = charectbytes1[c];
+			md.reset();
+			md.update(cp);
+			hash = md.digest();
+			
+			try {
+				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 	}
     static byte[] charectbytes0 = {
         '3','3','3','3','3','3',
