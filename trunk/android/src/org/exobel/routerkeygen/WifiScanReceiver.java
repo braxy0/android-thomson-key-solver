@@ -21,10 +21,16 @@ class WiFiScanReceiver extends BroadcastReceiver {
 	  }
 
 	  public void onReceive(Context c, Intent intent) {
+		  
+		if ( solver == null )
+			return;
+		if ( solver.wifi == null )
+			return;
 	    List<ScanResult> results = solver.wifi.getScanResults();
 	    List<WifiNetwork> list = new ArrayList<WifiNetwork>();
 	    Set<WifiNetwork> set = new TreeSet<WifiNetwork>();
-
+	    if ( results == null )/*He have had reports of this returning null instead of empty*/
+	    	return;
 	    for (int i = 0; i < results.size() - 1; ++i)
 	    	for (int j = i+1; j < results.size(); ++j)
 		    	if(results.get(i).SSID.equals(results.get(j).SSID))
