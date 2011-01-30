@@ -6,7 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Stage4 {
-	static final byte [] version = { 0, 1};
+	
+	/*
+	 * Version 1 - Initial dictionary of 55.8 MB ( downloaded 740 times )
+	 * Version 2 - Second version with 41.9 MB
+	 */
+	static final byte [] version = { 0, 2};
 	public static void main(String[] args) {
 		FileInputStream fis;
 		EntryTable entry = new EntryTable(4);
@@ -55,7 +60,7 @@ public class Stage4 {
 		}
 		FileOutputStream fos;
 		try {
-			fos = new FileOutputStream("thomson.dic");
+			fos = new FileOutputStream("RouterKeygen.dic");
 		} catch (FileNotFoundException e) {
 			System.out.println("Error!" + e);
 			return;

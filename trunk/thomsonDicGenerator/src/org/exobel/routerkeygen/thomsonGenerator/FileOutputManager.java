@@ -103,7 +103,7 @@ public class FileOutputManager {
 	 		int offset;
 	 		public FileOutput( String file ) throws FileNotFoundException{
 	 			fos = new FileOutputStream(file);
-	 			buffer = new byte[40960];
+	 			buffer = new byte[4096];
 	 			offset = 0;
 	 		}
 	 		public void add ( byte [] bytes , int len ) throws IOException{

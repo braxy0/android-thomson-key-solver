@@ -49,11 +49,11 @@ public class Stage3 {
 				// 1byte for header and 3 for address
 				currentEntry = fileData[offset + 0];
 				entry.addEntry((short) (0xFF & currentEntry), address );
-				outputData[address + 0] = fileData[offset + 1];
-				outputData[address + 1] = fileData[offset + 2];
-				outputData[address + 2] = fileData[offset + 3];
-				outputData[address + 3] = fileData[offset + 4];
-				address += 4;
+		//		outputData[address + 0] = fileData[offset + 1];
+				outputData[address + 0] = fileData[offset + 2];
+				outputData[address + 1] = fileData[offset + 3];
+				outputData[address + 2] = fileData[offset + 4];
+				address += 3;
 				offset += 5;
 				while (offset < count ){
 					tmp = fileData[offset + 0];
@@ -62,12 +62,12 @@ public class Stage3 {
 						currentEntry = tmp;
 						entry.addEntry((short) (0xFF & currentEntry), address );
 					}
-					outputData[address + 0] = fileData[offset + 1];
-					outputData[address + 1] = fileData[offset + 2];
-					outputData[address + 2] = fileData[offset + 3];
-					outputData[address + 3] = fileData[offset + 4];
+				//	outputData[address + 0] = fileData[offset + 1];
+					outputData[address + 0] = fileData[offset + 2];
+					outputData[address + 1] = fileData[offset + 3];
+					outputData[address + 2] = fileData[offset + 4];
 					offset += 5;
-					address += 4;
+					address += 3;
 				}
 				entry.toFile(outputData);
 				files.sendFile(fileName, outputData , address);
