@@ -273,6 +273,8 @@ public class RouterKeygen extends Activity {
             	calc.setOnClickListener(new View.OnClickListener(){
            		 public void onClick(View arg0) {
         					router = edit.getText().toString().trim();
+        			        begin =  System.currentTimeMillis();
+
         					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"" , RouterKeygen.this);
         					if ( !wifi.supported )
         					{
@@ -309,6 +311,7 @@ public class RouterKeygen extends Activity {
         				  							break;				
 													
         			        }
+        					
         					RouterKeygen.this.calculator.router = wifi;
         					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
         					RouterKeygen.this.calculator.start();
