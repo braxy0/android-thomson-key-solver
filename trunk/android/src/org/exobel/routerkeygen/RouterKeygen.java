@@ -273,7 +273,7 @@ public class RouterKeygen extends Activity {
             	calc.setOnClickListener(new View.OnClickListener(){
            		 public void onClick(View arg0) {
         					router = edit.getText().toString().trim();
-        					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"");
+        					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"" , RouterKeygen.this);
         					if ( !wifi.supported )
         					{
         						  Toast.makeText( RouterKeygen.this , 

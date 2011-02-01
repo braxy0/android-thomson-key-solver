@@ -46,6 +46,21 @@ public class AliceKeygen extends KeygenThread {
 
 		if ( router == null)
 			return;
+		if ( router.supportedAlice == null )
+		{
+			pwList.add(parent.getResources().getString(R.string.msg_erralicenotsupported));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
+		if ( !router.supportedAlice.supported )
+		{
+			pwList.add(parent.getResources().getString(R.string.msg_erralicenotsupported));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
+		
 		try {
 			md = MessageDigest.getInstance("SHA256");
 		} catch (NoSuchAlgorithmException e1) {
@@ -54,71 +69,9 @@ public class AliceKeygen extends KeygenThread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		
-		byte [] mac = new byte[6];
-		for (int i = 0; i < 12; i += 2)
-			mac[i / 2] = (byte) ((Character.digit(router.getMac().charAt(i), 16) << 4)
-					+ Character.digit(router.getMac().charAt(i + 1), 16));
-		String serialStr = "";
-		int Q = 0, k = 0 ;
-		if (  router.ssid.startsWith("Alice-96") )
-		{
-			Q = 96017051;
-			k = 13;
-			serialStr  = "69102X";
-			return;
-		}
-		else if (  router.ssid.startsWith("Alice-93") 	)
-		{
-			Q = 92398366;
-			k = 13;
-			serialStr  = "69101X";
-		}
-		else if ( router.ssid.startsWith("Alice-56")	)
-		{
-			Q = 54808800;
-			k = 13;
-			serialStr  = "67902X";
-		}
-		else if ( router.ssid.startsWith("Alice-55") )
-		{
-			Q = 55164449;
-			k = 8;
-			serialStr  = "67904X";
-		}
-		else if ( router.ssid.startsWith("Alice-54") )
-		{
-			Q = 52420689;
-			k = 8;
-			serialStr  = "67903X";	
-		}
-		else if ( router.ssid.startsWith("Alice-48") )
-		{
-			Q = 47896103;
-			k = 8;	
-			serialStr  = "67903X";
-		}
-		else if ( router.ssid.startsWith("Alice-46") )
-		{
-			Q = 39015145;
-			k = 13;	
-			serialStr = "67902X";
-		}
-		else if ( router.ssid.startsWith("Alice-37") )
-		{
-			Q = 33175048;
-			k = 13;	
-			serialStr  = "67902X";
-		}
-		
-		
-		if ( Q == 0 || k == 0 )
-		{
-			pwList.add(parent.getResources().getString(R.string.msg_erralicenotsupported));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
-			return;
-		}
+		String serialStr = router.supportedAlice.serial + "X";
+		int Q = router.supportedAlice.magic[0];
+		int k = router.supportedAlice.magic[1] ;
 		int serial = ( Integer.valueOf(router.getEssid()) - Q ) / k;
 		String tmp = Integer.toString(serial);
 		for (int i = 0; i < 7 - tmp.length(); i++){
@@ -126,22 +79,32 @@ public class AliceKeygen extends KeygenThread {
 		}
 		serialStr += tmp;
 		
-		md.reset();
-		md.update(specialSeq);
-		try {
-			md.update(serialStr.getBytes("ASCII"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		md.update(mac);
+		byte [] mac = new byte[6];
 		String key = "";
-		byte [] hash = md.digest();		
-		for ( int i = 0 ; i < 24 ; ++i )
-		{
-			key += preInitCharset[hash[i] & 0xFF];
-		}
-		pwList.add(key);/*For pre AGPF 4.5.0sx*/
+		byte [] hash;		
 		
+		if (  router.getMac().length() == 12 ) {
+				
+			
+			for (int i = 0; i < 12; i += 2)
+				mac[i / 2] = (byte) ((Character.digit(router.getMac().charAt(i), 16) << 4)
+						+ Character.digit(router.getMac().charAt(i + 1), 16));
+
+			md.reset();
+			md.update(specialSeq);
+			try {
+				md.update(serialStr.getBytes("ASCII"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			md.update(mac);
+			hash = md.digest();
+			for ( int i = 0 ; i < 24 ; ++i )
+			{
+				key += preInitCharset[hash[i] & 0xFF];
+			}
+			pwList.add(key);/*For pre AGPF 4.5.0sx*/
+		}
 		
 		/*For post AGPF 4.5.0sx*/
 		String macEth = router.getMac().substring(0,6);

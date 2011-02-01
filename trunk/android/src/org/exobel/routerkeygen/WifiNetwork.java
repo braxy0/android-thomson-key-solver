@@ -2,6 +2,15 @@ package org.exobel.routerkeygen;
 
 import java.io.Serializable;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import android.content.Context;
+
+
 public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -12,12 +21,12 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	boolean supported;
 	boolean newThomson;
 	int level;
-	
+	AliceHandle supportedAlice;
 	TYPE type;
 	static enum TYPE {
 		THOMSON , DLINK , DISCUS , VERIZON ,
 		EIRCOM , PIRELLI , TELSEY , ALICE};
-	public WifiNetwork(String ssid, String mac, int level , String enc){
+	public WifiNetwork(String ssid, String mac, int level , String enc , Context con ){
 		this.ssid = ssid;
 		this.mac = mac.toUpperCase();
 		this.level  = level;
@@ -25,7 +34,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		if ( this.encryption.equals(""))
 			this.encryption = "Open";
 		this.newThomson = false;
-		this.supported =  essidFilter();
+		this.supported =  essidFilter(con);
 	}
 	
 	public int getLevel(){
@@ -37,26 +46,30 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	}
 	
 	public String getMacEnd(){
+		if ( mac.length() < 12 )
+			return mac;
 		return mac.substring(9, 11) + mac.substring(12, 14) + mac.substring(15, 17);
 	}
 	
 	public String getMac(){
+		if ( mac.length() < 12 )
+			return mac;
 		return  mac.substring(0, 2) +  mac.substring(3, 5) +  
 		 		mac.substring(6, 8) + mac.substring(9, 11) + 
 				mac.substring(12, 14) + mac.substring(15, 17);
 	}
 	
-	private boolean essidFilter() {
-		if ( ( ssid.startsWith("BTHomeHub") && ssid.length() == 15 )  ||
-		     ( ssid.startsWith("Thomson") && ssid.length() == 13 )    ||
+	private boolean essidFilter(Context con) {
+		if ( ( ssid.startsWith("Thomson") && ssid.length() == 13 )    ||
 		     ( ssid.startsWith("SpeedTouch") && ssid.length() == 16 ) ||
 		     ( ssid.startsWith("O2Wireless") && ssid.length() == 16 ) ||
-		     ( ssid.startsWith("Orange") && ssid.length() == 12 ) || 
-		     ( ssid.startsWith("Infinitum") && ssid.length() == 15 )  ||
+		     ( ssid.startsWith("Orange-") && ssid.length() == 13 ) || 
+		     ( ssid.startsWith("INFINITUM") && ssid.length() == 15 )  ||
 		     ( ssid.startsWith("BigPond") && ssid.length() == 13 )  ||
 		     ( ssid.startsWith("Otenet") && ssid.length() == 12 ) ||
-		     ( ssid.startsWith("BBox") && ssid.length() == 10 ) ||
-		     ( ssid.startsWith("DMax") && ssid.length() == 10 ))
+		     ( ssid.startsWith("Bbox-") && ssid.length() == 11 ) ||
+		     ( ssid.startsWith("DMAX") && ssid.length() == 10 )  || 
+		     ( ssid.startsWith("privat") && ssid.length() == 12 ) )
 		{
 			ssidSubpart = new String (ssid.substring(ssid.length()-6));
 			if ( !mac.equals("") )
@@ -115,14 +128,22 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 					type = TYPE.TELSEY;
 					return true;
 				}*/
-		if ( ( ssid.startsWith("Alice-96") || ssid.startsWith("Alice-93") || 
-			   ssid.startsWith("Alice-56") || ssid.startsWith("Alice-55") || 
-			   ssid.startsWith("Alice-54") || ssid.startsWith("Alice-48") ||
-			   ssid.startsWith("Alice-46") || ssid.startsWith("Alice-37")  )
-			   && ssid.length() == 14 )
+		if ( ssid.startsWith("Alice-") && ssid.length() == 14 )
 		{
+			supportedAlice = new AliceHandle(ssid.substring(0,9));
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+		    SAXParser saxParser;
+		    try {
+		    	saxParser = factory.newSAXParser();
+				saxParser.parse(con.getResources().openRawResource(R.raw.alice), supportedAlice);
+			} 
+		    catch (Exception e) {}
 			ssidSubpart = new String ( ssid.substring(ssid.length()-8));
 			type = TYPE.ALICE;
+			if( !supportedAlice.supported )
+				return false;
+			if ( mac.equals("") )
+				mac = supportedAlice.mac;
 			return true;
 		}
 		return false;
@@ -147,6 +168,35 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			return -1;
 		return 1;
 	}
-	
-	
+	class AliceHandle extends DefaultHandler {
+		String alice;
+		boolean supported;
+		int [] magic;
+		String serial;
+		String mac;
+		public AliceHandle(String alice){
+			super();
+			this.alice = alice;
+			this.supported = false;
+			this.magic = new int [2];
+		} 
+		public void startElement(String uri, String localName,
+		        String qName, Attributes attributes){
+			if ( alice.equalsIgnoreCase(localName) )
+			{
+				serial = attributes.getValue("sn");
+				mac = attributes.getValue("mac");
+				magic[0] = Integer.parseInt(attributes.getValue("q"));
+				magic[1] = Integer.parseInt(attributes.getValue("k"));
+				supported = true;
+			}
+		}
+
+		   public void endElement( String namespaceURI,
+		              String localName,
+		              String qName ) throws SAXException {}
+
+		   public void characters( char[] ch, int start, int length )
+		              throws SAXException {}
+	}
 }
