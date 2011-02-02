@@ -12,7 +12,7 @@ extern "C" {
  * Method:    thomson
  * Signature: ([B)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomson
+JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomson
   (JNIEnv *, jobject, jbyteArray);
 
 #ifdef __cplusplus

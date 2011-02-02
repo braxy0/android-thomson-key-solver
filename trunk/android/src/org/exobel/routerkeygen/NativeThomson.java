@@ -2,13 +2,13 @@ package org.exobel.routerkeygen;
 
 public class NativeThomson {
     	  static {
-    		  System.load("/data/data/org.exobel.routerkeygen/libthomson.so");
+    		  System.loadLibrary("thomson");
     		  }
     		  
     		  /** 
-    		   * Adds two integers, returning their sum
+    		   * Native processing without a dictionary.
     		   */
-    		  public native String thomson( byte [] essid );
+    		  public static native String[] thomson( byte [] essid );
     		  
 
 }

@@ -60,4 +60,5 @@
 <string name="msg_errpirelli">The MAC address is invalid.</string>
 <string name="msg_errthomson3g">Error connecting with the web service.</string>
 <string name="msg_erralicenotsupported">This Alice series is not yet supported!</string>
+<string name="msg_errversion">Unknown version of the dictionary.</string>
 </resources>

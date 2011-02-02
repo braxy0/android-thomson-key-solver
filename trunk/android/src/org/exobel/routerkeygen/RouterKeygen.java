@@ -274,8 +274,9 @@ public class RouterKeygen extends Activity {
            		 public void onClick(View arg0) {
         					router = edit.getText().toString().trim();
         			        begin =  System.currentTimeMillis();
-
         					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"" , RouterKeygen.this);
+
+        					//WifiNetwork wifi = new WifiNetwork("FASTWEB-1-002196", "00:21:96:12:34:56" , 0 ,"" , RouterKeygen.this);
         					if ( !wifi.supported )
         					{
         						  Toast.makeText( RouterKeygen.this , 

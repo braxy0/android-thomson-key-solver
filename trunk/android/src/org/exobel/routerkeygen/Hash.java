@@ -110,43 +110,38 @@ public class Hash {
         return (val << shift) & MAX_VALUE;
     }
 
+    
+    private long rot(long val, int shift){
+    	return (leftShift(val, shift)|(val>>>(32-shift))) & MAX_VALUE;
+    }
     /**
-     * Mix up the values in the hash function.
+     * Mix up the values in the hash function. 
      */
     private void hashMix() {
-        a = subtract(a, b);
-        a = subtract(a, c);
-        a = xor(a, c >> 13);
-        b = subtract(b, c);
-        b = subtract(b, a);
-        b = xor(b, leftShift(a, 8));
-        c = subtract(c, a);
-        c = subtract(c, b);
-        c = xor(c, (b >> 13));
-        a = subtract(a, b);
-        a = subtract(a, c);
-        a = xor(a, (c >> 12));
-        b = subtract(b, c);
-        b = subtract(b, a);
-        b = xor(b, leftShift(a, 16));
-        c = subtract(c, a);
-        c = subtract(c, b);
-        c = xor(c, (b >> 5));
-        a = subtract(a, b);
-        a = subtract(a, c);
-        a = xor(a, (c >> 3));
-        b = subtract(b, c);
-        b = subtract(b, a);
-        b = xor(b, leftShift(a, 10));
-        c = subtract(c, a);
-        c = subtract(c, b);
-        c = xor(c, (b >> 15));
+      a = subtract(a,c);
+      a = xor(a, rot(c, 4));
+      c = add(c, b);
+      b = subtract(b,a);
+      b = xor(b, rot(a, 6));
+      a = add(a, c);
+      c = subtract(c,b);
+      c = xor(c, rot(b, 8));
+      b = add(b, a);
+      a = subtract(a,c);
+      a = xor(a, rot(c, 16));
+      c = add(c, b); 
+      b = subtract(b,a);
+      b = xor(b, rot(a, 19));
+      a = add(a, c);
+      c = subtract(c,b);
+      c = xor(c, rot(b, 4));
+      b = add(b, a);
     }
 
   @SuppressWarnings("fallthrough")
   public long hashword(long[] k, int length, long initval) {
    
-    a = b = c = 0xdeadbeef + (length<<2) + initval & MAX_VALUE;
+    a = b = c = 0xdeadbeef + (length<<2) +  ( initval & MAX_VALUE ) ;
 
     int i=0;
     while (length > 3)
@@ -154,18 +149,6 @@ public class Hash {
       a = add( a, k[i+0]);
       b = add( b, k[i+1]); 
       c = add( c, k[i+2]); 
-
-      // mix(a,b,c)... Java needs "out" parameters!!!
-      // Note: recent JVMs (Sun JDK6) turn pairs of shifts (needed to do a rotate)
-      // into real x86 rotate instructions.
-      /*{
-        a -= c;  a ^= (c<<4)|(c>>>-4);   c += b;
-        b -= a;  b ^= (a<<6)|(a>>>-6);   a += c;
-        c -= b;  c ^= (b<<8)|(b>>>-8);   b += a;
-        a -= c;  a ^= (c<<16)|(c>>>-16); c += b;
-        b -= a;  b ^= (a<<19)|(a>>>-19); a += c;
-        c -= b;  c ^= (b<<4)|(b>>>-4);   b += a;
-      }*/
       hashMix();
 
       length -= 3;
@@ -176,23 +159,29 @@ public class Hash {
       case 3 : c = add( c, k[i+2]);  // fall through
       case 2 : b = add( b, k[i+1]);  // fall through
       case 1 : a = add( a, k[i+0]);  // fall through
-   /*     // final(a,b,c);
-      {
-        c ^= b; c -= (b<<14)|(b>>>-14);
-        a ^= c; a -= (c<<11)|(c>>>-11);
-        b ^= a; b -= (a<<25)|(a>>>-25);
-        c ^= b; c -= (b<<16)|(b>>>-16);
-        a ^= c; a -= (c<<4)|(c>>>-4);
-        b ^= a; b -= (a<<14)|(a>>>-14);
-        c ^= b; c -= (b<<24)|(b>>>-24);
-      }*/hashMix();
+      		   finalHash();
       case 0:
         break;
     }
     return c;
   }
 
-
+  void finalHash(){
+	  c = xor(c, b);
+	  c = subtract(c,rot(b,14) );
+	  a = xor(a, c);
+	  a = subtract(a,rot(c,11) );
+	  b = xor(b,a);
+	  b = subtract(b, rot(a,25));
+	  c = xor(c, b);
+	  c = subtract(c,rot(b,16) );
+	  a = xor(a, c);
+	  a = subtract(a,rot(c,4) );
+	  b = xor(b,a);
+	  b = subtract(b, rot(a,14));
+	  c = xor(c, b);
+	  c = subtract(c,rot(b,24) );
+  }
  
 
 }
