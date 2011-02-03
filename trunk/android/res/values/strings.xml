@@ -61,4 +61,13 @@
 <string name="msg_errthomson3g">Error connecting with the web service.</string>
 <string name="msg_erralicenotsupported">This Alice series is not yet supported!</string>
 <string name="msg_errversion">Unknown version of the dictionary.</string>
+<string name="pref_native">Native Calculation</string>
+<string name="pref_hinton_native">Calculating on target if it fails to find the dictionary</string>
+<string name="pref_hintoff_native">Only warns if it fails to find the dictionary</string>
+<string name="dialog_nativecalc">Calculating Keys</string>
+<string name="dialog_nativecalc_msg">This can take up to 2 minutes. Please wait.</string>
+<string name="dialog_thomson3g">Thomson 3G</string>
+
+<string name="dialog_thomson3g_msg">Fetching Keys...</string>
+<string name="msg_startingnativecalc">Error with dictionary. Starting native calculation.</string>
 </resources>

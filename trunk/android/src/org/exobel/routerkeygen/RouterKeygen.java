@@ -53,8 +53,10 @@ public class RouterKeygen extends Activity {
 	static final String TAG = "RouterKeygen";
 	Handler handler = new Handler() {
           public void handleMessage(Message msg) {
-        	if ( thomson3g )
-				removeDialog(PROGRESSBAR);
+        	if ( thomson3g)
+				removeDialog(THOMSON3G);
+        	if ( nativeCalc )
+        		removeDialog(NATIVE_CALC);
 			if ( msg.what == 0 )
 			{
 				begin = System.currentTimeMillis()-begin;
@@ -63,6 +65,24 @@ public class RouterKeygen extends Activity {
 			}
 			if ( msg.what == 1 )
 			{
+				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
+				{
+					if ( ((ThomsonKeygen)calculator).errorDict )
+					{
+						Toast.makeText( RouterKeygen.this , 
+										RouterKeygen.this.getResources().getString(R.string.msg_startingnativecalc) , 
+										Toast.LENGTH_SHORT).show();
+						WifiNetwork tmp = RouterKeygen.this.calculator.router;
+						RouterKeygen.this.calculator = new NativeThomson(RouterKeygen.this);
+						RouterKeygen.this.calculator.router = tmp;
+						RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
+						RouterKeygen.this.calculator.start();
+						showDialog(NATIVE_CALC);
+						return;
+					}
+
+				}
+				
 				Toast.makeText( RouterKeygen.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
 				
 			}
@@ -151,7 +171,7 @@ public class RouterKeygen extends Activity {
 					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 					RouterKeygen.this.calculator.start();
 					if (  vulnerable.get(position).type == TYPE.THOMSON && thomson3g )
-						showDialog(PROGRESSBAR);
+						showDialog(THOMSON3G);
 					removeDialog(KEY_LIST);
 			}
 		});
@@ -202,22 +222,24 @@ public class RouterKeygen extends Activity {
     	}
 	}
 	ProgressDialog progressDialog;
-    private static final int PROGRESSBAR = 0; 
+    private static final int THOMSON3G = 0; 
     private static final int KEY_LIST = 1;
     private static final int MANUAL_CALC = 2;
+    private static final int NATIVE_CALC = 3;
     protected Dialog onCreateDialog(int id ) {
         switch (id) {
-        case PROGRESSBAR: {
+        case THOMSON3G: {
             				progressDialog = new ProgressDialog(RouterKeygen.this);
                             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                            progressDialog.setTitle("Thomson 3G Lookup");
-                            progressDialog.setMessage("Fetching Keys...");
+                            progressDialog.setTitle(RouterKeygen.this.getResources().getString(R.string.dialog_thomson3g));
+                            progressDialog.setMessage(RouterKeygen.this.getResources().getString(R.string.dialog_thomson3g_msg));
                             progressDialog.setCancelable(false);
                             progressDialog.setProgress(0);
-                            progressDialog.setButton("Cancel", new DialogInterface.OnClickListener(){
+                            progressDialog.setButton(RouterKeygen.this.getResources().getString(R.string.bt_manual_cancel),
+                            				new DialogInterface.OnClickListener(){
                                     public void onClick(DialogInterface dialog, int which) {
                                     	RouterKeygen.this.calculator.stopRequested = true;
-                                            removeDialog(PROGRESSBAR);
+                                            removeDialog(THOMSON3G);
                                     }
     });
                             progressDialog.setIndeterminate(false);
@@ -319,7 +341,7 @@ public class RouterKeygen extends Activity {
         					removeDialog(KEY_LIST);
         					removeDialog(MANUAL_CALC);
         					if (  wifi.type == TYPE.THOMSON && thomson3g )
-        						showDialog(PROGRESSBAR);
+        						showDialog(THOMSON3G);
                    	
                         	
                 }
@@ -333,6 +355,23 @@ public class RouterKeygen extends Activity {
          
             	return dialog;
             }
+            case NATIVE_CALC: {
+				progressDialog = new ProgressDialog(RouterKeygen.this);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setTitle(RouterKeygen.this.getResources().getString(R.string.dialog_nativecalc));
+                progressDialog.setMessage(RouterKeygen.this.getResources().getString(R.string.dialog_nativecalc_msg));
+                progressDialog.setCancelable(false);
+                progressDialog.setProgress(0);
+                progressDialog.setButton(RouterKeygen.this.getResources().getString(R.string.bt_manual_cancel),
+                		new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int which) {
+                        	RouterKeygen.this.calculator.stopRequested = true;
+                                removeDialog(THOMSON3G);
+                        }
+			});
+			                progressDialog.setIndeterminate(false);
+			return progressDialog;
+			}
         }
         return null;
     }
@@ -393,15 +432,18 @@ public class RouterKeygen extends Activity {
 
     boolean wifiOn;
     boolean thomson3g;
+    boolean nativeCalc;
     String folderSelect;
 	final String folderSelectPref = "folderSelect";
 	final String wifiOnPref = "wifion";
 	final String thomson3gPref = "thomson3g";
+	final String nativeCalcPref = "nativethomson";
 	private void getPrefs() {
 	    SharedPreferences prefs = PreferenceManager
 	                    .getDefaultSharedPreferences(getBaseContext());
 	    wifiOn = prefs.getBoolean(wifiOnPref , true);
 	    thomson3g = prefs.getBoolean(thomson3gPref, false);
+	    nativeCalc = prefs.getBoolean(nativeCalcPref, false);
 	    folderSelect = prefs.getString(folderSelectPref, 
 	    		Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
 	    		"thomson");

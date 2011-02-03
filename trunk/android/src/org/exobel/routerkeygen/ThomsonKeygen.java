@@ -26,6 +26,7 @@ public class ThomsonKeygen extends KeygenThread {
 	int sequenceNumber;
 	byte[] routerESSID;
 	boolean thomson3g;
+	boolean errorDict;
 	int len = 0;
 	final String onlineDict = "http://paginas.fe.up.pt/~ei10139/webdic/";
 	public ThomsonKeygen(RouterKeygen par ,boolean thomson3g ) {
@@ -35,6 +36,7 @@ public class ThomsonKeygen extends KeygenThread {
 		this.table= new byte[1282];
 		this.routerESSID = new byte[3];
 		this.thomson3g = thomson3g;
+		this.errorDict = false;
 	}
 
 	public void  run(){
@@ -160,7 +162,8 @@ public class ThomsonKeygen extends KeygenThread {
 			pwList.add(parent.getResources().getString(R.string.msg_dictnotfound));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
-			return nativeCalc();
+			errorDict = true;
+			return false;
 		}
 		int version = 0;
 		try {
@@ -169,7 +172,8 @@ public class ThomsonKeygen extends KeygenThread {
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
-				return nativeCalc();
+				errorDict = true;
+				return false;
 			}
 			version = table[0] << 8 | table[1];
 			int totalOffset = 0;
@@ -187,7 +191,8 @@ public class ThomsonKeygen extends KeygenThread {
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
-				return nativeCalc();
+				errorDict = true;
+				return false;
 			}	
 			int lenght = 0;
 			if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
@@ -207,17 +212,23 @@ public class ThomsonKeygen extends KeygenThread {
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
-				return nativeCalc();
+				return false;
 			}
 			lenght -= offset;
 			len = lenght;	
-		} catch (IOException e1) {}
+		} catch (IOException e1) {
+			errorDict = true;
+			pwList.add(parent.getResources().getString(R.string.msg_errordict));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return false;
+			}
 		if ( version > 2 )
 		{
 			pwList.add(parent.getResources().getString(R.string.msg_errversion));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
-			return nativeCalc();
+			return false;
 		}
 		
 		if ( version == 1 )
@@ -228,15 +239,6 @@ public class ThomsonKeygen extends KeygenThread {
 		return true;
 	}
 	
-	private boolean nativeCalc(){
-		String [] results = NativeThomson.thomson(routerESSID);
-		if ( results.length == 0 )
-			return false;
-		pwList.clear();
-		for (int i = 0 ; i < results.length ; ++i  )
-			pwList.add(results[i]);
-		return true;
-	}
 	
 	private void secondDic(){
 		cp[0] = (byte) (char) 'C';
