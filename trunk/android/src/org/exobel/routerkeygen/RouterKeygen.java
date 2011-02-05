@@ -180,11 +180,29 @@ public class RouterKeygen extends Activity {
 	}
 	
 	protected void onSaveInstanceState (Bundle outState){	
-		PersitentData rot = new PersitentData(vulnerable, router, list_key);
-		outState.putSerializable("backup", rot);
+		try {
+			removeDialog(NATIVE_CALC);
+			removeDialog(THOMSON3G);
+			if ( calculator instanceof NativeThomson )
+			{
+				outState.putSerializable("warning", true);
+			}
+			PersitentData rot = new PersitentData(vulnerable, router, list_key);
+			outState.putSerializable("backup", rot);
+		}
+		catch(Exception e){}
 	}
 
 	protected void onRestoreInstanceState (Bundle savedInstanceState){
+		if ( savedInstanceState == null  )
+			return;
+		Boolean warning = (Boolean)savedInstanceState.getSerializable("warning");
+		if ( warning != null )
+		{
+			Toast.makeText( RouterKeygen.this ,
+							getResources().getString(R.string.msg_rotation_nativecalc) , 
+							Toast.LENGTH_SHORT).show();
+		}
 		PersitentData rot = (PersitentData)savedInstanceState.getSerializable("backup");
 		if ( rot == null )
 			return;

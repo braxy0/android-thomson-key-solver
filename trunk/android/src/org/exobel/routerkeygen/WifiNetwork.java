@@ -168,7 +168,8 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			return -1;
 		return 1;
 	}
-	class AliceHandle extends DefaultHandler {
+	class AliceHandle extends DefaultHandler implements Serializable{
+		private static final long serialVersionUID = -1867841551140131246L;
 		String alice;
 		boolean supported;
 		int [] magic;

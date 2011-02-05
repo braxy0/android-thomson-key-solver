@@ -56,10 +56,7 @@ public class PirelliKeygen extends KeygenThread{
 				key[i] += 0x57;
 		try {
 			pwList.add(StringUtils.getHexString(key).toUpperCase());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (UnsupportedEncodingException e) {}
 		parent.list_key = pwList;
 		parent.handler.sendEmptyMessage(0);
 		return;
