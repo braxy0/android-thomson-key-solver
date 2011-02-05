@@ -157,14 +157,20 @@ public class RouterKeygen extends Activity {
 											new VerizonKeygen(RouterKeygen.this);
 				  							break;
 				  		case PIRELLI: RouterKeygen.this.calculator = 
-				  						new PirelliKeygen(RouterKeygen.this);
-  										break;
+					  						new PirelliKeygen(RouterKeygen.this);
+	  										break;
 				  		case TELSEY: RouterKeygen.this.calculator = 
-	  									new TelseyKeygen(RouterKeygen.this);
-										break;				
+		  									new TelseyKeygen(RouterKeygen.this);
+											break;				
 				  		case ALICE:	 RouterKeygen.this.calculator = 
-										new AliceKeygen(RouterKeygen.this);
-  										break;	
+											new AliceKeygen(RouterKeygen.this);
+	  										break;	
+				  		case WLAN4:	 RouterKeygen.this.calculator = 
+											new WlanKeygen(RouterKeygen.this);
+				  							break;
+				  		case HUAWEI: RouterKeygen.this.calculator = 
+											new HuaweiKeygen(RouterKeygen.this);
+				  							break;
 			        }
 			        
 					RouterKeygen.this.calculator.router = vulnerable.get(position);
@@ -314,8 +320,8 @@ public class RouterKeygen extends Activity {
            		 public void onClick(View arg0) {
         					router = edit.getText().toString().trim();
         			        begin =  System.currentTimeMillis();
-        					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"" , RouterKeygen.this);
 
+        				    WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"" , RouterKeygen.this);
         					//WifiNetwork wifi = new WifiNetwork("FASTWEB-1-002196", "00:21:96:12:34:56" , 0 ,"" , RouterKeygen.this);
         					if ( !wifi.supported )
         					{
@@ -349,7 +355,13 @@ public class RouterKeygen extends Activity {
 													break;
         				  		case ALICE:	 RouterKeygen.this.calculator = 
 		  											new AliceKeygen(RouterKeygen.this);
-        				  							break;				
+        				  							break;
+        				  		case WLAN4:	 RouterKeygen.this.calculator = 
+													new WlanKeygen(RouterKeygen.this);
+        				  							break;
+        				  		case HUAWEI: RouterKeygen.this.calculator = 
+													new HuaweiKeygen(RouterKeygen.this);
+						  							break;
 													
         			        }
         					

@@ -71,4 +71,5 @@
 <string name="dialog_thomson3g_msg">Fetching Keys...</string>
 <string name="msg_startingnativecalc">Error with dictionary. Starting native calculation.</string>
 <string name="msg_rotation_nativecalc">Calculation Cancelled. Please do not rotate your phone while doing the calculation.</string>
+<string name="msg_err_essidhuawei">The calculated SSID does not match the provided one.</string>
 </resources>
