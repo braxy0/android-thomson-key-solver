@@ -28,7 +28,8 @@ public class ThomsonKeygen extends KeygenThread {
 	boolean thomson3g;
 	boolean errorDict;
 	int len = 0;
-	final String onlineDict = "http://paginas.fe.up.pt/~ei10139/webdic/";
+	final String onlineDict = "http://android-thomson-key-solver.googlecode.com/svn-history/r90/trunk/webdic/";
+
 	public ThomsonKeygen(RouterKeygen par ,boolean thomson3g ) {
 		super(par);
 		this.cp = new byte[12];
@@ -39,7 +40,7 @@ public class ThomsonKeygen extends KeygenThread {
 		this.errorDict = false;
 	}
 
-	public void  run(){
+	public void run(){
 		if ( router == null)
 			return;
 		try {
