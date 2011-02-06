@@ -5,11 +5,11 @@ public class NativeThomson extends KeygenThread{
 	public NativeThomson(RouterKeygen par) {
 		super(par);
 	}
-
+	
 
 	static {
-    		  System.loadLibrary("thomson");
-    		  }
+		System.loadLibrary("thomson");
+    }
     		  
   /** 
    * Native processing without a dictionary.
@@ -32,8 +32,15 @@ public class NativeThomson extends KeygenThread{
 		for (int i = 0; i < 6; i += 2)
 			routerESSID[i / 2] = (byte) ((Character.digit(router.getEssid().charAt(i), 16) << 4)
 					+ Character.digit(router.getEssid().charAt(i + 1), 16));
-
-		String [] results = this.thomson(routerESSID);
+		String [] results;
+		try{
+			results = this.thomson(routerESSID);
+		}catch (Exception e) {
+			pwList.add(parent.getResources().getString(R.string.msg_err_native));
+			parent.list_key = pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
 		if ( stopRequested )
 			return;
 		for (int i = 0 ; i < results.length ; ++i  )

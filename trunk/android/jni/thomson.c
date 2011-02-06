@@ -13,7 +13,12 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomso
 {
     int n = sizeof(dic)/sizeof("AAA");
     __android_log_write(ANDROID_LOG_DEBUG, "NativeThomson","enter");
-
+    jclass cls = (*env)->GetObjectClass(env, obj);
+    jfieldID fid_s = (*env)->GetFieldID(env, cls, "stopRequested", "Z");
+    if ( fid_s == NULL ) {
+        return; /* exception already thrown */
+    }
+    unsigned char stop = (*env)->GetBooleanField(env, obj, fid_s);
     jbyte *e_native= (*env)->GetByteArrayElements(env, ess, 0);
     uint8_t ssid[3];
     ssid[0] = e_native[0];
@@ -21,19 +26,23 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomso
     ssid[2] = e_native[2];
 	uint8_t message_digest[20];
 	SHA_CTX sha1;
-	int year = 7;
+	int year = 4;
 	int week = 1;
 	int i = 0 ;
+	char  debug[80];
 	char input[13];
 	input[0] = 'C';
 	input[1] = 'P';
 	input[2] = '0';
 	char result[5][11];
 	int keys = 0;
-	for( i = 0 ; i < n; ++i  )
+	for( i = 0; i < n; ++i  )
 	{
 		sprintf( (&input[0]) + 6, "%02X%02X%02X" , (int)dic[i][0]
-		                        , (int)dic[i][1], (int)dic[i][2] );        
+		                        , (int)dic[i][1], (int)dic[i][2] );
+		stop = (*env)->GetBooleanField(env, obj, fid_s);
+		if ( stop )
+			return;
 		for ( year = 4 ; year <= 9 ; ++year )
 		{
 		    for ( week = 1 ; week <= 52 ; ++week )
@@ -51,6 +60,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomso
 		    }
 		}
 	}
+	__android_log_write(ANDROID_LOG_DEBUG, "NativeThomson","leaving");
 	jobjectArray ret;
 	ret= (jobjectArray)(*env)->NewObjectArray(env,keys, (*env)->FindClass(env,"java/lang/String"),0);
 	for ( i = 0; i < keys ; ++i )

@@ -7,10 +7,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef org_exobel_routerkeygen_NativeThomson_MIN_PRIORITY
+#define org_exobel_routerkeygen_NativeThomson_MIN_PRIORITY 1L
+#undef org_exobel_routerkeygen_NativeThomson_NORM_PRIORITY
+#define org_exobel_routerkeygen_NativeThomson_NORM_PRIORITY 5L
+#undef org_exobel_routerkeygen_NativeThomson_MAX_PRIORITY
+#define org_exobel_routerkeygen_NativeThomson_MAX_PRIORITY 10L
 /*
  * Class:     org_exobel_routerkeygen_NativeThomson
  * Method:    thomson
- * Signature: ([B)Ljava/lang/String;
+ * Signature: ([BI)[Ljava/lang/String;
  */
 JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomson
   (JNIEnv *, jobject, jbyteArray);

@@ -153,6 +153,7 @@ public class ThomsonKeygen extends KeygenThread {
 			pwList.add(parent.getResources().getString(R.string.msg_nosdcard));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
+			errorDict = true;
 			return false;
 		}
 		RandomAccessFile fis;
@@ -212,6 +213,7 @@ public class ThomsonKeygen extends KeygenThread {
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
 				parent.handler.sendEmptyMessage(1);
+				errorDict = true;
 				return false;
 			}
 			lenght -= offset;
@@ -228,6 +230,7 @@ public class ThomsonKeygen extends KeygenThread {
 			pwList.add(parent.getResources().getString(R.string.msg_errversion));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
+			errorDict = true;
 			return false;
 		}
 		
