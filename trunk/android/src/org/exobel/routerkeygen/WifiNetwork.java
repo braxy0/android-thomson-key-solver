@@ -101,15 +101,16 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.EIRCOM;
 			return true;
 		}
-		if ( ssid.length() == 5  && ( mac.contains("00:1F:90") || 
-				mac.contains("00:18:01") || mac.contains("00:20:E0") ||
-				mac.contains("00:0F:B3") || mac.contains("00:1E:A7") ||
-				mac.contains("00:15:05") || mac.contains("00:24:7B") ) )
+		if ( ssid.length() == 5  && ( mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44") ||
+				mac.startsWith("00:18:01") || mac.startsWith("00:20:E0") ||
+				mac.startsWith("00:0F:B3") || mac.startsWith("00:1E:A7") ||
+				mac.startsWith("00:15:05") || mac.startsWith("00:24:7B") ||
+				mac.startsWith("00:26:62") || mac.startsWith("00:26:B8") ) )
 		{
 			ssidSubpart = ssid;
 			type = TYPE.VERIZON;
 			return true;
-		}		
+		}
 		if ( ( ssid.startsWith("FASTWEB-1-000827") && ssid.length() == 22 ) ||
 		     ( ssid.startsWith("FASTWEB-1-0013C8") && ssid.length() == 22 )	||
 		     ( ssid.startsWith("FASTWEB-1-0017C2") && ssid.length() == 22 )	||
@@ -118,7 +119,12 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		     ( ssid.startsWith("FASTWEB-1-001D8B") && ssid.length() == 22 )	||
 		     ( ssid.startsWith("FASTWEB-1-002233") && ssid.length() == 22 )	||
 		     ( ssid.startsWith("FASTWEB-1-00238E") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-002553") && ssid.length() == 22 )	)
+		     ( ssid.startsWith("FASTWEB-1-002553") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-00A02F") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-080018") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-3039F2") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-38229D") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-6487D7") && ssid.length() == 22 ))
 			{
 				ssidSubpart = new String ( ssid.substring(ssid.length()-12));
 				if ( mac.equals("") )
