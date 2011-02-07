@@ -109,9 +109,16 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			ssidSubpart = ssid;
 			type = TYPE.VERIZON;
 			return true;
-		}
-		if ( ( ssid.startsWith("FASTWEB-1-001CA2") && ssid.length() == 22 ) ||
-		     ( ssid.startsWith("FASTWEB-1-001DBX") && ssid.length() == 22 )	)
+		}		
+		if ( ( ssid.startsWith("FASTWEB-1-000827") && ssid.length() == 22 ) ||
+		     ( ssid.startsWith("FASTWEB-1-0013C8") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-0017C2") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-00193E") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-001CA2") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-001D8B") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-002233") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-00238E") && ssid.length() == 22 )	||
+		     ( ssid.startsWith("FASTWEB-1-002553") && ssid.length() == 22 )	)
 			{
 				ssidSubpart = new String ( ssid.substring(ssid.length()-12));
 				if ( mac.equals("") )
