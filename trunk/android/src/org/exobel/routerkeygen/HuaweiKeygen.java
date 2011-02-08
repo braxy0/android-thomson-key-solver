@@ -88,13 +88,6 @@ public class HuaweiKeygen extends KeygenThread {
 				(a6[mac[10]])^(a0[mac[11]])^10;
 		String ssidFinal = Character.toString(ssid[s1]) + Character.toString(ssid[s2]) + 
 				Character.toString(ssid[s3]) + Character.toString(ssid[s4]);
-		if ( !router.getEssid().equalsIgnoreCase(ssidFinal) )
-		{
-			pwList.add(parent.getResources().getString(R.string.msg_err_essidhuawei));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
-			return;
-		}
 		int ya=(a2[mac[0]])^(n11[mac[1]])^(a7[mac[2]])^(a8[mac[3]])^(a14[mac[4]])^
 				(a5[mac[5]])^(a5[mac[6]])^(a2[mac[7]])^(a0[mac[8]])^(a1[mac[9]])^
 				(a15[mac[10]])^(a0[mac[11]])^13;
@@ -115,6 +108,13 @@ public class HuaweiKeygen extends KeygenThread {
 				Integer.toString(key[ye]) );
 		parent.list_key =  pwList;
 		parent.handler.sendEmptyMessage(0);
+		if ( !router.getEssid().equalsIgnoreCase(ssidFinal) && 
+				router.ssid.startsWith("INFINITUM") )
+		{
+			pwList.add(parent.getResources().getString(R.string.msg_err_essidhuawei));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+		}
 		return;
 	}
 }

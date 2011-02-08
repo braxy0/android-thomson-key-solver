@@ -15,6 +15,14 @@ public class KeygenThread extends Thread {
 	
 	
 
+	public WifiNetwork getRouter() {
+		return router;
+	}
+
+	public void setRouter(WifiNetwork router) {
+		this.router = router;
+	}
+
 	public KeygenThread( RouterKeygen par )
 	{
 		this.parent = par;

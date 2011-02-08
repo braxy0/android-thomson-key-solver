@@ -445,5 +445,14 @@ public class RouterKeygen extends Activity {
 	    		"thomson");
     }
 	
+	public List<String> getResults() {
+		return list_key;
+	}
 	
+	public KeygenThread getWorker(){
+		return calculator;
+	}
+	public void setWorker(KeygenThread k){
+		this.calculator = k;
+	}
 }
