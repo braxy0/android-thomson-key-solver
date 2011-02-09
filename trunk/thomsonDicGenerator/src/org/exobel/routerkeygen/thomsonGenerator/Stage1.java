@@ -29,20 +29,22 @@ public class Stage1 {
         byte [] ret = new byte [5];
     	cp[0] = (byte) (char)'C';
     	cp[1] = (byte) (char)'P';
+        cp[2] = (byte) (char)'0';
     	System.out.println("Stage1");
 		System.out.println("Calculating possibles ESSID's.");
 
         int offset = 0;
-        for(int y = 4; y < 10; y++)
+        for(int w = 1; w <= 52; w++)
         {
-            cp[2] = (byte) Character.forDigit((y / 10), 10);
-            cp[3] = (byte) Character.forDigit((y % 10), 10);
-            System.out.println("Done .. " + 100*(y-4)/6 + "%");
-            for(int w = 1; w <= 52; w++)
-            {
-                
-                cp[4] = (byte) Character.forDigit((w / 10), 10);
-                cp[5] = (byte) Character.forDigit((w % 10), 10);
+            cp[4] = (byte) Character.forDigit((w / 10), 10);
+            cp[5] = (byte) Character.forDigit((w % 10), 10);
+            System.out.println("Done .. " + 100*(w-1)/52 + "%");
+
+            if (  ((w-1)%3) == 0 )
+            	sequenceNumber = 0;
+	        for(int y = 4; y < 10; y++)
+	        {
+	            cp[3] = (byte) Character.forDigit((y % 10), 10);
                 for(int a = 0; a < AlphabetCodes.charectbytes.length; a++)
                 {
                     cp[6] = AlphabetCodes.charectbytes[a][0];

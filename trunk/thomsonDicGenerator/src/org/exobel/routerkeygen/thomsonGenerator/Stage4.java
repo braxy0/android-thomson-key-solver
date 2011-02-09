@@ -10,12 +10,13 @@ public class Stage4 {
 	/*
 	 * Version 1 - Initial dictionary of 55.8 MB ( downloaded 740 times )
 	 * Version 2 - Second version with 41.9 MB
+	 * Version 3 - Third version with 28.0 MB
 	 */
-	static final byte [] version = { 0, 2};
+	static final byte [] version = { 0, 3};
 	public static void main(String[] args) {
 		FileInputStream fis;
 		EntryTable entry = new EntryTable(4);
-    	System.out.println("Stage3");
+    	System.out.println("Stage4");
 		System.out.println("Creating main table and assembling the final file.");
 		long begin = System.currentTimeMillis();
 		String fileName = "56.dat";
