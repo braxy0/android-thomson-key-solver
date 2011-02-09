@@ -10,6 +10,8 @@ public class NativeThomson extends KeygenThread{
 	static {
 		System.loadLibrary("thomson");
     }
+	
+	
     		  
   /** 
    * Native processing without a dictionary.

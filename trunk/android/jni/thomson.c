@@ -42,7 +42,10 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_NativeThomson_thomso
 		                        , (int)dic[i][1], (int)dic[i][2] );
 		stop = (*env)->GetBooleanField(env, obj, fid_s);
 		if ( stop )
+		{
+			(*env)->ReleaseByteArrayElements(env, ess, e_native, 0);
 			return;
+		}
 		for ( year = 4 ; year <= 9 ; ++year )
 		{
 		    for ( week = 1 ; week <= 52 ; ++week )
