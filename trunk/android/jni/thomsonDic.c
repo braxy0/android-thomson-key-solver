@@ -1,7 +1,7 @@
 #include "org_exobel_routerkeygen_ThomsonKeygen.h"
 #include <ctype.h>
 #include <string.h>
-#include "sha1.h"
+#include "sha.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>

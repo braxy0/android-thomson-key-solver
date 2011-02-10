@@ -1,7 +1,7 @@
 #include "org_exobel_routerkeygen_NativeThomson.h"
 #include <ctype.h>
 #include <string.h>
-#include "sha1.h"
+#include "sha.h"
 #include "unknown.h"
 #include <stdio.h>
 #include <stdlib.h>
