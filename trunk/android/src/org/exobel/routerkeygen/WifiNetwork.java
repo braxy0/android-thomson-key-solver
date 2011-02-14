@@ -26,7 +26,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	static enum TYPE {
 		THOMSON , DLINK , DISCUS , VERIZON ,
 		EIRCOM , PIRELLI , TELSEY , ALICE ,
-		WLAN4 , HUAWEI};
+		WLAN4 , HUAWEI, WLAN2};
 	public WifiNetwork(String ssid, String mac, int level , String enc , Context con ){
 		this.ssid = ssid;
 		this.mac = mac.toUpperCase();
@@ -178,6 +178,15 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		{
 			ssidSubpart = new String ( ssid.substring(ssid.length()-4));
 			type = TYPE.HUAWEI;
+			return true;
+		}
+		if ( ssid.startsWith("WLAN_") && ssid.length() == 7 &&
+			( mac.startsWith("00:01:38") || mac.startsWith("00:16:38") || 
+			  mac.startsWith("00:01:13") || mac.startsWith("00:01:1B") || 
+			  mac.startsWith("00:19:5B") ) )
+		{
+			ssidSubpart = new String ( ssid.substring(ssid.length()-2));
+			type = TYPE.WLAN2;
 			return true;
 		}
 		return false;

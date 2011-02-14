@@ -166,11 +166,14 @@ public class RouterKeygen extends Activity {
 											new AliceKeygen(RouterKeygen.this);
 	  										break;	
 				  		case WLAN4:	 RouterKeygen.this.calculator = 
-											new WlanKeygen(RouterKeygen.this);
+											new Wlan4Keygen(RouterKeygen.this);
 				  							break;
 				  		case HUAWEI: RouterKeygen.this.calculator = 
 											new HuaweiKeygen(RouterKeygen.this);
 				  							break;
+				  		case WLAN2:	 RouterKeygen.this.calculator = 
+											new Wlan2Keygen(RouterKeygen.this);
+				  							break;					
 			        }
 					RouterKeygen.this.calculator.router = vulnerable.get(position);
 					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
@@ -323,11 +326,14 @@ public class RouterKeygen extends Activity {
 		  											new AliceKeygen(RouterKeygen.this);
         				  							break;
         				  		case WLAN4:	 RouterKeygen.this.calculator = 
-													new WlanKeygen(RouterKeygen.this);
+													new Wlan4Keygen(RouterKeygen.this);
         				  							break;
         				  		case HUAWEI: RouterKeygen.this.calculator = 
 													new HuaweiKeygen(RouterKeygen.this);
 						  							break;
+						  		case WLAN2:	 RouterKeygen.this.calculator = 
+													new Wlan2Keygen(RouterKeygen.this);
+						  							break;	
 													
         			        }
         					

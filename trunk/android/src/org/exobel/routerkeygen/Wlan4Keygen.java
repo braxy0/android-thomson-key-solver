@@ -4,9 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class WlanKeygen extends KeygenThread {
+public class Wlan4Keygen extends KeygenThread {
 
-	public WlanKeygen(RouterKeygen par) {
+	public Wlan4Keygen(RouterKeygen par) {
 		super(par);
 	}
 	final String magic = "bcgbghgg";
