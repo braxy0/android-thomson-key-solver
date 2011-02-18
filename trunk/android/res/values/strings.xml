@@ -53,7 +53,7 @@
 <string name="pref_thomson3g">Use 3G for Thomson</string>
 <string name="pref_hinton_thomson3g">Fetching keys from Internet</string>
 <string name="pref_hintoff_thomson3g">Using dictionary to generate keys.</string>
-<string name="msg_nosdcard">SD card is not mounted!</string>
+<string name="msg_nosdcard">The external storage is not available.</string>
 <string name="msg_nomd5">This phone cannot process a MD5 hash.</string>
 <string name="msg_nosha1">This phone cannot process a SHA1 hash.</string>
 <string name="msg_nosha256">This phone cannot process a SHA256 hash.</string>
@@ -74,4 +74,6 @@
 <string name="msg_err_essidhuawei">The calculated SSID does not match the provided one.</string>
 <string name="msg_err_native">Error in the Native Calculation.Please inform the team.</string>
 <string name="msg_results">Click on one of the keys to copy it. It will then open the Wifi Settings where you can use it for testing.</string>
+<string name="msg_nomemoryonsdcard">The external storage has not enough free memory.</string>
+<string name="msg_error">Error</string>
 </resources>
