@@ -15,7 +15,7 @@ public class StageWebdic {
 		String prefixfileName = "56";
 		String suffixfileName = "00";
 		byte [] fileData = new byte [300000];
-		byte [] outputData = new byte [4];
+		byte [] outputData = new byte [2];
 		long begin = System.currentTimeMillis();  
 		System.out.println("Stage3");
 		System.out.println("Refactoring dat files for webdic.");
@@ -53,15 +53,13 @@ public class StageWebdic {
 
 				int offset= 0;
 				while (offset < count ){
-					outputData[0] = fileData[offset + 1];
-					outputData[1] = fileData[offset + 2];
-					outputData[2] = fileData[offset + 3];
-					outputData[3] = fileData[offset + 4];
+					outputData[0] = fileData[offset + 2];
+					outputData[1] = fileData[offset + 3];
 					try {
 						files.sendFile("webdic" + File.separator + prefixfileName + File.separator + 
 								AlphabetCodes.getHexString(fileData[offset + 0]) + ".dat",outputData );
 					} catch (UnsupportedEncodingException e) {}
-					offset += 5;
+					offset += 4;
 
 				}
 				files.close();
