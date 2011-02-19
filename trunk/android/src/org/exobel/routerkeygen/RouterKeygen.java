@@ -350,40 +350,42 @@ public class RouterKeygen extends Activity {
 		}
 		switch( wifi.type )
 		{
-		case THOMSON: RouterKeygen.this.calculator = 
-			new ThomsonKeygen(RouterKeygen.this , thomson3g);
-		break;
-		case DISCUS: RouterKeygen.this.calculator = 
-			new DiscusKeygen(RouterKeygen.this);
-		break;
-		case EIRCOM: RouterKeygen.this.calculator = 
-			new EircomKeygen(RouterKeygen.this);
-		break;
-		case DLINK: RouterKeygen.this.calculator = 
-			new DlinkKeygen(RouterKeygen.this);
-		break;
-		case VERIZON: RouterKeygen.this.calculator = 
-			new VerizonKeygen(RouterKeygen.this);
-		break;
-		case PIRELLI: RouterKeygen.this.calculator = 
-			new PirelliKeygen(RouterKeygen.this);
-		break;
-		case TELSEY: RouterKeygen.this.calculator = 
-			new TelseyKeygen(RouterKeygen.this);
-		break;
-		case ALICE:	 RouterKeygen.this.calculator = 
-			new AliceKeygen(RouterKeygen.this);
-		break;
-		case WLAN4:	 RouterKeygen.this.calculator = 
-			new Wlan4Keygen(RouterKeygen.this);
-		break;
-		case HUAWEI: RouterKeygen.this.calculator = 
-			new HuaweiKeygen(RouterKeygen.this);
-		break;
-		case WLAN2:	 RouterKeygen.this.calculator = 
-			new Wlan2Keygen(RouterKeygen.this);
-		break;	
-
+			case THOMSON: RouterKeygen.this.calculator = 
+						new ThomsonKeygen(RouterKeygen.this , thomson3g);
+						break;
+			case DISCUS: RouterKeygen.this.calculator = 
+						new DiscusKeygen(RouterKeygen.this);
+						break;
+			case EIRCOM: RouterKeygen.this.calculator = 
+						new EircomKeygen(RouterKeygen.this);
+						break;
+			case DLINK: RouterKeygen.this.calculator = 
+						new DlinkKeygen(RouterKeygen.this);
+						break;
+			case VERIZON: RouterKeygen.this.calculator = 
+						new VerizonKeygen(RouterKeygen.this);
+						break;
+			case PIRELLI: RouterKeygen.this.calculator = 
+						new PirelliKeygen(RouterKeygen.this);
+						break;
+			case TELSEY: RouterKeygen.this.calculator = 
+						new TelseyKeygen(RouterKeygen.this);
+						break;
+			case ALICE:	 RouterKeygen.this.calculator = 
+						new AliceKeygen(RouterKeygen.this);
+						break;
+			case WLAN4:	 RouterKeygen.this.calculator = 
+						new Wlan4Keygen(RouterKeygen.this);
+						break;
+			case HUAWEI: RouterKeygen.this.calculator = 
+						new HuaweiKeygen(RouterKeygen.this);
+						break;
+			case WLAN2:	 RouterKeygen.this.calculator = 
+						new Wlan2Keygen(RouterKeygen.this);
+						break;
+			case ONO_WEP: RouterKeygen.this.calculator = 
+						new OnoKeygen(RouterKeygen.this);
+						break;			
 		}
 
 		RouterKeygen.this.calculator.router = wifi;

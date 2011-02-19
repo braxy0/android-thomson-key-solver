@@ -64,7 +64,11 @@ public class Downloader extends Thread{
 				messHand.sendMessage(Message.obtain(messHand, 4, myProgress, fileLen));
 				Thread.sleep(10);
 				if ( stopRequested )
+				{
+					dis.close();
+					fos.close();
 					return;
+				}
 			}
 		Thread.sleep(10);
 		messHand.sendEmptyMessage(3);
