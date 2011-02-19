@@ -31,7 +31,6 @@ public class Preferences extends PreferenceActivity {
 	ProgressDialog pbarDialog;
 	Downloader downloader;
 	int myProgress = 0, fileLen;
-	int byteRead;
 	long lastt, now = 0, downloadBegin = 0;
 
 	private static final String PUB_DONATE = 
@@ -73,8 +72,8 @@ public class Preferences extends PreferenceActivity {
 										}
 									});
 
+
 									myProgress = 0;
-									byteRead = 0;
 									downloader = new Downloader(messHand , PUB_DOWNLOAD);
 									downloader.start();
 									lastt = downloadBegin = System.currentTimeMillis();

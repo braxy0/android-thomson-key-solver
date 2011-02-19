@@ -123,64 +123,15 @@ public class RouterKeygen extends Activity {
 					int position, long id) {
 				router = ((TextView)((RelativeLayout) view).getChildAt(2)).getText().toString();
 
-				if ( !vulnerable.get(position).supported )
+
+				if (vulnerable.get(position).newThomson)
 				{
-					Toast.makeText( RouterKeygen.this , 
-							RouterKeygen.this.getResources().getString(R.string.msg_unspported) ,
+					Toast.makeText( RouterKeygen.this ,
+							RouterKeygen.this.getResources().getString(R.string.msg_newthomson) ,
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
-				else
-					if (vulnerable.get(position).newThomson)
-					{
-						Toast.makeText( RouterKeygen.this ,
-								RouterKeygen.this.getResources().getString(R.string.msg_newthomson) ,
-								Toast.LENGTH_SHORT).show();
-						return;
-					}
-				begin =  System.currentTimeMillis();
-				switch( vulnerable.get(position).type )
-				{
-				case THOMSON: RouterKeygen.this.calculator = 
-					new ThomsonKeygen(RouterKeygen.this , thomson3g);
-				break;
-				case DISCUS: RouterKeygen.this.calculator = 
-					new DiscusKeygen(RouterKeygen.this);
-				break;
-				case EIRCOM: RouterKeygen.this.calculator = 
-					new EircomKeygen(RouterKeygen.this);
-				break;
-				case DLINK: RouterKeygen.this.calculator = 
-					new DlinkKeygen(RouterKeygen.this);
-				break;
-				case VERIZON: RouterKeygen.this.calculator = 
-					new VerizonKeygen(RouterKeygen.this);
-				break;
-				case PIRELLI: RouterKeygen.this.calculator = 
-					new PirelliKeygen(RouterKeygen.this);
-				break;
-				case TELSEY: RouterKeygen.this.calculator = 
-					new TelseyKeygen(RouterKeygen.this);
-				break;				
-				case ALICE:	 RouterKeygen.this.calculator = 
-					new AliceKeygen(RouterKeygen.this);
-				break;	
-				case WLAN4:	 RouterKeygen.this.calculator = 
-					new Wlan4Keygen(RouterKeygen.this);
-				break;
-				case HUAWEI: RouterKeygen.this.calculator = 
-					new HuaweiKeygen(RouterKeygen.this);
-				break;
-				case WLAN2:	 RouterKeygen.this.calculator = 
-					new Wlan2Keygen(RouterKeygen.this);
-				break;					
-				}
-				RouterKeygen.this.calculator.router = vulnerable.get(position);
-				RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
-				RouterKeygen.this.calculator.start();
-				if (  vulnerable.get(position).type == TYPE.THOMSON && thomson3g )
-					showDialog(THOMSON3G);
-				removeDialog(KEY_LIST);
+				calcKeys(vulnerable.get(position));
 			}
 		});
 		stateChanged = new WifiStateReceiver(wifi);
@@ -303,59 +254,7 @@ public class RouterKeygen extends Activity {
 
 					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"" , RouterKeygen.this);
 					//WifiNetwork wifi = new WifiNetwork("FASTWEB-1-002196", "00:21:96:12:34:56" , 0 ,"" , RouterKeygen.this);
-					if ( !wifi.supported )
-					{
-						Toast.makeText( RouterKeygen.this , 
-								RouterKeygen.this.getResources().getString(R.string.msg_unspported),
-								Toast.LENGTH_SHORT).show();
-						return;
-					}
-					switch( wifi.type )
-					{
-					case THOMSON: RouterKeygen.this.calculator = 
-						new ThomsonKeygen(RouterKeygen.this , thomson3g);
-					break;
-					case DISCUS: RouterKeygen.this.calculator = 
-						new DiscusKeygen(RouterKeygen.this);
-					break;
-					case EIRCOM: RouterKeygen.this.calculator = 
-						new EircomKeygen(RouterKeygen.this);
-					break;
-					case DLINK: RouterKeygen.this.calculator = 
-						new DlinkKeygen(RouterKeygen.this);
-					break;
-					case VERIZON: RouterKeygen.this.calculator = 
-						new VerizonKeygen(RouterKeygen.this);
-					break;
-					case PIRELLI: RouterKeygen.this.calculator = 
-						new PirelliKeygen(RouterKeygen.this);
-					break;
-					case TELSEY: RouterKeygen.this.calculator = 
-						new TelseyKeygen(RouterKeygen.this);
-					break;
-					case ALICE:	 RouterKeygen.this.calculator = 
-						new AliceKeygen(RouterKeygen.this);
-					break;
-					case WLAN4:	 RouterKeygen.this.calculator = 
-						new Wlan4Keygen(RouterKeygen.this);
-					break;
-					case HUAWEI: RouterKeygen.this.calculator = 
-						new HuaweiKeygen(RouterKeygen.this);
-					break;
-					case WLAN2:	 RouterKeygen.this.calculator = 
-						new Wlan2Keygen(RouterKeygen.this);
-					break;	
-
-					}
-
-					RouterKeygen.this.calculator.router = wifi;
-					RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
-					RouterKeygen.this.calculator.start();
-					removeDialog(KEY_LIST);
-					removeDialog(MANUAL_CALC);
-					if (  wifi.type == TYPE.THOMSON && thomson3g )
-						showDialog(THOMSON3G);
-
+					calcKeys(wifi);
 
 				}
 			});
@@ -441,7 +340,62 @@ public class RouterKeygen extends Activity {
 		}
 	}
 
+	private void calcKeys(WifiNetwork wifi){
+		if ( !wifi.supported )
+		{
+			Toast.makeText( RouterKeygen.this , 
+					RouterKeygen.this.getResources().getString(R.string.msg_unspported),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+		switch( wifi.type )
+		{
+		case THOMSON: RouterKeygen.this.calculator = 
+			new ThomsonKeygen(RouterKeygen.this , thomson3g);
+		break;
+		case DISCUS: RouterKeygen.this.calculator = 
+			new DiscusKeygen(RouterKeygen.this);
+		break;
+		case EIRCOM: RouterKeygen.this.calculator = 
+			new EircomKeygen(RouterKeygen.this);
+		break;
+		case DLINK: RouterKeygen.this.calculator = 
+			new DlinkKeygen(RouterKeygen.this);
+		break;
+		case VERIZON: RouterKeygen.this.calculator = 
+			new VerizonKeygen(RouterKeygen.this);
+		break;
+		case PIRELLI: RouterKeygen.this.calculator = 
+			new PirelliKeygen(RouterKeygen.this);
+		break;
+		case TELSEY: RouterKeygen.this.calculator = 
+			new TelseyKeygen(RouterKeygen.this);
+		break;
+		case ALICE:	 RouterKeygen.this.calculator = 
+			new AliceKeygen(RouterKeygen.this);
+		break;
+		case WLAN4:	 RouterKeygen.this.calculator = 
+			new Wlan4Keygen(RouterKeygen.this);
+		break;
+		case HUAWEI: RouterKeygen.this.calculator = 
+			new HuaweiKeygen(RouterKeygen.this);
+		break;
+		case WLAN2:	 RouterKeygen.this.calculator = 
+			new Wlan2Keygen(RouterKeygen.this);
+		break;	
 
+		}
+
+		RouterKeygen.this.calculator.router = wifi;
+		RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
+		begin =  System.currentTimeMillis();//debugging
+		RouterKeygen.this.calculator.start();
+		removeDialog(KEY_LIST);
+		removeDialog(MANUAL_CALC);
+		if (  wifi.type == TYPE.THOMSON && thomson3g )
+			showDialog(THOMSON3G);
+		removeDialog(KEY_LIST);
+	}
 
 	boolean wifiOn;
 	boolean thomson3g;
