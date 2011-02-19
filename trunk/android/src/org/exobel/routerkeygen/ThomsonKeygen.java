@@ -30,7 +30,7 @@ public class ThomsonKeygen extends KeygenThread {
 	boolean thomson3g;
 	boolean errorDict;
 	int len = 0;
-	final String onlineDict = "http://android-thomson-key-solver.googlecode.com/svn-history/r90/trunk/webdic/";
+	final String onlineDict = "http://paginas.fe.up.pt/~ei10139/webdic/";
 
 	public ThomsonKeygen(RouterKeygen par ,boolean thomson3g ) {
 		super(par);
