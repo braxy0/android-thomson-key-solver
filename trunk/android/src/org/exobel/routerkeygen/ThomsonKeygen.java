@@ -1,11 +1,13 @@
 package org.exobel.routerkeygen;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import android.os.Environment;
@@ -87,12 +89,17 @@ public class ThomsonKeygen extends KeygenThread {
 		return;
 	}
 	private boolean internetCalc(){
-
-		ThomsonHttpRetriever client = new ThomsonHttpRetriever();
-		InputStream onlineFile =  client.retrieveStream(
-									onlineDict +  
-									router.getEssid().substring(0, 2).toLowerCase() + "/" + 
-									router.getEssid().substring(2, 4).toLowerCase() + ".dat");	
+		DataInputStream onlineFile = null;
+		int lenght =0 ;
+		URL url;
+		try {
+			url = new URL(onlineDict + router.getEssid().substring(0, 2).toLowerCase() + "/" + 
+										router.getEssid().substring(2, 4).toLowerCase() + ".dat");
+			URLConnection con= url.openConnection();
+			onlineFile = new DataInputStream(con.getInputStream());
+			lenght = con.getContentLength();
+		} catch (IOException e1) {}
+		
 		if ( onlineFile == null )
 		{
 			pwList.add(parent.getResources().getString(R.string.msg_errthomson3g));
@@ -101,47 +108,20 @@ public class ThomsonKeygen extends KeygenThread {
 			return false;
 		}
 		this.entry = new byte[2000];
+		len = 0;
+		while ( len < lenght )
 		try {
-			len = onlineFile.read(entry);
+			Thread.sleep(10);
+			if ( ( len += onlineFile.read(this.entry , len , 2000 - len ) ) == -1 ){
+				len = lenght;
+				onlineFile.close();
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		cp[0] = (byte) (char) 'C';
-		cp[1] = (byte) (char) 'P';
-		for (int offset = 0; offset < len ; offset += 4 )
-		{
-			if ( stopRequested )
-				return false;
-
-			if ( entry[offset] != routerESSID[2])
-				continue;
-			sequenceNumber = ( (0xFF & entry[offset + 1]) << 16 ) | 
-			( (0xFF & entry[offset + 2])  << 8 ) | (0xFF & entry[offset + 3]) ;
-			c = sequenceNumber % 36;
-			b = sequenceNumber/36 % 36;
-			a = sequenceNumber/(36*36) % 36;
-			year = sequenceNumber / ( 36*36*36*52 ) + 4 ;
-			week = ( sequenceNumber / ( 36*36*36 ) ) % 52 + 1 ;				
-			cp[2] = (byte) Character.forDigit((year / 10), 10);
-			cp[3] = (byte) Character.forDigit((year % 10), 10);
-			cp[4] = (byte) Character.forDigit((week / 10), 10);
-			cp[5] = (byte) Character.forDigit((week % 10), 10);
-			cp[6] = charectbytes0[a];
-			cp[7] = charectbytes1[a];
-			cp[8] = charectbytes0[b];
-			cp[9] = charectbytes1[b];
-			cp[10] = charectbytes0[c];
-			cp[11] = charectbytes1[c];
-			md.reset();
-			md.update(cp);
-			hash = md.digest();
-			
-			try {
-				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}
+		} catch (InterruptedException e) {}
+		
+		firstDic();
 		return true;
 	}
 
@@ -180,11 +160,15 @@ public class ThomsonKeygen extends KeygenThread {
 			version = table[0] << 8 | table[1];
 			int totalOffset = 0;
 			int offset = 0;
+			int lastLength = 0 , length = 0;
 			if ( table[( 0xFF &routerESSID[0] )*5 + 2 ] == routerESSID[0] )
 			{
 				int i = ( 0xFF &routerESSID[0] )*5 + 2;
 				offset =( (0xFF & table[i + 1]) << 24 ) | ( (0xFF & table[i + 2])  << 16 ) |
 						( (0xFF & table[i + 3])  << 8 ) | (0xFF & table[i + 4]);
+				if ( (0xFF & table[i]) != 0xFF )
+					lastLength = ( (0xFF & table[i + 6]) << 24 ) | ( (0xFF & table[i + 7])  << 16 ) |
+						( (0xFF & table[i + 8])  << 8 ) | (0xFF & table[i + 9]);
 			}
 			totalOffset += offset;
 			fis.seek(totalOffset);
@@ -196,20 +180,36 @@ public class ThomsonKeygen extends KeygenThread {
 				errorDict = true;
 				return false;
 			}	
-			int lenght = 0;
 			if ( table[( 0xFF &routerESSID[1] )*4] == routerESSID[1] )
 			{
 				int i = ( 0xFF &routerESSID[1] )*4;
 				offset =( (0xFF & table[i + 1])  << 16 ) |
 						( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
-				lenght =  ( (0xFF & table[i + 5])  << 16 ) |
+				length =  ( (0xFF & table[i + 5])  << 16 ) |
 						( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
 				
 			}
 			totalOffset += offset;
+			length -= offset;
+			if ( ( lastLength != 0 ) && ( (0xFF & routerESSID[1] ) == 0xFF ) )
+			{
+				/*Only for SSID starting with XXFF. We use the next item on the main table
+			 	to know the length of the sector we are looking for. */
+				lastLength -= totalOffset;
+				length = lastLength;
+			}
 			fis.seek(totalOffset );
-			this.entry = new byte[lenght - offset];
-			if ( fis.read(entry,0, lenght - offset) == -1 )
+			if ( ( (0xFF & routerESSID[0] ) != 0xFF ) || ( (0xFF & routerESSID[1] ) != 0xFF  ) )
+			{
+				this.entry = new byte[length];
+				len = fis.read(entry,0, length);
+			}
+			else
+			{ /*Only for SSID starting with FFFF as we don't have a marker of the end.*/
+					this.entry = new byte[2000];
+					len = fis.read( entry );
+			}
+			if ( len == -1 )
 			{
 				pwList.add(parent.getResources().getString(R.string.msg_errordict));
 				parent.list_key =  pwList;
@@ -217,8 +217,6 @@ public class ThomsonKeygen extends KeygenThread {
 				errorDict = true;
 				return false;
 			}
-			lenght -= offset;
-			len = lenght;	
 		} catch (IOException e1) {
 			errorDict = true;
 			pwList.add(parent.getResources().getString(R.string.msg_errordict));
