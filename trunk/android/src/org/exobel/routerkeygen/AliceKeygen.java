@@ -35,7 +35,7 @@ public class AliceKeygen extends KeygenThread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		if ( !router.supportedAlice.supported )
+		if ( router.supportedAlice.isEmpty() )
 		{
 			pwList.add(parent.getResources().getString(R.string.msg_erralicenotsupported));
 			parent.list_key =  pwList;
@@ -51,27 +51,72 @@ public class AliceKeygen extends KeygenThread {
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		String serialStr = router.supportedAlice.serial + "X";
-		int Q = router.supportedAlice.magic[0];
-		int k = router.supportedAlice.magic[1] ;
-		int serial = ( Integer.valueOf(router.getEssid()) - Q ) / k;
-		String tmp = Integer.toString(serial);
-		for (int i = 0; i < 7 - tmp.length(); i++){
-			serialStr += "0";
-		}
-		serialStr += tmp;
-		
-		byte [] mac = new byte[6];
-		String key = "";
-		byte [] hash;		
-		
-		if (  router.getMac().length() == 12 ) {
+		for ( int j = 0 ; j <router.supportedAlice.size() ; ++j )
+		{/*For pre AGPF 4.5.0sx*/
+			String serialStr = router.supportedAlice.get(j).serial + "X";
+			int Q = router.supportedAlice.get(j).magic[0];
+			int k = router.supportedAlice.get(j).magic[1] ;
+			int serial = ( Integer.valueOf(router.getEssid()) - Q ) / k;
+			String tmp = Integer.toString(serial);
+			for (int i = 0; i < 7 - tmp.length(); i++){
+				serialStr += "0";
+			}
+			serialStr += tmp;
+			
+			byte [] mac = new byte[6];
+			String key = "";
+			byte [] hash;		
+			
+			if (  router.getMac().length() == 12 ) {
+					
 				
+				for (int i = 0; i < 12; i += 2)
+					mac[i / 2] = (byte) ((Character.digit(router.getMac().charAt(i), 16) << 4)
+							+ Character.digit(router.getMac().charAt(i + 1), 16));
+	
+				md.reset();
+				md.update(specialSeq);
+				try {
+					md.update(serialStr.getBytes("ASCII"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+				md.update(mac);
+				hash = md.digest();
+				for ( int i = 0 ; i < 24 ; ++i )
+				{
+					key += preInitCharset.charAt(hash[i] & 0xFF);
+				}
+				if ( !pwList.contains(key)  ) 
+					pwList.add(key);
+			}
+			
+			/*For post AGPF 4.5.0sx*/
+			String macEth = router.getMac().substring(0,6);
+			int extraNumber = 0;
+			while ( extraNumber <= 9 )
+			{
+				String calc = Integer.toHexString(Integer.valueOf(
+						extraNumber + router.getEssid()) ).toUpperCase();
+				if ( macEth.charAt(5) == calc.charAt(0))
+				{
+					macEth += calc.substring(1);
+					break;
+				}
+				extraNumber++;
+			}
+			if ( macEth.equals(router.getMac().substring(0,6)) )
+			{
+				parent.list_key = pwList;
+				parent.handler.sendEmptyMessage(0);
+				return;
+			}
+			
+			
 			
 			for (int i = 0; i < 12; i += 2)
-				mac[i / 2] = (byte) ((Character.digit(router.getMac().charAt(i), 16) << 4)
-						+ Character.digit(router.getMac().charAt(i + 1), 16));
-
+				mac[i / 2] = (byte) ((Character.digit(macEth.charAt(i), 16) << 4)
+						+ Character.digit(macEth.charAt(i + 1), 16));
 			md.reset();
 			md.update(specialSeq);
 			try {
@@ -80,53 +125,13 @@ public class AliceKeygen extends KeygenThread {
 				e.printStackTrace();
 			}
 			md.update(mac);
+			key = "";
 			hash = md.digest();
 			for ( int i = 0 ; i < 24 ; ++i )
-			{
 				key += preInitCharset.charAt(hash[i] & 0xFF);
-			}
-			pwList.add(key);/*For pre AGPF 4.5.0sx*/
+			if ( !pwList.contains(key)  ) 
+				pwList.add(key);
 		}
-		
-		/*For post AGPF 4.5.0sx*/
-		String macEth = router.getMac().substring(0,6);
-		int extraNumber = 0;
-		while ( extraNumber <= 9 )
-		{
-			String calc = Integer.toHexString(Integer.valueOf(
-					extraNumber + router.getEssid()) ).toUpperCase();
-			if ( macEth.charAt(5) == calc.charAt(0))
-			{
-				macEth += calc.substring(1);
-				break;
-			}
-			extraNumber++;
-		}
-		if ( macEth.equals(router.getMac().substring(0,6)) )
-		{
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(0);
-			return;
-		}
-		
-		
-		
-		for (int i = 0; i < 12; i += 2)
-			mac[i / 2] = (byte) ((Character.digit(macEth.charAt(i), 16) << 4)
-					+ Character.digit(macEth.charAt(i + 1), 16));
-		md.reset();
-		md.update(specialSeq);
-		try {
-			md.update(serialStr.getBytes("ASCII"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		md.update(mac);
-		key = "";
-		hash = md.digest();
-		for ( int i = 0 ; i < 24 ; ++i )
-			key += preInitCharset.charAt(hash[i] & 0xFF);
-		pwList.add(key);
 		parent.list_key = pwList;
 		parent.handler.sendEmptyMessage(0);
 		return;

@@ -1,6 +1,7 @@
 package org.exobel.routerkeygen;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -18,7 +19,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	boolean supported;
 	boolean newThomson;
 	int level;
-	AliceHandle supportedAlice;
+	List <AliceMagicInfo> supportedAlice;
 	TYPE type;
 	static enum TYPE {
 		THOMSON , DLINK , DISCUS , VERIZON ,
@@ -137,20 +138,19 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		}*/
 		if ( ssid.startsWith("Alice-") && ssid.length() == 14 )
 		{
-			supportedAlice = new AliceHandle(ssid.substring(0,9));
+			AliceHandle aliceReader = new AliceHandle(ssid.substring(0,9));
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 		    SAXParser saxParser;
 		    try {
 		    	saxParser = factory.newSAXParser();
-				saxParser.parse(con.getResources().openRawResource(R.raw.alice), supportedAlice);
+				saxParser.parse(con.getResources().openRawResource(R.raw.alice), aliceReader);
 			} 
 		    catch (Exception e) {}
 			ssidSubpart = ssid.substring(ssid.length()-8);
 			type = TYPE.ALICE;
-			if( !supportedAlice.supported )
+			if( aliceReader.supportedAlice.isEmpty() )
 				return false;
-			if ( mac.equals("") )
-				mac = supportedAlice.mac;
+			supportedAlice = aliceReader.supportedAlice;
 			return true;
 		}
 		if (  ( ssid.startsWith("WLAN_") && ssid.length() == 9 ) ||
