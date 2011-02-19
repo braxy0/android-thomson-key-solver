@@ -16,19 +16,25 @@ public class Downloader extends Thread{
 	String urlDownload;	
 	boolean stopRequested;
 	public void run() {
-		URL url;
+		File myDicFile;
 		URLConnection con;
 		DataInputStream dis;
 		FileOutputStream fos;
-		int myProgress = 0, fileLen;
-		int byteRead;
+		int myProgress = 0;
+		int fileLen, byteRead;
 		byte[] buf;
 		try {
-			url = new URL(urlDownload);
-			fos = new FileOutputStream(
-					new File(
-						Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic"));
-			con = url.openConnection();
+			con = new URL(urlDownload).openConnection();
+			myDicFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic");
+			
+			// Append mode on
+			fos = new FileOutputStream(myDicFile, true);
+			
+			// Resuming if possible
+			myProgress = byteRead = (int) myDicFile.length();
+			if(byteRead > 0)
+				con.setRequestProperty("Range", "bytes=" + byteRead + "-");
+			
 			dis = new DataInputStream(con.getInputStream());
 			fileLen = con.getContentLength();
 			
