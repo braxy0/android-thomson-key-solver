@@ -5,6 +5,7 @@ package org.exobel.routerkeygen;
  * <br> 
  * 
  * Many WLAN_XX don't use this algorithm.
+ * Code by Kampanita
  */
 
 public class Wlan2Keygen extends KeygenThread {
@@ -13,10 +14,7 @@ public class Wlan2Keygen extends KeygenThread {
 		super(par);
 	}
 
-	final String magic = "";
-
 	public void run() {
-		// char inicio;
 		char[] key = new char[26];
 
 		if (router == null)
@@ -24,9 +22,7 @@ public class Wlan2Keygen extends KeygenThread {
 		String mac = router.getMac();
 
 		if (mac.length() != 12) {
-			pwList
-					.add(parent.getResources().getString(
-							R.string.msg_errpirelli));
+			pwList.add(parent.getResources().getString(R.string.msg_errpirelli));
 			parent.list_key = pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;
@@ -60,14 +56,14 @@ public class Wlan2Keygen extends KeygenThread {
 		key[24] = mac.charAt(4);
 		key[25] = mac.charAt(5);
 
-		int max=9;
-		String inicio=router.ssidSubpart.substring(0,1);
+		int max = 9;
+		String inicio = router.ssidSubpart.substring(0,1);
 		int primer_n = Integer.parseInt(inicio, 16);  
 		if (primer_n > max) {
-		   String cadena=String.valueOf(key, 0, 2);  	
+		   String cadena = String.valueOf(key, 0, 2);  	
 		   int value = Integer.parseInt(cadena,16);
 		   value=value-1;
-		   String cadena2=Integer.toHexString(value);
+		   String cadena2 = Integer.toHexString(value);
 		   key[0]=cadena2.charAt(0);
 		   key[1]=cadena2.charAt(1);
 		}

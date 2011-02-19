@@ -263,6 +263,12 @@ public class RouterKeygen extends Activity {
             	share.setOnClickListener(new View.OnClickListener(){
              		 public void onClick(View arg0) {
              			Intent i = new Intent(Intent.ACTION_SEND);
+             			if ( i == null ){
+             				Toast.makeText( RouterKeygen.this , 
+									RouterKeygen.this.getResources().getString(R.string.msg_err_sendto) , 
+									Toast.LENGTH_SHORT).show();
+             				return;
+             			}
              			i.setType("text/plain");
              			i.putExtra(Intent.EXTRA_SUBJECT, router + 
              					RouterKeygen.this.getResources().getString(R.string.share_msg_begin));

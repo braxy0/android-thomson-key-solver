@@ -10,26 +10,8 @@ public class AliceKeygen extends KeygenThread {
 		super(par);
 	}
 	
-	private String preInitCharset [] = {
-			 "0","1","2","3","4","5","6","7","8","9","a","b","c",
-			 "d","e","f","g","h","i","j","k","l","m","n","o","p",
-			 "q","r","s","t","u","v","w","x","y","z","0","1","2",
-			 "3","4","5","6","7","8","9","a","b","c","d","e","f","g",
-			 "h","i","j","k","l","m","n","o","p","q","r","s","t","u",
-			 "v","w","x","y","z","0","1","2","3","4","5","6","7","8",
-			 "9","a","b","c","d","e","f","g","h","i","j","k","l","m",
-			 "n","o","p","q","r","s","t","u","v","w","x","y","z","0",
-			 "1","2","3","4","5","6","7","8","9","a","b","c","d","e",
-			 "f","g","h","i","j","k","l","m","n","o","p","q","r","s",
-			 "t","u","v","w","x","y","z","0","1","2","3","4","5","6",
-			 "7","8","9","a","b","c","d","e","f","g","h","i","j","k",
-			 "l","m","n","o","p","q","r","s","t","u","v","w","x","y",
-			 "z","0","1","2","3","4","5","6","7","8","9","a","b","c",
-			 "d","e","f","g","h","i","j","k","l","m","n","o","p","q",
-			 "r","s","t","u","v","w","x","y","z","0","1","2","3","4",
-			 "5","6","7","8","9","a","b","c","d","e","f","g","h","i",
-			 "j","k","l","m","n","o","p","q","r","s","t","u","v","W",
-			 "x","y","z","0","1","2","3"};
+	final private String preInitCharset =
+			 "0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvWxyz0123";
 	 
 	 private byte specialSeq[/*32*/]= {
 		0x64, (byte) 0xC6, (byte) 0xDD, (byte) 0xE3, 
@@ -101,7 +83,7 @@ public class AliceKeygen extends KeygenThread {
 			hash = md.digest();
 			for ( int i = 0 ; i < 24 ; ++i )
 			{
-				key += preInitCharset[hash[i] & 0xFF];
+				key += preInitCharset.charAt(hash[i] & 0xFF);
 			}
 			pwList.add(key);/*For pre AGPF 4.5.0sx*/
 		}
@@ -143,7 +125,7 @@ public class AliceKeygen extends KeygenThread {
 		key = "";
 		hash = md.digest();
 		for ( int i = 0 ; i < 24 ; ++i )
-			key += preInitCharset[hash[i] & 0xFF];
+			key += preInitCharset.charAt(hash[i] & 0xFF);
 		pwList.add(key);
 		parent.list_key = pwList;
 		parent.handler.sendEmptyMessage(0);

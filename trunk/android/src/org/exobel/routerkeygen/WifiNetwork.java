@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import android.content.Context;
 
@@ -68,7 +65,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		     ( ssid.startsWith("DMAX") && ssid.length() == 10 )  || 
 		     ( ssid.startsWith("privat") && ssid.length() == 12 ) )
 		{
-			ssidSubpart = new String (ssid.substring(ssid.length()-6));
+			ssidSubpart = ssid.substring(ssid.length()-6);
 			if ( !mac.equals("") )
 				if ( ssidSubpart.equals(getMacEnd()) )
 					newThomson = true;
@@ -84,14 +81,14 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		if ( ( ssid.startsWith("Discus-") && ssid.length() == 13 ) ||
 			( ssid.startsWith("Discus--") && ssid.length() == 14 )	)
 		{
-			ssidSubpart = new String ( ssid.substring(ssid.length()-6));
+			ssidSubpart = ssid.substring(ssid.length()-6);
 			type = TYPE.DISCUS;
 			return true;
 		}
 		if ( ( ssid.startsWith("Eircom") && ssid.length() >= 14 ) ||
 		     ( ssid.startsWith("eircom") && ssid.length() >= 14 )	)
 		{
-			ssidSubpart = new String ( ssid.substring(ssid.length()-8));
+			ssidSubpart = ssid.substring(ssid.length()-8);
 			if ( mac.equals("") )
 				calcEircomMAC();
 			type = TYPE.EIRCOM;
@@ -122,7 +119,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		     ( ssid.startsWith("FASTWEB-1-38229D") && ssid.length() == 22 )	||
 		     ( ssid.startsWith("FASTWEB-1-6487D7") && ssid.length() == 22 ))
 			{
-				ssidSubpart = new String ( ssid.substring(ssid.length()-12));
+				ssidSubpart = ssid.substring(ssid.length()-12);
 				if ( mac.equals("") )
 					calcFastwebMAC();
 				type = TYPE.PIRELLI;
@@ -148,7 +145,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 				saxParser.parse(con.getResources().openRawResource(R.raw.alice), supportedAlice);
 			} 
 		    catch (Exception e) {}
-			ssidSubpart = new String ( ssid.substring(ssid.length()-8));
+			ssidSubpart = ssid.substring(ssid.length()-8);
 			type = TYPE.ALICE;
 			if( !supportedAlice.supported )
 				return false;
@@ -159,7 +156,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		if (  ( ssid.startsWith("WLAN_") && ssid.length() == 9 ) ||
 			  ( ssid.startsWith("JAZZTEL_") && ssid.length() == 12 ))
 		{
-			ssidSubpart = new String ( ssid.substring(ssid.length()-4));
+			ssidSubpart = ssid.substring(ssid.length()-4);
 			type = TYPE.WLAN4;
 			return true;
 		}
@@ -176,7 +173,10 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 				mac.startsWith("5C:4C:A9") || mac.startsWith("1C:1D:67") ||
 				mac.startsWith("CC:96:A0") || mac.startsWith("20:2B:C1"))
 		{
-			ssidSubpart = new String ( ssid.substring(ssid.length()-4));
+			if ( ssid.startsWith("INFINITUM")  )
+				ssidSubpart = ssid.substring(ssid.length()-4);
+			else
+				ssidSubpart = "";
 			type = TYPE.HUAWEI;
 			return true;
 		}
@@ -185,7 +185,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			  mac.startsWith("00:01:13") || mac.startsWith("00:01:1B") || 
 			  mac.startsWith("00:19:5B") ) )
 		{
-			ssidSubpart = new String ( ssid.substring(ssid.length()-2));
+			ssidSubpart = ssid.substring(ssid.length()-2);
 			type = TYPE.WLAN2;
 			return true;
 		}
@@ -211,36 +211,5 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			return -1;
 		return 1;
 	}
-	class AliceHandle extends DefaultHandler implements Serializable{
-		private static final long serialVersionUID = -1867841551140131246L;
-		String alice;
-		boolean supported;
-		int [] magic;
-		String serial;
-		String mac;
-		public AliceHandle(String alice){
-			super();
-			this.alice = alice;
-			this.supported = false;
-			this.magic = new int [2];
-		} 
-		public void startElement(String uri, String localName,
-		        String qName, Attributes attributes){
-			if ( alice.equalsIgnoreCase(localName) )
-			{
-				serial = attributes.getValue("sn");
-				mac = attributes.getValue("mac");
-				magic[0] = Integer.parseInt(attributes.getValue("q"));
-				magic[1] = Integer.parseInt(attributes.getValue("k"));
-				supported = true;
-			}
-		}
-
-		   public void endElement( String namespaceURI,
-		              String localName,
-		              String qName ) throws SAXException {}
-
-		   public void characters( char[] ch, int start, int length )
-		              throws SAXException {}
-	}
+	
 }
