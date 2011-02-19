@@ -1,13 +1,8 @@
 
 package org.exobel.routerkeygen;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Stack;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,22 +24,23 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class Preferences extends PreferenceActivity {
 
 	ProgressDialog pbarDialog;
-	Thread myRunnableThread;
+	Downloader downloader;
 	int myProgress = 0, fileLen;
 	int byteRead;
-	long lastt, now = 0;
+	long lastt, now = 0, downloadBegin = 0;
 
 	private static final String PUB_DONATE = 
 		"market://details?id=org.exobel.routerkeygen.donate";
 	private static final String PUB_DOWNLOAD = 
 		"http://android-thomson-key-solver.googlecode.com/files/RouterKeygen.dic";
+	private static final String folderSelectPref = "folderSelect";
+
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.preferences);
@@ -59,23 +55,24 @@ public class Preferences extends PreferenceActivity {
 
 						pbarDialog.setMax(100);
 						pbarDialog.setTitle("Downloading dictionary");
-						pbarDialog.setCancelable(true);
+						pbarDialog.setCancelable(false);
 						pbarDialog.setOnDismissListener(new OnDismissListener() {
 							public void onDismiss(DialogInterface dialog) {
-								myRunnableThread.stop();
+								downloader.stopRequested = true;
 							}
 						});
 						pbarDialog.setButton("Cancel", new OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
-								myRunnableThread.stop();
+								downloader.stopRequested = true;
 								pbarDialog.dismiss();
 							}
 						});
 
 						myProgress = 0;
 						byteRead = 0;
-						myRunnableThread = new Thread(myThread);
-						myRunnableThread.start();
+						downloader = new Downloader(messHand , PUB_DOWNLOAD);
+						downloader.start();
+						lastt = downloadBegin = System.currentTimeMillis();
 						return true;
 					}
 				});
@@ -126,84 +123,63 @@ public class Preferences extends PreferenceActivity {
 				pbarDialog.show();
 				break;
 			case 3:
+				SharedPreferences prefs = PreferenceManager
+											.getDefaultSharedPreferences(getBaseContext());
+				String folderSelect = prefs.getString(folderSelectPref, 
+							    		Environment.getExternalStorageDirectory().getAbsolutePath() +
+							    		File.separator + "thomson");
+				 if (!renameFile(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic" ,
+							folderSelect + File.separator + "RouterKeygen.dic" , true ))
+					 Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_err_rename_dic),
+								Toast.LENGTH_SHORT).show();
 				pbarDialog.dismiss();
 				break;
 			case 4:
 				now = System.currentTimeMillis();
-				if(now - lastt < 4000 )
+				if(now - lastt < 1000 )
 					break;
-				
-				long kbs = (myProgress / (now - lastt))*1000/1024;
+				myProgress = msg.arg1;
+				fileLen = msg.arg2;
+				long kbs =  ((myProgress / (now - downloadBegin))*1000/1024);
 				if(kbs == 0)
 					break;
-				
+				double progress =  100 * ( (double)myProgress/ fileLen );
+				pbarDialog.setProgress((int) progress);
 				pbarDialog.setMessage("Download speed: "
 						+ kbs + "kb/s"
 						+ "\nEstimaded Time Left: "
 						+ (fileLen - myProgress) / kbs / 1024 + "s");
+				lastt = now;
 				break;
 			}
 		}
 	};
 	
-	private Runnable myThread = new Runnable() {
-		public void run() {
-			URL url;
-			URLConnection con;
-			DataInputStream dis;
-			FileOutputStream fos;
-			byte[] buf;
-			try {
-				url = new URL(PUB_DOWNLOAD);
-				fos = new FileOutputStream(
-						new File(
-							Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic"));
-				con = url.openConnection();
-				dis = new DataInputStream(con.getInputStream());
-				fileLen = con.getContentLength();
-				
-				// Checking if external storage has enough memory ...
-				android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
-				if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < fileLen)
-					messHand.sendEmptyMessage(1);
+	 private boolean renameFile(String file, String toFile , boolean saveOld) {
 
-				lastt = System.currentTimeMillis();
-				buf = new byte[65536];
-				messHand.sendEmptyMessage(2);
-				while (myProgress < fileLen) {
-					try{
+	        File toBeRenamed = new File(file);
+	        File newFile = new File(toFile);
 
-						if ((byteRead = dis.read(buf)) != -1)
-						{
-							fos.write(buf, 0, byteRead);
-							myProgress += byteRead;
-						}
-						else
-						{
-							dis.close();
-							fos.close();
-							myProgress = fileLen;
-						}
-					}
-					catch(Exception e)
-					{
-					}
-					messHand.sendEmptyMessage(4);
-					pbarDialog.setProgress(100 * myProgress / fileLen);
-					Thread.sleep(10);
-				}
-			Thread.sleep(10);
-			messHand.sendEmptyMessage(3);
-			}
-			catch (FileNotFoundException e)
-			{
-				messHand.sendEmptyMessage(0);
-			}
-			catch(Exception e)
-			{
-			}
-		}
-	};
+	        if (!toBeRenamed.exists() || toBeRenamed.isDirectory())
+	            return false;
+	        
+
+	        if (newFile.exists() && !newFile.isDirectory() && saveOld) {
+	        	if ( !renameFile(toFile,toFile+"_backup" , false) )
+	        		Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_err_backup_dic),
+						Toast.LENGTH_SHORT).show();
+	        	else
+	        		toFile +="_backup";
+	        }
+	        newFile = new File(toFile);
+
+	        //Rename
+	        if (!toBeRenamed.renameTo(newFile) )
+	           return false;
+	       
+
+	        return true;
+	    }
 	
 	private static final String TAG = "ThomsonPreferences";
 	private String[] mFileList;
@@ -276,7 +252,7 @@ public class Preferences extends PreferenceActivity {
 					SharedPreferences.Editor editor = customSharedPreference
 					.edit();
 
-					editor.putString("folderSelect",mPath.toString());
+					editor.putString(folderSelectPref,mPath.toString());
 					editor.commit();
 					String path = mPath.toString();
 					mPath = new File(path +  File.separator + "RouterKeygen.dic");
