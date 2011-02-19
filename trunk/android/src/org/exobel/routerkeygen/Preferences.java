@@ -48,31 +48,43 @@ public class Preferences extends PreferenceActivity {
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference)
 					{
-						pbarDialog = new ProgressDialog( Preferences.this);
+						new AlertDialog.Builder(Preferences.this)
+							.setTitle(R.string.pref_download)
+							.setMessage(R.string.msg_dicislarge)
+							.setCancelable(false)
+							.setPositiveButton(R.string.bt_yes, new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int id) {
+									pbarDialog = new ProgressDialog( Preferences.this);
 
-						pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-						pbarDialog.setMessage("Estimating download speed and time left...");
+									pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+									pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
+									pbarDialog.setMax(100);
+									pbarDialog.setTitle(R.string.msg_dl_dlingdic);
+									pbarDialog.setCancelable(false);
+									pbarDialog.setOnDismissListener(new OnDismissListener() {
+										public void onDismiss(DialogInterface dialog) {
+											downloader.stopRequested = true;
+										}
+									});
+									pbarDialog.setButton(getString(R.string.bt_cancel), new OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											downloader.stopRequested = true;
+											pbarDialog.dismiss();
+										}
+									});
 
-						pbarDialog.setMax(100);
-						pbarDialog.setTitle("Downloading dictionary");
-						pbarDialog.setCancelable(false);
-						pbarDialog.setOnDismissListener(new OnDismissListener() {
-							public void onDismiss(DialogInterface dialog) {
-								downloader.stopRequested = true;
-							}
-						});
-						pbarDialog.setButton("Cancel", new OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								downloader.stopRequested = true;
-								pbarDialog.dismiss();
-							}
-						});
-
-						myProgress = 0;
-						byteRead = 0;
-						downloader = new Downloader(messHand , PUB_DOWNLOAD);
-						downloader.start();
-						lastt = downloadBegin = System.currentTimeMillis();
+									myProgress = 0;
+									byteRead = 0;
+									downloader = new Downloader(messHand , PUB_DOWNLOAD);
+									downloader.start();
+									lastt = downloadBegin = System.currentTimeMillis();
+					           }
+					       })
+					       .setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
+					           public void onClick(DialogInterface dialog, int id) {
+					                dialog.cancel();
+					           }
+					       }).create().show();
 						return true;
 					}
 				});
@@ -138,11 +150,13 @@ public class Preferences extends PreferenceActivity {
 				now = System.currentTimeMillis();
 				if(now - lastt < 1000 )
 					break;
+				
 				myProgress = msg.arg1;
 				fileLen = msg.arg2;
 				long kbs =  ((myProgress / (now - downloadBegin))*1000/1024);
 				if(kbs == 0)
 					break;
+				
 				double progress =  100 * ( (double)myProgress/ fileLen );
 				pbarDialog.setProgress((int) progress);
 				pbarDialog.setMessage("Download speed: "
