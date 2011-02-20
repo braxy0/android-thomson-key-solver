@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
@@ -21,7 +20,7 @@ public class Stage2 {
 		int progress = 0;
 		int c = 0;
 		byte [] fileData = new  byte [300000];
-		ArrayList<DictEntry> entries = new ArrayList<DictEntry>();
+		Set<DictEntry> entries = new TreeSet<DictEntry>();
        for(int a = 0; a < AlphabetCodes.charect.length; a++)
         {
             for(int b = 0; b < AlphabetCodes.charect.length; b++, c++)
@@ -44,41 +43,13 @@ public class Stage2 {
 				}
 				files.addFile(file);
 				int offset = 0;
-				int lastn = 0;
 				while ( offset < count)
 				{
 					entry[0] = fileData[offset + 0];
-					//entry[1] = fileData[offset + 1];
+					entry[1] = fileData[offset + 1];
 					entry[2] = fileData[offset + 2];
 					entry[3] = fileData[offset + 3];
 					entry[4] = fileData[offset + 4];
-					int number = ( (0xFF & entry[2]) << 16 ) | 
-								 ( (0xFF & entry[3])  << 8 ) |
-								   (0xFF & entry[4]) ;
-					int diff = number - lastn;
-					if(diff > 2097152) // 2 ^ 21
-						System.out.println("Ooops, larger than 2 ^ 21!");
-					if(diff > 1048576) // 2 ^ 20
-						System.out.println("Ooops, larger than 2 ^ 20!");
-					if(diff > 524288) // 2 ^ 19
-						System.out.println("Ooops, larger than 2 ^ 19!");
-					if(diff > 262144) // 2 ^ 18
-						System.out.println("Ooops, larger than 2 ^ 18!");
-					if(diff > 131072) // 2 ^ 17
-						System.out.println("Ooops, larger than 2 ^ 17!");
-					if(diff > 65536) // 2 ^ 16
-						System.out.println("Ooops, larger than 2 ^ 16!");
-					if(diff > 4096) // 2 ^ 12
-					{
-						System.out.println("Ooops, larger than 2 ^ 12!");
-						diff = 4080;
-					}
-					
-					if((diff >> 4) == 255) // 2 ^ 12
-						System.out.println("Warning, FF exists!");
-					//System.out.println("[ " + (number - lastn) + "  == " + ((number - lastn) >> 4) + " ]");
-					lastn = number;
-					entry[1] = (byte) (diff  >> 4);
 					entries.add(new DictEntry(entry));
 					offset += 5;
 				}
@@ -142,22 +113,20 @@ public class Stage2 {
         long time = System.currentTimeMillis() - begin;
         System.out.println("Done .. 100%! It took " + time + " miliseconds.");
 	}
-	private static class DictEntry { //implements Comparable<DictEntry>{
+	private static class DictEntry implements Comparable<DictEntry>{
 		short [] hash;
 		int number;
 		
 		public DictEntry(byte [] entry ){
-			hash = new short [1];
+			hash = new short [2];
 			hash[0] = (short) (0xFF & entry[0]);
-			// hash[1] = (short) (0xFF & entry[1]); // discarded, average 220 possibilities
-			number = entry[1];
-			//number = ( (0xFF & entry[2]) << 16 ) | 
-			//		 ( (0xFF & entry[3])  << 8 ) |
-			//		   (0xFF & entry[4]) ;
+			hash[1] = (short) (0xFF & entry[1]);
+			number = ( (0xFF & entry[2]) << 16 ) | 
+					 ( (0xFF & entry[3])  << 8 ) |
+					   (0xFF & entry[4]) ;
 
 		}
 
-		/*
 		@Override
 		public int compareTo(DictEntry o) {
 			if ( this.hash[0] > o.hash[0] )
@@ -165,7 +134,7 @@ public class Stage2 {
 			if ( this.hash[0] == o.hash[0] && this.number < o.number )
 				return 1;
 			return -1;
-		}/**/
+		}
 		
 		public String toString(){
 			try {
