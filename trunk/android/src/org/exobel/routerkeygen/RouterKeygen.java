@@ -213,10 +213,10 @@ public class RouterKeygen extends Activity {
 			calc.setOnClickListener(new View.OnClickListener(){
 				public void onClick(View arg0) {
 					router = edit.getText().toString().trim();
+					if ( router.equals("") )
+						return;
 					begin =  System.currentTimeMillis();
-
 					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"" , RouterKeygen.this);
-					//WifiNetwork wifi = new WifiNetwork("FASTWEB-1-002196", "00:21:96:12:34:56" , 0 ,"" , RouterKeygen.this);
 					calcKeys(wifi);
 
 				}

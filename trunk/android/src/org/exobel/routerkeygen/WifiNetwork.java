@@ -126,17 +126,15 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 				type = TYPE.PIRELLI;
 				return true;
 			}
-		//Still not working
-		/*if ( ( ssid.startsWith("FASTWEB-1-00036F") && ssid.length() == 22 ) ||
-			 ( ssid.startsWith("FASTWEB-1-002196") )	)
+		if ( ssid.matches("FASTWEB-[1-2]-002196[0-9A-F]{6}|FASTWEB-[1-2]-00036F[0-9A-F]{6}") )
 		{
 			ssidSubpart = new String ( ssid.substring(ssid.length()-12));
 			if ( mac.equals("") )
 				calcFastwebMAC();
 			type = TYPE.TELSEY;
 			return true;
-		}*/
-		if ( ssid.startsWith("Alice-") && ssid.length() == 14 )
+		}
+		if ( ssid.matches("Alice-[0-9]{8}") )
 		{
 			AliceHandle aliceReader = new AliceHandle(ssid.substring(0,9));
 			SAXParserFactory factory = SAXParserFactory.newInstance();

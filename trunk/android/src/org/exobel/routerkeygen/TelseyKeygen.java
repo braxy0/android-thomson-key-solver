@@ -1,11 +1,35 @@
 package org.exobel.routerkeygen;
 
+/*
+ * The algorithm for the FASTWEB Telsey
+ * SSID of the form:
+ * FASTWEB-1-002196XXXXXX
+ * FASTWEB-1-00036FXXXXXX
+ * where X is a hexadecimal digit.
+ * Algorithm:
+ * Get the mac as an array of bytes and scramble them 
+ * as the mentioned on the link.
+ * Use the hashword from Bob Jenkins to compute recursively 
+ * a hash from the array calculated above.
+ * Save the resulting hash as a hexadecimal string.
+ * Produce a second vector with the rules specified below
+ * Use the hashword from Bob Jenkins to compute recursively 
+ * a hash from the array calculated above.
+ * Save the resulting hash as a hexadecimal string.
+ * The key will be the final 5 characters of the first string
+ * and first 5 from the second string.
+ * Credit:
+ *  http://www.pcpedia.it/Hacking/algoritmi-di-generazione-wpa-alice-e-fastweb-e-lavidita-del-sapere.html
+ *  http://wifiresearchers.wordpress.com/2010/09/09/telsey-fastweb-full-disclosure/
+ */
 public class TelseyKeygen extends KeygenThread {
 
 	public TelseyKeygen(RouterKeygen par) {
 		super(par);
 	}
 
+	
+	//Scramble Function
 	long[] scrambler(String mac){
 		long[]vector = new long [64];
 		byte [] macValue = new byte[6];
@@ -122,9 +146,9 @@ public class TelseyKeygen extends KeygenThread {
 		vector[53]=0xFFFFFFFFL & ((long)( ( ( 0xFF & macValue[5] ) << 24 )|( ( 0xFF & macValue[5] ) << 16 ) |
 		   		   ( ( 0xFF & macValue[1] ) << 8 )|( 0xFF & macValue[4] ) ));
 		vector[54]=0xFFFFFFFFL & ((long)( ( ( 0xFF & macValue[3] ) << 24 )|( ( 0xFF & macValue[0] ) << 16 ) |
-		   		   ( ( 0xFF & macValue[1] ) << 8 )|( 0xFF & macValue[4] ) ));
+		   		   ( ( 0xFF & macValue[1] ) << 8 )|( 0xFF & macValue[5] ) ));
 		vector[55]=0xFFFFFFFFL & ((long)( ( ( 0xFF & macValue[3] ) << 24 )|( ( 0xFF & macValue[1] ) << 16 ) |
-		   		   ( ( 0xFF & macValue[0] ) << 8 )|( 0xFF & macValue[5] ) ));
+		   		   ( ( 0xFF & macValue[0] ) << 8 )|( 0xFF & macValue[4] ) ));
 		vector[56]=0xFFFFFFFFL & ((long)( ( ( 0xFF & macValue[4] ) << 24 )|( ( 0xFF & macValue[2] ) << 16 ) |
 		   		   ( ( 0xFF & macValue[2] ) << 8 )|( 0xFF & macValue[5] ) ));
 		vector[57]=0xFFFFFFFFL & ((long)( ( ( 0xFF & macValue[4] ) << 24 )|( ( 0xFF & macValue[3] ) << 16 ) |
@@ -147,19 +171,23 @@ public class TelseyKeygen extends KeygenThread {
 	
 	public void run(){
 		Hash hash = new Hash();
-		if ( router.mac.equals("") ) 
+		if ( router.getMac().equals("") ) 
 		{
 			pwList.add(parent.getResources().getString(R.string.msg_nomac));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
 			return;
 		}
-		long [] key = scrambler("002196123456");
+		long [] key = scrambler(router.getMac());
 		long seed = 0;
-		for (int x = 0; x < 64; x++) {
+
+		for (int x = 0; x < 64; x++) {	
 			seed = hash.hashword(key,x, seed);
-		}
+		}	
+
 		String S1 = Long.toHexString(seed);
+		while ( S1.length() < 8 )
+			S1 = "0" + S1;
 		
 		
  		for ( int x = 0; x <64; x++) {
@@ -172,17 +200,14 @@ public class TelseyKeygen extends KeygenThread {
 			    else
 			    	key[x] =( key[x]<< 7 ) & 0xFFFFFFFF;
 		}
-		@SuppressWarnings("unused")
-		String test = "";
-		for (int x = 0; x < 64; x++) {
-			test  = Long.toHexString(key[x]);
-		}
 		
 		seed = 0;
 		for (int x = 0; x < 64; x++) {
 			seed = hash.hashword(key, x, seed);
 		}
 		String S2 =  Long.toHexString(seed);
+		while ( S2.length() < 8 )
+			S2 = "0" + S2;
 		pwList.add(S1.substring(S1.length() - 5) +  S2.substring(0, 5));
 		parent.list_key =  pwList;
 		parent.handler.sendEmptyMessage(0);
