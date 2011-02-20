@@ -73,8 +73,8 @@ public class Downloader extends Thread{
 					return;
 				}
 			}
-		Thread.sleep(10);
-		messHand.sendEmptyMessage(3);
+			Thread.sleep(10);
+			messHand.sendEmptyMessage(3);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -82,6 +82,7 @@ public class Downloader extends Thread{
 		}
 		catch(Exception e)
 		{
+			messHand.sendEmptyMessage(-1);
 		}
 	}
 

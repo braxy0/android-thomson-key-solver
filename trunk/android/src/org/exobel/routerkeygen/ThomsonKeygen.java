@@ -30,7 +30,7 @@ public class ThomsonKeygen extends KeygenThread {
 	boolean thomson3g;
 	boolean errorDict;
 	int len = 0;
-	final String onlineDict = "http://paginas.fe.up.pt/~ei10139/webdic/";
+	final String onlineDict = "http://android-thomson-key-solver.googlecode.com/svn-history/r90/trunk/webdic/";
 
 	public ThomsonKeygen(RouterKeygen par ,boolean thomson3g ) {
 		super(par);
@@ -223,8 +223,8 @@ public class ThomsonKeygen extends KeygenThread {
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
 			return false;
-			}
-		if ( version > 4 )
+		}
+		if ( version > 3 )
 		{
 			pwList.add(parent.getResources().getString(R.string.msg_errversion));
 			parent.list_key =  pwList;
@@ -235,9 +235,9 @@ public class ThomsonKeygen extends KeygenThread {
 		
 		if ( version == 1 )
 			firstDic();
-		if ( version == 2 )
+		else if ( version == 2 )
 			secondDic();
-		if ( version == 3 )
+		else if ( version == 3 )
 		{
 			String [] results;
 			try{

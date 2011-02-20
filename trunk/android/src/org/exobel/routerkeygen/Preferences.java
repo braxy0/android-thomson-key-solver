@@ -1,8 +1,16 @@
 
 package org.exobel.routerkeygen;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.MessageDigest;
 import java.util.Stack;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,6 +35,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class Preferences extends PreferenceActivity {
+	
+	// The maximum supported dictionary version
+	public static final int MAX_DIC_VERSION = 3;
 
 	ProgressDialog pbarDialog;
 	Downloader downloader;
@@ -36,7 +47,11 @@ public class Preferences extends PreferenceActivity {
 	private static final String PUB_DONATE = 
 		"market://details?id=org.exobel.routerkeygen.donate";
 	private static final String PUB_DOWNLOAD = 
-		"http://android-thomson-key-solver.googlecode.com/files/RouterKeygen.dic";
+		"http://dl.dropbox.com/u/7566036/RouterKeygen.dic";
+	//"http://android-thomson-key-solver.googlecode.com/files/RouterKeygen.dic";
+	private static final String PUB_DIC_CFV =
+		"http://dl.dropbox.com/u/7566036/RouterKeygen.cfv";
+	
 	private static final String folderSelectPref = "folderSelect";
 
 	
@@ -53,8 +68,65 @@ public class Preferences extends PreferenceActivity {
 							.setCancelable(false)
 							.setPositiveButton(R.string.bt_yes, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int id) {
-									pbarDialog = new ProgressDialog( Preferences.this);
+									// Check if we have the latest dictionary version.
 
+									File myDicFile = new File(PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+										.getString(folderSelectPref,
+											Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "thomson")
+											+ File.separator + "RouterKeygen.dic");
+									
+									if(myDicFile.exists());
+									{
+										pbarDialog = new ProgressDialog(Preferences.this);
+										pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+										pbarDialog.setMessage(getString(R.string.msg_wait));
+										pbarDialog.show();
+
+										// TODO: Check if this dic is not corrupt.
+										
+										// Comparing this version with the online version
+										try {
+											InputStream is = new FileInputStream(myDicFile);
+											URLConnection con = new URL(PUB_DIC_CFV).openConnection();
+											DataInputStream dis = new DataInputStream(con.getInputStream());
+											if(con.getContentLength() != 18)
+												throw new Exception();
+											
+											byte[] dicVersion = new byte [2];
+											byte[] cfvTable = new byte[18];
+											dis.read(cfvTable);
+											
+											// Check our version
+											is.read(dicVersion);
+											
+											int thisVersion, onlineVersion;
+											thisVersion = dicVersion[0] << 8 | dicVersion[1];
+											onlineVersion = cfvTable[0] << 8 | cfvTable[1];
+											
+											if(thisVersion >= onlineVersion)
+											{
+												// All is well
+												pbarDialog.dismiss();
+												return;
+											}
+											if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
+											{
+												// Online version is too advanced
+												pbarDialog.dismiss();
+												messHand.sendEmptyMessage(5);
+												return;
+											}
+											
+										} catch (Exception e)
+										{
+											pbarDialog.dismiss();
+											messHand.sendEmptyMessage(-1);
+											return;
+										}
+										pbarDialog.dismiss();
+									}
+									// Download the dictionary
+									pbarDialog = new ProgressDialog(Preferences.this);
 									pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 									pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
 									pbarDialog.setMax(100);
@@ -88,6 +160,29 @@ public class Preferences extends PreferenceActivity {
 					       })
 					       .setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
 					           public void onClick(DialogInterface dialog, int id) {
+					        	   try
+					        	   {
+						        	   MessageDigest md = MessageDigest.getInstance("MD5");
+						        	   InputStream is = new FileInputStream("/sdcard/RouterKeygen.dic");
+						        	   try {
+						        	     is = new java.security.DigestInputStream(is, md);
+						        	     // read stream to EOF as normal...
+						        	     int ch;
+						        	     
+						        	     byte []  buffer = new byte [16384] ; 
+						        	     while ( is.read ( buffer )  != -1 );
+						        	   }
+						        	   finally {
+						        	     is.close();
+						        	   }
+						        	   byte[] digest = md.digest();
+
+						        	   Toast.makeText(Preferences.this, StringUtils.getHexString(digest), Toast.LENGTH_SHORT).show();
+					        	   }
+					        	   catch(Exception e)
+					        	   {
+					        		   
+					        	   }
 					                dialog.cancel();
 					           }
 					       }).create().show();
@@ -129,6 +224,10 @@ public class Preferences extends PreferenceActivity {
 			
 			switch(msg.what)
 			{
+			case -1:
+				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
+					.setMessage(R.string.msg_err_unkown).show();
+			break;
 			case 0:
 				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
 					.setMessage(R.string.msg_nosdcard).show();
@@ -165,11 +264,15 @@ public class Preferences extends PreferenceActivity {
 				
 				double progress =  100 * ( (double)myProgress/ fileLen );
 				pbarDialog.setProgress((int) progress);
-				pbarDialog.setMessage("Download speed: "
-						+ kbs + "kb/s"
-						+ "\nEstimaded Time Left: "
+				pbarDialog.setMessage(getString(R.string.msg_dl_speed) + ": "
+						+ kbs + "kb/s\n"
+						+ getString(R.string.msg_dl_eta) + ": "
 						+ (fileLen - myProgress) / kbs / 1024 + "s");
 				lastt = now;
+				break;
+			case 5:
+				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
+					.setMessage(R.string.msg_err_online_too_adv).show();
 				break;
 			}
 		}
