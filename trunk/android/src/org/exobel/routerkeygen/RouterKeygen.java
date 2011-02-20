@@ -51,44 +51,7 @@ public class RouterKeygen extends Activity {
 	String router;
 	long begin;
 	static final String TAG = "RouterKeygen";
-	Handler handler = new Handler() {
-		public void handleMessage(Message msg) {
-			if ( thomson3g)
-				removeDialog(THOMSON3G);
-			if ( nativeCalc )
-				removeDialog(NATIVE_CALC);
-			if ( msg.what == 0 )
-			{
-				begin = System.currentTimeMillis()-begin;
-				Log.d(TAG, "Time to solve:" + begin);
-				showDialog(KEY_LIST);
-			}
-			if ( msg.what == 1 )
-			{
-				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
-				{
-					if ( ((ThomsonKeygen)calculator).errorDict )
-					{
-						Toast.makeText( RouterKeygen.this , 
-								RouterKeygen.this.getResources().getString(R.string.msg_startingnativecalc) , 
-								Toast.LENGTH_SHORT).show();
-						WifiNetwork tmp = RouterKeygen.this.calculator.router;
-						RouterKeygen.this.calculator = new NativeThomson(RouterKeygen.this);
-						RouterKeygen.this.calculator.router = tmp;
-						RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
-						RouterKeygen.this.calculator.start();
-						showDialog(NATIVE_CALC);
-						return;
-					}
-
-				}
-
-				Toast.makeText( RouterKeygen.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
-
-			}
-		}
-	};
-	final String welcomeScreenShownPref = "welcomeScreenShown";
+		final String welcomeScreenShownPref = "welcomeScreenShown";
 
 	/** Called when the activity is first created. */
 	@Override
@@ -243,7 +206,7 @@ public class RouterKeygen extends Activity {
 		case MANUAL_CALC: {
 			Dialog dialog = new Dialog(this);
 			dialog.setContentView(R.layout.manual);
-			dialog.setTitle("Manual Input");
+			dialog.setTitle(RouterKeygen.this.getResources().getString(R.string.menu_manual));
 			final EditText edit = (EditText ) dialog.findViewById(R.id.manual_edittext);
 
 			Button calc = ( Button ) dialog.findViewById(R.id.bt_manual_calc);
@@ -421,6 +384,44 @@ public class RouterKeygen extends Activity {
 	public List<String> getResults() {
 		return list_key;
 	}
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			if ( thomson3g)
+				removeDialog(THOMSON3G);
+			if ( nativeCalc )
+				removeDialog(NATIVE_CALC);
+			if ( msg.what == 0 )
+			{
+				begin = System.currentTimeMillis()-begin;
+				Log.d(TAG, "Time to solve:" + begin);
+				showDialog(KEY_LIST);
+			}
+			if ( msg.what == 1 )
+			{
+				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
+				{
+					if ( ((ThomsonKeygen)calculator).errorDict )
+					{
+						Toast.makeText( RouterKeygen.this , 
+								RouterKeygen.this.getResources().getString(R.string.msg_startingnativecalc) , 
+								Toast.LENGTH_SHORT).show();
+						WifiNetwork tmp = RouterKeygen.this.calculator.router;
+						RouterKeygen.this.calculator = new NativeThomson(RouterKeygen.this);
+						RouterKeygen.this.calculator.router = tmp;
+						RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
+						RouterKeygen.this.calculator.start();
+						showDialog(NATIVE_CALC);
+						return;
+					}
+
+				}
+
+				Toast.makeText( RouterKeygen.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
+
+			}
+		}
+	};
+
 
 	public KeygenThread getWorker(){
 		return calculator;
