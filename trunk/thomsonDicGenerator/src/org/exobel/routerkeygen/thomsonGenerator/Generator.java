@@ -8,7 +8,7 @@ public class Generator {
 	public static void main(String[] args) {
 		for(int i = 0; i < args.length; ++i)
         {
-            if(args[i].equalsIgnoreCase("onlinedic"))
+            if(args[i].equalsIgnoreCase("webdic"))
             {
                 Stage1.main(args);
         		Stage2.main(args);
