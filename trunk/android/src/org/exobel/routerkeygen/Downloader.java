@@ -14,7 +14,8 @@ import android.os.Message;
 public class Downloader extends Thread{
 	Handler messHand;
 	String urlDownload;	
-	boolean stopRequested;
+	boolean stopRequested = false;
+	boolean deleteTemp = false;
 	public void run() {
 		File myDicFile;
 		URLConnection con;
@@ -65,6 +66,8 @@ public class Downloader extends Thread{
 				Thread.sleep(10);
 				if ( stopRequested )
 				{
+					if ( deleteTemp )
+						myDicFile.delete();
 					dis.close();
 					fos.close();
 					return;

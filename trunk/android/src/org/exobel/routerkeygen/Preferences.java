@@ -65,8 +65,15 @@ public class Preferences extends PreferenceActivity {
 											downloader.stopRequested = true;
 										}
 									});
-									pbarDialog.setButton(getString(R.string.bt_cancel), new OnClickListener() {
+									pbarDialog.setButton(getString(R.string.bt_pause), new OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {
+											downloader.stopRequested = true;
+											pbarDialog.dismiss();
+										}
+									});
+									pbarDialog.setButton2(getString(R.string.bt_manual_cancel), new OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											downloader.deleteTemp = true;
 											downloader.stopRequested = true;
 											pbarDialog.dismiss();
 										}

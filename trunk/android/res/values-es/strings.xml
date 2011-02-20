@@ -76,5 +76,7 @@
 <string name="msg_err_native">Error en el Cáculo Nativo. Informa al KnD Taldea.</string>
 <string name="msg_results">Haz Click una de las keys para copiarla. Después se abrirón los Wifi Settings donde las puedes "probar" ;).</string>
 <string name="menu_tester">Tester</string>
+<string name="bt_pause">Pausar</string>
+
 </resources>
 <!-- Translation by KaMPaNiTa -->
