@@ -396,7 +396,7 @@ public class RouterKeygen extends Activity {
 				Log.d(TAG, "Time to solve:" + begin);
 				showDialog(KEY_LIST);
 			}
-			if ( msg.what == 1 )
+			else if ( msg.what == 1 )
 			{
 				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
 				{
