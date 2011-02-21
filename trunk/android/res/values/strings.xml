@@ -89,4 +89,5 @@
     <string name="msg_dl_speed">Download speed</string>
     <string name="msg_dl_eta">Estimaded time left</string>
     <string name="msg_dic_updated">Your dictionary is already the latest version.</string>
+    <string name="msg_dic_updated_finished">Your dictionary is now latest version.</string>
 </resources>

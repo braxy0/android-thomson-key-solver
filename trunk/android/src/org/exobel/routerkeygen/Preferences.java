@@ -44,7 +44,11 @@ public class Preferences extends PreferenceActivity {
 	Downloader downloader;
 	int myProgress = 0, fileLen;
 	long lastt, now = 0, downloadBegin = 0;
-
+	
+	byte[] dicVersion = new byte [2];
+	static byte[] cfvTable = new byte[18];
+	
+	
 	private static final String PUB_DONATE = 
 		"market://details?id=org.exobel.routerkeygen.donate";
 	private static final String PUB_DOWNLOAD = 
@@ -95,9 +99,7 @@ public class Preferences extends PreferenceActivity {
 														if(con.getContentLength() != 18)
 															throw new Exception();
 														
-														byte[] dicVersion = new byte [2];
-														byte[] cfvTable = new byte[18];
-														dis.read(cfvTable);
+														dis.read(Preferences.cfvTable);
 														
 														// Check our version
 														is.read(dicVersion);
@@ -192,8 +194,6 @@ public class Preferences extends PreferenceActivity {
 														+ File.separator + "DicTemp.dic");
 					try {
 						is = new DigestInputStream(is, md);
-						// read stream to EOF as normal...
-					 
 						byte []  buffer = new byte [16384] ; 
 						while ( is.read ( buffer )  != -1 );
 					}
@@ -201,13 +201,42 @@ public class Preferences extends PreferenceActivity {
 						is.close();
 					}
 					byte[] digest = md.digest();
-					
-					if (!renameFile(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic" ,
-							folderSelect + File.separator + "RouterKeygen.dic" , true ))
-						messHand.sendEmptyMessage(8);
+
 					downloadHash = StringUtils.getHexString(digest);
-					//TODO: compare with the correct string
-					messHand.sendEmptyMessage(9);
+
+					try {
+						URLConnection con = new URL(PUB_DIC_CFV).openConnection();
+						DataInputStream dis = new DataInputStream(con.getInputStream());
+						if(con.getContentLength() != 18)
+							throw new Exception();
+						
+						dis.read(Preferences.cfvTable);
+
+						for(int i = 0; i < 16; ++i)
+						{
+							if(digest[i] != cfvTable[i + 2])
+							{
+								new File(
+										Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic"
+								).delete();
+								messHand.sendEmptyMessage(-1);
+								return;
+							}
+						}
+						
+						if (!renameFile(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic" ,
+								folderSelect + File.separator + "RouterKeygen.dic" , true ))
+						{
+							messHand.sendEmptyMessage(8);
+							return;
+						}
+						messHand.sendEmptyMessage(9);
+					}
+					catch (Exception e)
+					{
+						messHand.sendEmptyMessage(-1);
+						return;
+					}
 
 		 	   }
 		 	   catch(Exception e){}
@@ -318,7 +347,7 @@ public class Preferences extends PreferenceActivity {
 				break;
 			case 9: 
 				pbarDialog.dismiss();
-				Toast.makeText(Preferences.this,downloadHash , Toast.LENGTH_SHORT).show();
+				Toast.makeText(Preferences.this, R.string.msg_dic_updated_finished, Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
