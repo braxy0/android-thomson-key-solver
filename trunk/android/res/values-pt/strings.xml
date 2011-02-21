@@ -83,4 +83,12 @@
 	<string name="msg_dl_dlingdic">Descarregando Dicionário</string>
     <string name="msg_shortessid13">ESSID Inválido! Deve ter 13 caracteres.</string>
     <string name="bt_pause">Pausar</string>
+    <string name="msg_wait">Por favor aguarde...</string>
+    <string name="msg_err_unkown">Ocorreu um erro desconhecido.</string>
+    <string name="msg_err_online_too_adv">Versão online do dicionário é demasiado avançada para este programa.\nPor favor considere actualizar-lo.</string>
+    <string name="msg_dl_speed">Velocidade da transferência</string>
+    <string name="msg_dl_eta">Tempo restante estimado</string>
+    <string name="msg_dic_updated">O seu dicionário já é a versão mais recente.</string>
+    <string name="msg_dic_updated_finished">O seu dicionário é agora a versão mais recente.</string>
+    <string name="err_misbuilt_apk">O seu apk não foi construído correctamente. Por favor lembre-se de fazer build à parte nativa primeiro.</string>
 </resources>
