@@ -77,7 +77,7 @@ public class Preferences extends PreferenceActivity {
 											+ File.separator + "RouterKeygen.dic");
 									
 									if(myDicFile.exists());
-									{					
+									{
 										pbarDialog = new ProgressDialog(Preferences.this);
 										pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 										pbarDialog.setMessage(getString(R.string.msg_wait));

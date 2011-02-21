@@ -35,13 +35,9 @@ public class Downloader extends Thread{
 			myProgress = byteRead = (int) myDicFile.length();
 			if(byteRead > 0)
 				con.setRequestProperty("Range", "bytes=" + byteRead + "-");
-			//TODO:there's a bug in here
-			/*
-			 * Resume support is broken, md5 is only correct when the download is not stopped
-			 * the code seems correct though. Let's drop this for this release?
-			 */
+
 			dis = new DataInputStream(con.getInputStream());
-			fileLen = con.getContentLength();
+			fileLen = myProgress + con.getContentLength();
 			
 			// Checking if external storage has enough memory ...
 			android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
@@ -66,7 +62,7 @@ public class Downloader extends Thread{
 				}
 				catch(Exception e){}
 				messHand.sendMessage(Message.obtain(messHand, 4, myProgress, fileLen));
-				Thread.sleep(10);
+				//Thread.sleep(10);
 				if ( stopRequested )
 				{
 					if ( deleteTemp )
