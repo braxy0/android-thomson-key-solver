@@ -22,6 +22,7 @@ public class Generator {
 		Stage2.main(args);
 		Stage3.main(args);
 		Stage4.main(args);
+		Stage5.main(args);
     	System.out.println("Thomson Dictionary created. It's a file named RouterKeygen.dic.");
     	System.out.println("Any other file *.dat in the folder can be eliminated.");
 	}

@@ -62,23 +62,14 @@ public class Stage4 {
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream("RouterKeygen.dic");
-		} catch (FileNotFoundException e) {
-			System.out.println("Error!" + e);
-			return;
-		}
-		try {
 			fos.write(version);
-		} catch (IOException e) {
-			System.out.println("Error!" + e);
-			return;
-		}
-		entry.toFile(table);
-		try {
+			entry.toFile(table);
 			fos.write(table);
-		} catch (IOException e) {
-			System.out.println("Error!" + e);
+		} catch (Exception e) {
+			System.out.println("Error!" + e.getMessage());
 			return;
 		}
+
 		System.out.println("Initial table finished. Assembling in a single file!");
 		for(int a = 0; a < AlphabetCodes.charect.length; a++)
         {
