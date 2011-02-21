@@ -76,7 +76,23 @@
 <string name="msg_err_native">Error en el Cáculo Nativo. Informa al KnD Taldea.</string>
 <string name="msg_results">Haz Click una de las keys para copiarla. Después se abrirón los Wifi Settings donde las puedes "probar" ;).</string>
 <string name="menu_tester">Tester</string>
-<string name="bt_pause">Pausar</string>
 
+<string name="msg_nomemoryonsdcard">La tarjeta de memoria externa no tiene suficiente espacio libre</string>
+	<string name="msg_error">Error</string>
+	<string name="pref_msg_err_backup_dic">Error moviendo el anterior Diccionario a la copia de seguridad</string>
+	<string name="pref_msg_err_rename_dic">Error renombrando el Diccionario descargado.</string>
+	<string name="msg_err_sendto">Ha ocurrido un error tratando de compartir las Keys.</string>
+	<string name="msg_dicislarge">El tamaño del diccionario es de 28 MBs. Te avisamos de que estas usando una conexion Wi-fi.\nEstas seguro de querer continuar ?</string>
+	<string name="msg_dl_estimating">Estimando la velocidad de descarga y el tiempo restante...</string>
+	<string name="msg_dl_dlingdic">Descargando el Diccionario</string>
+    <string name="msg_shortessid13">ESSID inválido! Debe tener 13 caracteres.</string>
+    <string name="bt_pause">Pausa</string>
+    <string name="msg_wait">Espera por favor...</string>
+    <string name="msg_err_unkown">Ha ocurrido un error desconocido.</string>
+    <string name="msg_err_online_too_adv">La versión Online del diccionario es demasiado avanzada para este programa.\nPiensa en udpdatearlo.</string>
+    <string name="msg_dl_speed">Velocidad de bajada</string>
+    <string name="msg_dl_eta">Tiempo pendiende estimado</string>
+    <string name="msg_dic_updated">Tu Diccionario ya esta en la última versión.</string>
+    <string name="msg_dic_updated_finished">Tu Diccionario esta ahora en su última versión.</string>
 </resources>
 <!-- Translation by KaMPaNiTa -->

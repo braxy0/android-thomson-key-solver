@@ -311,44 +311,51 @@ public class RouterKeygen extends Activity {
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		switch( wifi.type )
-		{
-			case THOMSON: RouterKeygen.this.calculator = 
-						new ThomsonKeygen(RouterKeygen.this , thomson3g);
-						break;
-			case DISCUS: RouterKeygen.this.calculator = 
-						new DiscusKeygen(RouterKeygen.this);
-						break;
-			case EIRCOM: RouterKeygen.this.calculator = 
-						new EircomKeygen(RouterKeygen.this);
-						break;
-			case DLINK: RouterKeygen.this.calculator = 
-						new DlinkKeygen(RouterKeygen.this);
-						break;
-			case VERIZON: RouterKeygen.this.calculator = 
-						new VerizonKeygen(RouterKeygen.this);
-						break;
-			case PIRELLI: RouterKeygen.this.calculator = 
-						new PirelliKeygen(RouterKeygen.this);
-						break;
-			case TELSEY: RouterKeygen.this.calculator = 
-						new TelseyKeygen(RouterKeygen.this);
-						break;
-			case ALICE:	 RouterKeygen.this.calculator = 
-						new AliceKeygen(RouterKeygen.this);
-						break;
-			case WLAN4:	 RouterKeygen.this.calculator = 
-						new Wlan4Keygen(RouterKeygen.this);
-						break;
-			case HUAWEI: RouterKeygen.this.calculator = 
-						new HuaweiKeygen(RouterKeygen.this);
-						break;
-			case WLAN2:	 RouterKeygen.this.calculator = 
-						new Wlan2Keygen(RouterKeygen.this);
-						break;
-			case ONO_WEP: RouterKeygen.this.calculator = 
-						new OnoKeygen(RouterKeygen.this);
-						break;			
+		try {
+			switch( wifi.type )
+			{
+				case THOMSON: RouterKeygen.this.calculator = 
+							new ThomsonKeygen(RouterKeygen.this , thomson3g);
+							break;
+				case DISCUS: RouterKeygen.this.calculator = 
+							new DiscusKeygen(RouterKeygen.this);
+							break;
+				case EIRCOM: RouterKeygen.this.calculator = 
+							new EircomKeygen(RouterKeygen.this);
+							break;
+				case DLINK: RouterKeygen.this.calculator = 
+							new DlinkKeygen(RouterKeygen.this);
+							break;
+				case VERIZON: RouterKeygen.this.calculator = 
+							new VerizonKeygen(RouterKeygen.this);
+							break;
+				case PIRELLI: RouterKeygen.this.calculator = 
+							new PirelliKeygen(RouterKeygen.this);
+							break;
+				case TELSEY: RouterKeygen.this.calculator = 
+							new TelseyKeygen(RouterKeygen.this);
+							break;
+				case ALICE:	 RouterKeygen.this.calculator = 
+							new AliceKeygen(RouterKeygen.this);
+							break;
+				case WLAN4:	 RouterKeygen.this.calculator = 
+							new Wlan4Keygen(RouterKeygen.this);
+							break;
+				case HUAWEI: RouterKeygen.this.calculator = 
+							new HuaweiKeygen(RouterKeygen.this);
+							break;
+				case WLAN2:	 RouterKeygen.this.calculator = 
+							new Wlan2Keygen(RouterKeygen.this);
+							break;
+				case ONO_WEP: RouterKeygen.this.calculator = 
+							new OnoKeygen(RouterKeygen.this);
+							break;			
+			}
+		}catch(LinkageError e){
+			Toast.makeText( RouterKeygen.this ,
+					RouterKeygen.this.getResources().getString(R.string.err_misbuilt_apk), 
+					Toast.LENGTH_SHORT).show();
+			return;
 		}
 
 		RouterKeygen.this.calculator.router = wifi;
@@ -405,8 +412,16 @@ public class RouterKeygen extends Activity {
 						Toast.makeText( RouterKeygen.this , 
 								RouterKeygen.this.getResources().getString(R.string.msg_startingnativecalc) , 
 								Toast.LENGTH_SHORT).show();
+						
 						WifiNetwork tmp = RouterKeygen.this.calculator.router;
-						RouterKeygen.this.calculator = new NativeThomson(RouterKeygen.this);
+						try{
+							RouterKeygen.this.calculator = new NativeThomson(RouterKeygen.this);
+						}catch(LinkageError e){
+							Toast.makeText( RouterKeygen.this ,
+									RouterKeygen.this.getResources().getString(R.string.err_misbuilt_apk), 
+									Toast.LENGTH_SHORT).show();
+							return;
+						}
 						RouterKeygen.this.calculator.router = tmp;
 						RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 						RouterKeygen.this.calculator.start();

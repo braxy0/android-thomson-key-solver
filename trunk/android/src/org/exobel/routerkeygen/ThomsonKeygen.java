@@ -30,7 +30,7 @@ public class ThomsonKeygen extends KeygenThread {
 	boolean thomson3g;
 	boolean errorDict;
 	int len = 0;
-	final String onlineDict = "http://android-thomson-key-solver.googlecode.com/svn-history/r90/trunk/webdic/";
+	final String onlineDict = "http://paginas.fe.up.pt/~ee08281/webdic/";
 
 	public ThomsonKeygen(RouterKeygen par ,boolean thomson3g ) {
 		super(par);
@@ -121,7 +121,19 @@ public class ThomsonKeygen extends KeygenThread {
 			e.printStackTrace();
 		} catch (InterruptedException e) {}
 		
-		firstDic();
+		String [] results;
+		try{
+			results = 	this.thirdDicNative(routerESSID , entry , entry.length);
+		}catch (Exception e) {
+			pwList.add(parent.getResources().getString(R.string.msg_err_native));
+			parent.list_key = pwList;
+			parent.handler.sendEmptyMessage(1);
+			return false;
+		}
+		if ( stopRequested )
+			return false;
+		for (int i = 0 ; i < results.length ; ++i  )
+			pwList.add(results[i]);
 		return true;
 	}
 
@@ -265,7 +277,6 @@ public class ThomsonKeygen extends KeygenThread {
 	private native String [] thirdDicNative( byte [] essid  ,
 												byte [] entry , int size);
 
-	@SuppressWarnings("unused")
 	//This has been implemented natively for instant resolution!
 	private void thirdDic(){
 		cp[0] = (byte) (char) 'C';

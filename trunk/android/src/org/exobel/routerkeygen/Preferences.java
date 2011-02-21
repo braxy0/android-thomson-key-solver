@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.DigestInputStream;
