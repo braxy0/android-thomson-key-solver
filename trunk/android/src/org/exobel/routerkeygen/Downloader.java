@@ -35,7 +35,11 @@ public class Downloader extends Thread{
 			myProgress = byteRead = (int) myDicFile.length();
 			if(byteRead > 0)
 				con.setRequestProperty("Range", "bytes=" + byteRead + "-");
-			
+			//TODO:there's a bug in here
+			/*
+			 * Resume support is broken, md5 is only correct when the download is not stopped
+			 * the code seems correct though. Let's drop this for this release?
+			 */
 			dis = new DataInputStream(con.getInputStream());
 			fileLen = con.getContentLength();
 			
@@ -45,7 +49,6 @@ public class Downloader extends Thread{
 				messHand.sendEmptyMessage(1);
 
 			buf = new byte[65536];
-			messHand.sendEmptyMessage(2);
 			while (myProgress < fileLen) {
 				try{
 

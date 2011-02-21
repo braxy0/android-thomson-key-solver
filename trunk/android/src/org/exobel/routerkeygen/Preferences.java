@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.Stack;
 import android.app.AlertDialog;
@@ -70,122 +71,77 @@ public class Preferences extends PreferenceActivity {
 								public void onClick(DialogInterface dialog, int id) {
 									// Check if we have the latest dictionary version.
 
-									File myDicFile = new File(PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+									final File myDicFile = new File(PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 										.getString(folderSelectPref,
 											Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "thomson")
 											+ File.separator + "RouterKeygen.dic");
 									
 									if(myDicFile.exists());
-									{
+									{					
 										pbarDialog = new ProgressDialog(Preferences.this);
 										pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 										pbarDialog.setMessage(getString(R.string.msg_wait));
 										pbarDialog.show();
+										  new Thread(new Runnable() {
+											    public void run() {
 
-										// TODO: Check if this dic is not corrupt.
-										
-										// Comparing this version with the online version
-										try {
-											InputStream is = new FileInputStream(myDicFile);
-											URLConnection con = new URL(PUB_DIC_CFV).openConnection();
-											DataInputStream dis = new DataInputStream(con.getInputStream());
-											if(con.getContentLength() != 18)
-												throw new Exception();
-											
-											byte[] dicVersion = new byte [2];
-											byte[] cfvTable = new byte[18];
-											dis.read(cfvTable);
-											
-											// Check our version
-											is.read(dicVersion);
-											
-											int thisVersion, onlineVersion;
-											thisVersion = dicVersion[0] << 8 | dicVersion[1];
-											onlineVersion = cfvTable[0] << 8 | cfvTable[1];
-											
-											if(thisVersion >= onlineVersion)
-											{
-												// All is well
-												pbarDialog.dismiss();
-												return;
-											}
-											if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
-											{
-												// Online version is too advanced
-												pbarDialog.dismiss();
-												messHand.sendEmptyMessage(5);
-												return;
-											}
-											
-										} catch (Exception e)
-										{
-											pbarDialog.dismiss();
-											messHand.sendEmptyMessage(-1);
-											return;
-										}
-										pbarDialog.dismiss();
-									}
-									// Download the dictionary
-									pbarDialog = new ProgressDialog(Preferences.this);
-									pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-									pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
-									pbarDialog.setMax(100);
-									pbarDialog.setTitle(R.string.msg_dl_dlingdic);
-									pbarDialog.setCancelable(false);
-									pbarDialog.setOnDismissListener(new OnDismissListener() {
-										public void onDismiss(DialogInterface dialog) {
-											downloader.stopRequested = true;
-										}
-									});
-									pbarDialog.setButton(getString(R.string.bt_pause), new OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-											downloader.stopRequested = true;
-											pbarDialog.dismiss();
-										}
-									});
-									pbarDialog.setButton2(getString(R.string.bt_manual_cancel), new OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-											downloader.deleteTemp = true;
-											downloader.stopRequested = true;
-											pbarDialog.dismiss();
-										}
-									});
+													// TODO: Check if this dic is not corrupt.
+													
+													// Comparing this version with the online version
+													try {
+														InputStream is = new FileInputStream(myDicFile);
+														URLConnection con = new URL(PUB_DIC_CFV).openConnection();
+														DataInputStream dis = new DataInputStream(con.getInputStream());
+														if(con.getContentLength() != 18)
+															throw new Exception();
+														
+														byte[] dicVersion = new byte [2];
+														byte[] cfvTable = new byte[18];
+														dis.read(cfvTable);
+														
+														// Check our version
+														is.read(dicVersion);
+														
+														int thisVersion, onlineVersion;
+														thisVersion = dicVersion[0] << 8 | dicVersion[1];
+														onlineVersion = cfvTable[0] << 8 | cfvTable[1];
+														
+														if(thisVersion >= onlineVersion)
+														{
+															// All is well
+															messHand.sendEmptyMessage(6);
+															return;
+														}
+														if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
+														{
+															// Online version is too advanced
+															messHand.sendEmptyMessage(5);
+															return;
+														}
+														messHand.sendEmptyMessage(7);
+														
+													} 
+													catch ( FileNotFoundException e ){
+														messHand.sendEmptyMessage(7);
+													}
+													catch (Exception e)
+													{
+														messHand.sendEmptyMessage(-1);
+														return;
+													}
+												}
+											  }).start();
 
-
-									myProgress = 0;
-									downloader = new Downloader(messHand , PUB_DOWNLOAD);
-									downloader.start();
-									lastt = downloadBegin = System.currentTimeMillis();
+									}									
 					           }
 					       })
 					       .setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
 					           public void onClick(DialogInterface dialog, int id) {
-					        	   try
-					        	   {
-						        	   MessageDigest md = MessageDigest.getInstance("MD5");
-						        	   InputStream is = new FileInputStream("/sdcard/RouterKeygen.dic");
-						        	   try {
-						        	     is = new java.security.DigestInputStream(is, md);
-						        	     // read stream to EOF as normal...
-						        	     int ch;
-						        	     
-						        	     byte []  buffer = new byte [16384] ; 
-						        	     while ( is.read ( buffer )  != -1 );
-						        	   }
-						        	   finally {
-						        	     is.close();
-						        	   }
-						        	   byte[] digest = md.digest();
-
-						        	   Toast.makeText(Preferences.this, StringUtils.getHexString(digest), Toast.LENGTH_SHORT).show();
-					        	   }
-					        	   catch(Exception e)
-					        	   {
-					        		   
-					        	   }
 					                dialog.cancel();
 					           }
-					       }).create().show();
+					       })
+					       .create()
+					       .show();
 						return true;
 					}
 				});
@@ -217,7 +173,82 @@ public class Preferences extends PreferenceActivity {
 			}
 		});
 	}
+	
+	private void checkDownload(){
+		pbarDialog = new ProgressDialog(Preferences.this);
+		pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		pbarDialog.setMessage(getString(R.string.msg_wait));
+		pbarDialog.show();
+		new Thread(new Runnable() {
+		    public void run() {
+				try
+				{
+					String folderSelect = PreferenceManager
+										.getDefaultSharedPreferences(getBaseContext()).getString(folderSelectPref, 
+												Environment.getExternalStorageDirectory().getAbsolutePath() +
+												File.separator + "thomson");
+					MessageDigest md = MessageDigest.getInstance("MD5");
+					InputStream is = new FileInputStream(Environment.getExternalStorageDirectory().getPath()
+														+ File.separator + "DicTemp.dic");
+					try {
+						is = new DigestInputStream(is, md);
+						// read stream to EOF as normal...
+					 
+						byte []  buffer = new byte [16384] ; 
+						while ( is.read ( buffer )  != -1 );
+					}
+					finally {
+						is.close();
+					}
+					byte[] digest = md.digest();
+					
+					if (!renameFile(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic" ,
+							folderSelect + File.separator + "RouterKeygen.dic" , true ))
+						messHand.sendEmptyMessage(8);
+					downloadHash = StringUtils.getHexString(digest);
+					//TODO: compare with the correct string
+					messHand.sendEmptyMessage(9);
 
+		 	   }
+		 	   catch(Exception e){}
+		 	   }
+		  }).start();
+	}
+	
+	// Download the dictionary
+	private void startDownload(){
+		pbarDialog = new ProgressDialog(Preferences.this);
+		pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
+		pbarDialog.setMax(100);
+		pbarDialog.setTitle(R.string.msg_dl_dlingdic);
+		pbarDialog.setCancelable(false);
+		pbarDialog.setOnDismissListener(new OnDismissListener() {
+			public void onDismiss(DialogInterface dialog) {
+				downloader.stopRequested = true;
+			}
+		});
+		pbarDialog.setButton(getString(R.string.bt_pause), new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				downloader.stopRequested = true;
+				pbarDialog.dismiss();
+			}
+		});
+		pbarDialog.setButton2(getString(R.string.bt_manual_cancel), new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				downloader.deleteTemp = true;
+				downloader.stopRequested = true;
+				pbarDialog.dismiss();
+			}
+		});
+		pbarDialog.show();
+		myProgress = 0;
+		downloader = new Downloader(messHand , PUB_DOWNLOAD);
+		downloader.start();
+		lastt = downloadBegin = System.currentTimeMillis();
+	}
+	String downloadHash;
+	boolean notDownloadDic = false;
 	Handler messHand = new Handler() {
 
 		public void handleMessage(Message msg) {
@@ -225,10 +256,12 @@ public class Preferences extends PreferenceActivity {
 			switch(msg.what)
 			{
 			case -1:
+				pbarDialog.dismiss();
 				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
 					.setMessage(R.string.msg_err_unkown).show();
 			break;
 			case 0:
+				pbarDialog.dismiss();
 				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
 					.setMessage(R.string.msg_nosdcard).show();
 				break;
@@ -240,16 +273,8 @@ public class Preferences extends PreferenceActivity {
 				pbarDialog.show();
 				break;
 			case 3:
-				SharedPreferences prefs = PreferenceManager
-											.getDefaultSharedPreferences(getBaseContext());
-				String folderSelect = prefs.getString(folderSelectPref, 
-							    		Environment.getExternalStorageDirectory().getAbsolutePath() +
-							    		File.separator + "thomson");
-				 if (!renameFile(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic" ,
-							folderSelect + File.separator + "RouterKeygen.dic" , true ))
-					 Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_err_rename_dic),
-								Toast.LENGTH_SHORT).show();
 				pbarDialog.dismiss();
+				checkDownload();
 				break;
 			case 4:
 				now = System.currentTimeMillis();
@@ -258,6 +283,8 @@ public class Preferences extends PreferenceActivity {
 				
 				myProgress = msg.arg1;
 				fileLen = msg.arg2;
+				if ( fileLen == 0 )
+					break;
 				long kbs =  ((myProgress / (now - downloadBegin))*1000/1024);
 				if(kbs == 0)
 					break;
@@ -271,8 +298,27 @@ public class Preferences extends PreferenceActivity {
 				lastt = now;
 				break;
 			case 5:
+				pbarDialog.dismiss();
 				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
 					.setMessage(R.string.msg_err_online_too_adv).show();
+				break;
+			case 6:
+				pbarDialog.dismiss();
+				Toast.makeText(getBaseContext(),getResources().getString(R.string.msg_dic_updated),
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 7: 
+				pbarDialog.dismiss();
+				startDownload();
+				break;
+			case 8: 
+				pbarDialog.dismiss();
+				Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_err_rename_dic),
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 9: 
+				pbarDialog.dismiss();
+				Toast.makeText(Preferences.this,downloadHash , Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}

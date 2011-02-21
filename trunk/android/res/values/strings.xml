@@ -88,4 +88,5 @@
     <string name="msg_err_online_too_adv">Online version of the dictionary is too advanced for this program.\nPlease consider updating.</string>
     <string name="msg_dl_speed">Download speed</string>
     <string name="msg_dl_eta">Estimaded time left</string>
+    <string name="msg_dic_updated">Your dictionary is already the most recent version.</string>
 </resources>

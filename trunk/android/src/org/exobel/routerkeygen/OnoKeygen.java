@@ -51,7 +51,7 @@ public class OnoKeygen extends KeygenThread {
 		{
 			randNumber = (randNumber * 0x343fd + 0x269ec3) & 0xffffffff;
 			tmp = (short) ((randNumber >> 16) & 0xff);
-			key += getHexString(tmp).toUpperCase();
+			key += StringUtils.getHexString(tmp).toUpperCase();
 		}
 		pwList.add(key);
 		key = "";
@@ -67,7 +67,7 @@ public class OnoKeygen extends KeygenThread {
 		md.update(padto64(val).getBytes());
 		byte [] hash = md.digest();
 		for ( int i = 0 ; i < 13 ; ++i )
-			key += getHexString((short)hash[i]);
+			key += StringUtils.getHexString((short)hash[i]);
 		pwList.add(key.toUpperCase());
 		parent.list_key = pwList;
 		parent.handler.sendEmptyMessage(0);
@@ -84,21 +84,5 @@ public class OnoKeygen extends KeygenThread {
 		return ret.substring(0,64);
 	}
 	
-	public static String getHexString(short raw)
-	{
-		byte[] hex = new byte[2];
-		int v = raw & 0xFF;
-		hex[0] = HEX_CHAR_TABLE[v >>> 4];
-		hex[1] = HEX_CHAR_TABLE[v & 0xF];
-		try {
-			return new String(hex, "ASCII");
-		} catch (UnsupportedEncodingException e) {}
-		return "";
-	}
-	static final byte[] HEX_CHAR_TABLE = {
-	    (byte)'0', (byte)'1', (byte)'2', (byte)'3',
-	    (byte)'4', (byte)'5', (byte)'6', (byte)'7',
-	    (byte)'8', (byte)'9', (byte)'a', (byte)'b',
-	    (byte)'c', (byte)'d', (byte)'e', (byte)'f'
-	  };
+
 }
