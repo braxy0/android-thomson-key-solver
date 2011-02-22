@@ -84,4 +84,12 @@
 	<string name="msg_dl_dlingdic">Woordenboek downloaden...</string>
 	<string name="msg_shortessid13">Ongeldig ESSID. Lengte moet 13 zijn.</string>
 	<string name="bt_pause">Pauze</string>
+    <string name="msg_wait">Ogenblik geduld...</string>
+    <string name="msg_err_unkown">Er is een onbekende error opgetreden.</string>
+    <string name="msg_err_online_too_adv">De online versie van het woordenboek is te geavanceerd voor dit programma.\nOverweeg een update.</string>
+    <string name="msg_dl_speed">­Download snelheid</string>
+    <string name="msg_dl_eta">­Geschatte resterende tijd</string>
+    <string name="msg_dic_updated">Uw woordenboek is al de laatste versie.</string>
+    <string name="msg_dic_updated_finished">Uw woordenboek is nu de laatste versie.</string>
+    <string name="err_misbuilt_apk">Uw apk is niet juist gecompileerd. Denk er aan eerst het begin gedeelte te compileren.</string>
 </resources>

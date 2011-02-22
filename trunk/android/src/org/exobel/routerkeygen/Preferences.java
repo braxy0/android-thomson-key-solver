@@ -49,14 +49,13 @@ public class Preferences extends PreferenceActivity {
 	byte[] dicVersion = new byte [2];
 	static byte[] cfvTable = new byte[18];
 	
-	
 	private static final String PUB_DONATE = 
 		"market://details?id=org.exobel.routerkeygen.donate";
 	private static final String PUB_DOWNLOAD = 
-		"http://dl.dropbox.com/u/7566036/RouterKeygen.dic";
-	//"http://android-thomson-key-solver.googlecode.com/files/RouterKeygen.dic";
+		"http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
+		//"http://dl.dropbox.com/u/7566036/RouterKeygen.dic";
 	private static final String PUB_DIC_CFV =
-		"http://dl.dropbox.com/u/7566036/RouterKeygen.cfv";
+		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	
 	private static final String folderSelectPref = "folderSelect";
 
@@ -107,7 +106,7 @@ public class Preferences extends PreferenceActivity {
 														thisVersion = dicVersion[0] << 8 | dicVersion[1];
 														onlineVersion = cfvTable[0] << 8 | cfvTable[1];
 														
-														if(thisVersion >= onlineVersion)
+														if(thisVersion == onlineVersion)
 														{
 															// It is the latest version, but is it not corrupt?
 															if(checkDicMD5(myDicFile.getPath()))
@@ -193,7 +192,7 @@ public class Preferences extends PreferenceActivity {
 							Environment.getExternalStorageDirectory().getAbsolutePath());
 
 					String dicTemp = Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic";
-					if(checkDicMD5(dicTemp))
+					if(!checkDicMD5(dicTemp))
 					{
 						new File(dicTemp).delete();
 						messHand.sendEmptyMessage(-1);

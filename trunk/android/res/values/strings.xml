@@ -84,7 +84,7 @@
     <string name="msg_shortessid13">Invalid ESSID! It must have 13 characters.</string>
     <string name="bt_pause">Pause</string>
     <string name="msg_wait">Please wait...</string>
-    <string name="msg_err_unkown">Unknown error has occurred.</string>
+    <string name="msg_err_unkown">An unknown error has occurred.</string>
     <string name="msg_err_online_too_adv">Online version of the dictionary is too advanced for this program.\nPlease consider updating.</string>
     <string name="msg_dl_speed">Download speed</string>
     <string name="msg_dl_eta">Estimaded time left</string>
