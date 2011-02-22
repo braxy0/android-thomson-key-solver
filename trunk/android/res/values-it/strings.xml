@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Translation proudly done by Simone "lostrozzacavalli" Guidi-->
     <string name="app_name">Router Keygen</string>
     <string name="menu_scan">Scansiona</string>
     <string name="menu_manual">Immetti manualmente</string>
@@ -11,8 +12,8 @@
 	<string name="pref_hintoff_wifion">Non attivare il wifi automaticamente</string>
 	<string name="pref_wifion">Auto Wifi On</string>
 	<string name="pref_wifioff">Auto Wifi Off</string>
-	<string name="bt_share">Share Keys</string>
-	<string name="pref_folder_select">Folder Select</string>
+	<string name="bt_share">Condividi le chiavi</string>
+	<string name="pref_folder_select">Seleziona la cartella</string>
 	<string name="pref_folder_select_des">Seleziona la cartella del dizionario</string>
 	<string name="bt_choose">Apri</string>
 	<string name="bt_choose_back">Su</string>
@@ -26,8 +27,8 @@
 	<string name="msg_newthomson">Questo è un nuovo router Thomson la cui chiave non può essere calcolata!</string>
 	<string name="msg_unspported">Questo ESSID non è supportato!</string>
 	<string name="share_msg_begin">Chiavi</string>
-	<string name="share_title">Condividi le cbiavi</string>
-	<string name="msg_nowifidetected">No WIFI networks detected!</string>
+	<string name="share_title">Condividi le chiavi</string>
+	<string name="msg_nowifidetected">Nessuna rete wifi trovata!</string>
 	<string name="msg_copied">  è stato copiato negli appunti!</string>
 	<string name="msg_nowifi">Il Wifi non è attivo! Per favore attiva il Wifi!</string>
 	<string name="msg_scanstarted">La scansione è iniziata</string>
@@ -62,15 +63,15 @@
 	<string name="msg_erralicenotsupported">Questa serie Alice non è ancora supportata!</string>
 	<string name="msg_errversion">Versione sconosciuta del dizionario.</string>
 	<string name="pref_native">Calcolo nativo</string>
-	<string name="pref_hinton_native">Calcolando nel bersaglio se fallisce nel trovare il dizionario</string>
+	<string name="pref_hinton_native">Calcola in altro modo se fallisce nel trovare il dizionario</string>
 	<string name="pref_hintoff_native">Avverti solo se fallisce nel trovare il dizionario</string>
 	<string name="dialog_nativecalc">Calcolando le chiavi</string>
 	<string name="dialog_nativecalc_msg">Questo può richiedere fino a 2 minuti. Per favore attendi.</string>
 	<string name="dialog_thomson3g">Thomson 3G</string>
 	<string name="dialog_thomson3g_msg">Recuperando le chiavi...</string>
-	<string name="msg_startingnativecalc">Errore con il dizionario. Inizion del calcolo nativo.</string>
+	<string name="msg_startingnativecalc">Errore con il dizionario. Inizio del calcolo nativo.</string>
 	<string name="msg_rotation_nativecalc">Calcolo cancellato. Per favore non ruotare il cellulare durante l\'elaborazione del calcolo.</string>
-	<string name="msg_err_essidhuawei">L\' SSID calcolato non corrisponde a quello inserito.</string>
+	<string name="msg_err_essidhuawei">L\'SSID calcolato non corrisponde a quello inserito.</string>
 	<string name="msg_err_native">Errore nel calcolo nativo. Per favore informa il team.</string>
 	<string name="msg_results">Clicca su una delle chiavi per copiarla. Appariranno le opzioni del Wifi dove potrai usarla per fare dei test.</string>
 	<string name="msg_nomemoryonsdcard">Lo spazio esterno non ha sufficiente memoria.</string>
@@ -78,4 +79,16 @@
 	<string name="pref_msg_err_backup_dic">Errore nello spostare il dizionario nel backup</string>
 	<string name="pref_msg_err_rename_dic">Errore nel rinominare il dizionario scaricato.</string>
 	<string name="msg_err_sendto">È accaduto un errore nella condivisione delle chiavi.</string>
+    <string name="msg_dicislarge">Il dizionario occupa 28 MB. È consigliabile usare una connessione wifi.\nSei sicuro di voler continuare?</string>
+    <string name="msg_dl_estimating">Stimando la velocità di download e il tempo rimanente...</string>
+    <string name="msg_dl_dlingdic">Scaricando il dizionario</string>
+    <string name="msg_shortessid13">ESSID non valido! Deve essere composto di almeno 13 caratteri.</string>
+    <string name="bt_pause">Pausa</string>
+    <string name="msg_wait">Per favore attendi...</string>
+    <string name="msg_err_unkown">È accaduto un errore sconosciuto.</string>
+    <string name="msg_err_online_too_adv">La versione online di questo dizionario è troppo avanzata.\nPer favore esegui un update.</string>
+    <string name="msg_dl_speed">velocità di download</string>
+    <string name="msg_dl_eta">Tempo rimanente stimato</string>
+    <string name="msg_dic_updated">Il tuo dizionario è già aggiornato.</string>
+    <string name="msg_dic_updated_finished">Il tuo dizionario è ora aggiornato.</string>
 </resources>
