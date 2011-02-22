@@ -322,15 +322,15 @@ public class Preferences extends PreferenceActivity {
 				if ( fileLen == 0 )
 					break;
 				long kbs =  (((myProgress- downloadBefore) / (now - downloadBegin))*1000/1024);
+				long eta = (fileLen - myProgress) / kbs / 1024;
 				if(kbs == 0)
 					break;
 				
-				double progress =  100 * ( (double)myProgress/ fileLen );
-				pbarDialog.setProgress((int) progress);
+				pbarDialog.setProgress(100 * myProgress/ fileLen);
 				pbarDialog.setMessage(getString(R.string.msg_dl_speed) + ": "
 						+ kbs + "kb/s\n"
 						+ getString(R.string.msg_dl_eta) + ": "
-						+ (fileLen - myProgress) / kbs / 1024 + "s");
+						+ (eta > 60 ? eta/60 + "m" : eta + "s"));
 				lastt = now;
 				break;
 			case 5:
