@@ -37,7 +37,7 @@
     <string name="msg_shortessid6">ESSID Inválido! Deve ter 6 caracteres.</string>
     <string name="msg_errordict">Erro ao ler o dicionário.</string>
     <string name="msg_errnomatches">Nenhuma correspondência foi encontrada.</string>
-    <string name="msg_shortessid5">ESSID Inválido! Deve ter 6 caracteres.</string>
+    <string name="msg_shortessid5">ESSID Inválido! Deve ter 5 caracteres.</string>
     <string name="msg_nomac">Esta chave não pode ser gerada sem o endereço MAC</string>
     <string name="msg_dlinkerror">Erro no cálculo da chave D-Link</string>
     <string name="msg_dictnotfound">Dicionário não encontrado no SDCard.</string>

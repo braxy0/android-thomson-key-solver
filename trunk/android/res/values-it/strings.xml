@@ -35,10 +35,10 @@
 	<string name="msg_scanfailed">La scansione non è riuscita!</string>
 	<string name="msg_wifienabling">Sto abilitando il Wifi</string>
 	<string name="msg_wifibroken">Inabilitato ad attivare il Wifi</string>
-	<string name="msg_shortessid6">ESSID non valido! Deve essere composto da almeno 6 caratteri</string>
+	<string name="msg_shortessid6">ESSID non valido! Deve essere composto da almeno 6 caratteri.</string>
 	<string name="msg_errordict">Errore nel leggere il dizionario!</string>
 	<string name="msg_errnomatches">Non sono state trovate corrispondenze!</string>
-	<string name="msg_shortessid5">ESSID non valido! Deve essere composto da almeno 6 caratteri</string>
+	<string name="msg_shortessid5">ESSID non valido! Deve essere composto da almeno 5 caratteri.</string>
 	<string name="msg_nomac">Questa chiave non può essere generata senza un indirizzo MAC</string>
 	<string name="msg_dlinkerror">Errore nel calcolo della chiave D-Link</string>
 	<string name="msg_dictnotfound">Dizionario non trovato nella scheda SD!</string>
