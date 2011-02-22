@@ -12,6 +12,8 @@ import java.net.URLConnection;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.Stack;
+import java.util.TreeSet;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
@@ -76,7 +78,7 @@ public class Preferences extends PreferenceActivity {
 
 									final File myDicFile = new File(PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 										.getString(folderSelectPref,
-											Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "thomson")
+											Environment.getExternalStorageDirectory().getAbsolutePath())
 											+ File.separator + "RouterKeygen.dic");
 									
 									if(myDicFile.exists());
@@ -188,8 +190,7 @@ public class Preferences extends PreferenceActivity {
 				{
 					String folderSelect = PreferenceManager
 					.getDefaultSharedPreferences(getBaseContext()).getString(folderSelectPref, 
-							Environment.getExternalStorageDirectory().getAbsolutePath() +
-							File.separator + "thomson");
+							Environment.getExternalStorageDirectory().getAbsolutePath());
 
 					String dicTemp = Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic";
 					if(checkDicMD5(dicTemp))
@@ -283,8 +284,7 @@ public class Preferences extends PreferenceActivity {
 		downloader.start();
 		lastt = downloadBegin = System.currentTimeMillis();
 	}
-	String downloadHash;
-	boolean notDownloadDic = false;
+	int downloadBefore = 0;
 	Handler messHand = new Handler() {
 
 		public void handleMessage(Message msg) {
@@ -306,7 +306,8 @@ public class Preferences extends PreferenceActivity {
 					.setMessage(R.string.msg_nomemoryonsdcard).show();
 				break;
 			case 2:
-				pbarDialog.show();
+				downloadBefore = msg.arg1;
+				fileLen = msg.arg2;
 				break;
 			case 3:
 				pbarDialog.dismiss();
@@ -317,11 +318,11 @@ public class Preferences extends PreferenceActivity {
 				if(now - lastt < 1000 )
 					break;
 				
-				myProgress = msg.arg1;
+				myProgress = msg.arg1 ;
 				fileLen = msg.arg2;
 				if ( fileLen == 0 )
 					break;
-				long kbs =  ((myProgress / (now - downloadBegin))*1000/1024);
+				long kbs =  (((myProgress- downloadBefore) / (now - downloadBegin))*1000/1024);
 				if(kbs == 0)
 					break;
 				
@@ -388,6 +389,7 @@ public class Preferences extends PreferenceActivity {
 	
 	private static final String TAG = "ThomsonPreferences";
 	private String[] mFileList;
+	
 	private File mPath = new File(Environment.getExternalStorageDirectory() + File.separator);
 	private String mChosenFile = File.separator;
 	Stack<String> directoryTree = new Stack<String>();
@@ -404,6 +406,10 @@ public class Preferences extends PreferenceActivity {
 				}
 			};
 			mFileList = mPath.list(filter);
+			TreeSet<String> sorter = new TreeSet<String>();
+			for ( int i = 0 ; i < mFileList.length ; ++i  )
+				sorter.add(mFileList[i]);
+			mFileList = sorter.toArray(mFileList);
 		}
 		else{ 
 			if ( !directoryTree.empty() )

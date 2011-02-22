@@ -38,7 +38,7 @@ public class Downloader extends Thread{
 
 			dis = new DataInputStream(con.getInputStream());
 			fileLen = myProgress + con.getContentLength();
-			
+			messHand.sendMessage(Message.obtain(messHand, 2, myProgress, fileLen));
 			// Checking if external storage has enough memory ...
 			android.os.StatFs stat = new android.os.StatFs(Environment.getExternalStorageDirectory().getPath());
 			if((long)stat.getBlockSize() * (long)stat.getAvailableBlocks() < fileLen)
@@ -62,7 +62,7 @@ public class Downloader extends Thread{
 				}
 				catch(Exception e){}
 				messHand.sendMessage(Message.obtain(messHand, 4, myProgress, fileLen));
-				//Thread.sleep(10);
+				Thread.sleep(10);
 				if ( stopRequested )
 				{
 					if ( deleteTemp )
@@ -72,7 +72,6 @@ public class Downloader extends Thread{
 					return;
 				}
 			}
-			Thread.sleep(10);
 			messHand.sendEmptyMessage(3);
 		}
 		catch (FileNotFoundException e)

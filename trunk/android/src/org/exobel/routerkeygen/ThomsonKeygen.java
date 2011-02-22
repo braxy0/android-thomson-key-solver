@@ -121,20 +121,7 @@ public class ThomsonKeygen extends KeygenThread {
 			e.printStackTrace();
 		} catch (InterruptedException e) {}
 		
-		String [] results;
-		try{
-			results = 	this.thirdDicNative(routerESSID , entry , entry.length);
-		}catch (Exception e) {
-			pwList.add(parent.getResources().getString(R.string.msg_err_native));
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(1);
-			return false;
-		}
-		if ( stopRequested )
-			return false;
-		for (int i = 0 ; i < results.length ; ++i  )
-			pwList.add(results[i]);
-		return true;
+		return thirdDic();
 	}
 
 	private boolean localCalc(){
@@ -250,21 +237,7 @@ public class ThomsonKeygen extends KeygenThread {
 		else if ( version == 2 )
 			secondDic();
 		else if ( version == 3 )
-		{
-			String [] results;
-			try{
-				results = 	this.thirdDicNative(routerESSID , entry , entry.length);
-			}catch (Exception e) {
-				pwList.add(parent.getResources().getString(R.string.msg_err_native));
-				parent.list_key = pwList;
-				parent.handler.sendEmptyMessage(1);
-				return false;
-			}
-			if ( stopRequested )
-				return false;
-			for (int i = 0 ; i < results.length ; ++i  )
-				pwList.add(results[i]);
-		}
+			return thirdDic();
 		
 		return true;
 	}
@@ -278,88 +251,21 @@ public class ThomsonKeygen extends KeygenThread {
 												byte [] entry , int size);
 
 	//This has been implemented natively for instant resolution!
-	private void thirdDic(){
-		cp[0] = (byte) (char) 'C';
-		cp[1] = (byte) (char) 'P';
-		cp[2] = (byte) (char) '0';
-		int incRel;
-		sequenceNumber =( (0xFF & entry[0])  << 8 ) | (0xFF & entry[1]);
-		for ( int inc = 0 ; inc < 18 ; ++inc )
-		{
-			incRel = inc* ( 36*36*36*6*3);
-			c = (sequenceNumber+incRel) % 36;
-			b = (sequenceNumber+incRel)/36 % 36;
-			a = (sequenceNumber+incRel)/(36*36) % 36;
-			year =( (sequenceNumber+incRel) / ( 36*36*36 )% 6) + 4 ;
-			week = (sequenceNumber+incRel) / ( 36*36*36*6 )  + 1 ;				
-
-			
-			cp[3] = (byte) Character.forDigit((year % 10), 10);
-			cp[4] = (byte) Character.forDigit((week / 10), 10);
-			cp[5] = (byte) Character.forDigit((week % 10), 10);
-			cp[6] = charectbytes0[a];
-			cp[7] = charectbytes1[a];
-			cp[8] = charectbytes0[b];
-			cp[9] = charectbytes1[b];
-			cp[10] = charectbytes0[c];
-			cp[11] = charectbytes1[c];
-			md.reset();
-			md.update(cp);
-			hash = md.digest();
-			if ( hash[19] != routerESSID[2])
-				continue;
-			if ( hash[18] != routerESSID[1])
-				continue;
-			if ( hash[17] != routerESSID[0])
-				continue;
-			
-			try {
-				pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+	private boolean thirdDic(){
+		String [] results;
+			try{
+				results = 	this.thirdDicNative(routerESSID , entry , entry.length);
+			}catch (Exception e) {
+				pwList.add(parent.getResources().getString(R.string.msg_err_native));
+				parent.list_key = pwList;
+				parent.handler.sendEmptyMessage(1);
+				return false;
 			}
-		}
-		for (int offset = 2; offset < len ; offset += 2 )
-		{
 			if ( stopRequested )
-				return;
-			sequenceNumber += ( (0xFF & entry[offset + 0])  << 8 ) | (0xFF & entry[offset + 1]);
-			for ( int inc = 0 ; inc < 18 ; ++inc )
-			{
-				incRel = inc* ( 36*36*36*6*3);
-				c = (sequenceNumber+incRel) % 36;
-				b = (sequenceNumber+incRel)/36 % 36;
-				a = (sequenceNumber+incRel)/(36*36) % 36;
-				year =( (sequenceNumber+incRel) / ( 36*36*36 )% 6) + 4 ;
-				week = (sequenceNumber+incRel) / ( 36*36*36*6 )  + 1 ;				
-
-				
-				cp[3] = (byte) Character.forDigit((year % 10), 10);
-				cp[4] = (byte) Character.forDigit((week / 10), 10);
-				cp[5] = (byte) Character.forDigit((week % 10), 10);
-				cp[6] = charectbytes0[a];
-				cp[7] = charectbytes1[a];
-				cp[8] = charectbytes0[b];
-				cp[9] = charectbytes1[b];
-				cp[10] = charectbytes0[c];
-				cp[11] = charectbytes1[c];
-				md.reset();
-				md.update(cp);
-				hash = md.digest();
-				if ( hash[19] != routerESSID[2])
-					continue;
-				if ( hash[18] != routerESSID[1])
-					continue;
-				if ( hash[17] != routerESSID[0])
-					continue;
-				
-				try {
-					pwList.add(StringUtils.getHexString(hash).substring(0, 10).toUpperCase());
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+				return false;
+			for (int i = 0 ; i < results.length ; ++i  )
+				pwList.add(results[i]);
+			return true;
 	}
 	
 	

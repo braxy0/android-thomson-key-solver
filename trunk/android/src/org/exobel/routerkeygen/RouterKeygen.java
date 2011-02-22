@@ -1,6 +1,5 @@
 package org.exobel.routerkeygen;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -384,8 +383,7 @@ public class RouterKeygen extends Activity {
 		thomson3g = prefs.getBoolean(thomson3gPref, false);
 		nativeCalc = prefs.getBoolean(nativeCalcPref, false);
 		folderSelect = prefs.getString(folderSelectPref, 
-				Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
-				"thomson");
+				Environment.getExternalStorageDirectory().getAbsolutePath());
 	}
 
 	public List<String> getResults() {
