@@ -88,8 +88,6 @@ public class Preferences extends PreferenceActivity {
 										  new Thread(new Runnable() {
 											    public void run() {
 
-													// TODO: Check if this dic is not corrupt.
-													
 													// Comparing this version with the online version
 													try {
 														InputStream is = new FileInputStream(myDicFile);
@@ -109,9 +107,13 @@ public class Preferences extends PreferenceActivity {
 														
 														if(thisVersion >= onlineVersion)
 														{
-															// All is well
-															messHand.sendEmptyMessage(6);
-															return;
+															// It is the latest version, but is it not corrupt?
+															if(checkDicMD5(myDicFile.getPath()))
+															{
+																// All is well
+																messHand.sendEmptyMessage(6);
+																return;
+															}
 														}
 														if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
 														{
@@ -181,70 +183,76 @@ public class Preferences extends PreferenceActivity {
 		pbarDialog.setMessage(getString(R.string.msg_wait));
 		pbarDialog.show();
 		new Thread(new Runnable() {
-		    public void run() {
+			public void run() {
 				try
 				{
 					String folderSelect = PreferenceManager
-										.getDefaultSharedPreferences(getBaseContext()).getString(folderSelectPref, 
-												Environment.getExternalStorageDirectory().getAbsolutePath() +
-												File.separator + "thomson");
-					MessageDigest md = MessageDigest.getInstance("MD5");
-					InputStream is = new FileInputStream(Environment.getExternalStorageDirectory().getPath()
-														+ File.separator + "DicTemp.dic");
-					try {
-						is = new DigestInputStream(is, md);
-						byte []  buffer = new byte [16384] ; 
-						while ( is.read ( buffer )  != -1 );
-					}
-					finally {
-						is.close();
-					}
-					byte[] digest = md.digest();
+					.getDefaultSharedPreferences(getBaseContext()).getString(folderSelectPref, 
+							Environment.getExternalStorageDirectory().getAbsolutePath() +
+							File.separator + "thomson");
 
-					downloadHash = StringUtils.getHexString(digest);
-
-					try {
-						URLConnection con = new URL(PUB_DIC_CFV).openConnection();
-						DataInputStream dis = new DataInputStream(con.getInputStream());
-						if(con.getContentLength() != 18)
-							throw new Exception();
-						
-						dis.read(Preferences.cfvTable);
-
-						for(int i = 0; i < 16; ++i)
-						{
-							if(digest[i] != cfvTable[i + 2])
-							{
-								new File(
-										Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic"
-								).delete();
-								messHand.sendEmptyMessage(-1);
-								return;
-							}
-						}
-						
-						if (!renameFile(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic" ,
-								folderSelect + File.separator + "RouterKeygen.dic" , true ))
-						{
-							messHand.sendEmptyMessage(8);
-							return;
-						}
-						messHand.sendEmptyMessage(9);
-					}
-					catch (Exception e)
+					String dicTemp = Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic";
+					if(checkDicMD5(dicTemp))
 					{
+						new File(dicTemp).delete();
 						messHand.sendEmptyMessage(-1);
 						return;
 					}
+					if (!renameFile(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic" ,
+							folderSelect + File.separator + "RouterKeygen.dic" , true ))
+					{
+						messHand.sendEmptyMessage(8);
+						return;
+					}
+				}
+				catch (Exception e)
+				{
+					messHand.sendEmptyMessage(-1);
+					return;
+				}
+				messHand.sendEmptyMessage(9);
+			}
+		}).start();
+	}
+	
+	// Check RouterKeygen.dic file through md5
+	private boolean checkDicMD5(String dicFile)
+	{
+		try
+		{
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			InputStream is = new FileInputStream(dicFile);
+			try {
+				is = new DigestInputStream(is, md);
+				byte []  buffer = new byte [16384] ; 
+				while ( is.read ( buffer )  != -1 );
+			}
+			finally {
+				is.close();
+			}
+			byte[] digest = md.digest();
 
-		 	   }
-		 	   catch(Exception e){}
-		 	   }
-		  }).start();
+			URLConnection con = new URL(PUB_DIC_CFV).openConnection();
+			DataInputStream dis = new DataInputStream(con.getInputStream());
+			if(con.getContentLength() != 18)
+				throw new Exception();
+			
+			dis.read(Preferences.cfvTable);
+
+			for(int i = 0; i < 16; ++i)
+				if(digest[i] != cfvTable[i + 2])
+					return false;
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 	
 	// Download the dictionary
-	private void startDownload(){
+	private void startDownload() {
 		pbarDialog = new ProgressDialog(Preferences.this);
 		pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
