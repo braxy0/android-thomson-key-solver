@@ -381,7 +381,7 @@ public class RouterKeygen extends Activity {
 		.getDefaultSharedPreferences(getBaseContext());
 		wifiOn = prefs.getBoolean(wifiOnPref , true);
 		thomson3g = prefs.getBoolean(thomson3gPref, false);
-		nativeCalc = prefs.getBoolean(nativeCalcPref, false);
+		nativeCalc = prefs.getBoolean(nativeCalcPref, true);
 		folderSelect = prefs.getString(folderSelectPref, 
 				Environment.getExternalStorageDirectory().getAbsolutePath());
 	}

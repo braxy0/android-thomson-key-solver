@@ -16,7 +16,7 @@
                         android:key="thomson3g" />
                  <CheckBoxPreference
                         android:title="@string/pref_native"
-                        android:defaultValue="false"
+                        android:defaultValue="true"
                         android:summaryOn="@string/pref_hinton_native"
                         android:summaryOff="@string/pref_hintoff_native"
                         android:key="nativethomson" />            
