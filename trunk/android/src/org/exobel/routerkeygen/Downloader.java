@@ -62,7 +62,6 @@ public class Downloader extends Thread{
 				}
 				catch(Exception e){}
 				messHand.sendMessage(Message.obtain(messHand, 4, myProgress, fileLen));
-				Thread.sleep(10);
 				if ( stopRequested )
 				{
 					if ( deleteTemp )
