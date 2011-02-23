@@ -67,85 +67,7 @@ public class Preferences extends PreferenceActivity {
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference)
 					{
-						new AlertDialog.Builder(Preferences.this)
-							.setTitle(R.string.pref_download)
-							.setMessage(R.string.msg_dicislarge)
-							.setCancelable(false)
-							.setPositiveButton(R.string.bt_yes, new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									// Check if we have the latest dictionary version.
-
-									final File myDicFile = new File(PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-										.getString(folderSelectPref,
-											Environment.getExternalStorageDirectory().getAbsolutePath())
-											+ File.separator + "RouterKeygen.dic");
-									
-									if(myDicFile.exists());
-									{
-										pbarDialog = new ProgressDialog(Preferences.this);
-										pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-										pbarDialog.setMessage(getString(R.string.msg_wait));
-										pbarDialog.show();
-										  new Thread(new Runnable() {
-											    public void run() {
-
-													// Comparing this version with the online version
-													try {
-														InputStream is = new FileInputStream(myDicFile);
-														URLConnection con = new URL(PUB_DIC_CFV).openConnection();
-														DataInputStream dis = new DataInputStream(con.getInputStream());
-														if(con.getContentLength() != 18)
-															throw new Exception();
-														
-														dis.read(Preferences.cfvTable);
-														
-														// Check our version
-														is.read(dicVersion);
-														
-														int thisVersion, onlineVersion;
-														thisVersion = dicVersion[0] << 8 | dicVersion[1];
-														onlineVersion = cfvTable[0] << 8 | cfvTable[1];
-														
-														if(thisVersion == onlineVersion)
-														{
-															// It is the latest version, but is it not corrupt?
-															if(checkDicMD5(myDicFile.getPath()))
-															{
-																// All is well
-																messHand.sendEmptyMessage(6);
-																return;
-															}
-														}
-														if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
-														{
-															// Online version is too advanced
-															messHand.sendEmptyMessage(5);
-															return;
-														}
-														messHand.sendEmptyMessage(7);
-														
-													} 
-													catch ( FileNotFoundException e ){
-														messHand.sendEmptyMessage(7);
-													}
-													catch (Exception e)
-													{
-														messHand.sendEmptyMessage(-1);
-														return;
-													}
-												}
-											  }).start();
-
-									}									
-					           }
-					       })
-					       .setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
-					           public void onClick(DialogInterface dialog, int id) {
-					                dialog.cancel();
-					           }
-					       })
-					       .create()
-					       .show();
+						showDialog(DIALOG_ASK_DOWNLOAD);
 						return true;
 					}
 				});
@@ -179,10 +101,7 @@ public class Preferences extends PreferenceActivity {
 	}
 	
 	private void checkDownload(){
-		pbarDialog = new ProgressDialog(Preferences.this);
-		pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		pbarDialog.setMessage(getString(R.string.msg_wait));
-		pbarDialog.show();
+		showDialog(DIALOG_CHECKING_DOWNLOAD);
 		new Thread(new Runnable() {
 			public void run() {
 				try
@@ -253,31 +172,7 @@ public class Preferences extends PreferenceActivity {
 	
 	// Download the dictionary
 	private void startDownload() {
-		pbarDialog = new ProgressDialog(Preferences.this);
-		pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
-		pbarDialog.setMax(100);
-		pbarDialog.setTitle(R.string.msg_dl_dlingdic);
-		pbarDialog.setCancelable(false);
-		pbarDialog.setOnDismissListener(new OnDismissListener() {
-			public void onDismiss(DialogInterface dialog) {
-				downloader.stopRequested = true;
-			}
-		});
-		pbarDialog.setButton(getString(R.string.bt_pause), new OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				downloader.stopRequested = true;
-				pbarDialog.dismiss();
-			}
-		});
-		pbarDialog.setButton2(getString(R.string.bt_manual_cancel), new OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				downloader.deleteTemp = true;
-				downloader.stopRequested = true;
-				pbarDialog.dismiss();
-			}
-		});
-		pbarDialog.show();
+		showDialog(DIALOG_DOWNLOAD);
 		myProgress = 0;
 		downloader = new Downloader(messHand , PUB_DOWNLOAD);
 		downloader.start();
@@ -291,25 +186,25 @@ public class Preferences extends PreferenceActivity {
 			switch(msg.what)
 			{
 			case -1:
-				pbarDialog.dismiss();
-				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
-					.setMessage(R.string.msg_err_unkown).show();
+				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+				removeDialog(DIALOG_CHECKING_DOWNLOAD);
+				removeDialog(DIALOG_DOWNLOAD);
+				showDialog(DIALOG_ERROR);
 			break;
 			case 0:
-				pbarDialog.dismiss();
-				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
-					.setMessage(R.string.msg_nosdcard).show();
+				removeDialog(DIALOG_DOWNLOAD);
+				showDialog(DIALOG_ERROR_NOSD);
 				break;
 			case 1:
-				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
-					.setMessage(R.string.msg_nomemoryonsdcard).show();
+				removeDialog(DIALOG_DOWNLOAD);
+				showDialog(DIALOG_ERROR_NOMEMORYONSD);
 				break;
 			case 2:
 				downloadBefore = msg.arg1;
 				fileLen = msg.arg2;
 				break;
 			case 3:
-				pbarDialog.dismiss();
+				removeDialog(DIALOG_DOWNLOAD);
 				checkDownload();
 				break;
 			case 4:
@@ -334,26 +229,25 @@ public class Preferences extends PreferenceActivity {
 				lastt = now;
 				break;
 			case 5:
-				pbarDialog.dismiss();
-				new AlertDialog.Builder(Preferences.this).setTitle(R.string.msg_error)
-					.setMessage(R.string.msg_err_online_too_adv).show();
+				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+				showDialog(DIALOG_ERROR_TOO_ADVANCED);
 				break;
 			case 6:
-				pbarDialog.dismiss();
+				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
 				Toast.makeText(getBaseContext(),getResources().getString(R.string.msg_dic_updated),
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 7: 
-				pbarDialog.dismiss();
+				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
 				startDownload();
 				break;
 			case 8: 
-				pbarDialog.dismiss();
+				removeDialog(DIALOG_CHECKING_DOWNLOAD);
 				Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_err_rename_dic),
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 9: 
-				pbarDialog.dismiss();
+				removeDialog(DIALOG_CHECKING_DOWNLOAD);
 				Toast.makeText(Preferences.this, R.string.msg_dic_updated_finished, Toast.LENGTH_SHORT).show();
 				break;
 			}
@@ -392,8 +286,7 @@ public class Preferences extends PreferenceActivity {
 	private File mPath = new File(Environment.getExternalStorageDirectory() + File.separator);
 	private String mChosenFile = File.separator;
 	Stack<String> directoryTree = new Stack<String>();
-	private static final int DIALOG_LOAD_FOLDER = 1000;
-	private static final int DIALOG_ABOUT = 1001;
+
 
 	private void loadFolderList() {
 		mPath = new File(Environment.getExternalStorageDirectory() + File.separator + mChosenFile);
@@ -405,6 +298,8 @@ public class Preferences extends PreferenceActivity {
 				}
 			};
 			mFileList = mPath.list(filter);
+			if ( mFileList == null )
+				return;
 			TreeSet<String> sorter = new TreeSet<String>();
 			for ( int i = 0 ; i < mFileList.length ; ++i  )
 				sorter.add(mFileList[i]);
@@ -421,74 +316,230 @@ public class Preferences extends PreferenceActivity {
 		}
 	}
 
+	private static final int DIALOG_LOAD_FOLDER = 1000;
+	private static final int DIALOG_ABOUT = 1001;
+	private static final int DIALOG_ASK_DOWNLOAD = 1002;
+	private static final int DIALOG_CHECK_DOWNLOAD_SERVER = 1003;
+	private static final int DIALOG_ERROR_TOO_ADVANCED = 1004;
+	private static final int DIALOG_DOWNLOAD = 1005;
+	private static final int DIALOG_ERROR = 1006;
+	private static final int DIALOG_ERROR_NOSD = 1007;
+	private static final int DIALOG_ERROR_NOMEMORYONSD = 1008;
+	private static final int DIALOG_CHECKING_DOWNLOAD = 1009;
+
+
+
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog = null;
 		AlertDialog.Builder builder = new Builder(this);
 		switch(id) {
-		case DIALOG_LOAD_FOLDER:
-		{
-			loadFolderList();
-			builder.setTitle("Choose your folder");
-			if(mFileList == null || mFileList.length == 0) {
-				Log.e(TAG, "Showing file picker before loading the file list");
-				mFileList = new String[]{"(There are no more directories)"};
-				builder.setItems(mFileList, new DialogInterface.OnClickListener(){
-					public void onClick(DialogInterface dialog,int which) {}}
-				);
-			}
-			else
-				builder.setItems(mFileList, new DialogInterface.OnClickListener(){
-					public void onClick(DialogInterface dialog, int which){
-						directoryTree.push(mChosenFile);
-						mChosenFile += File.separator + mFileList[which];
-						removeDialog(DIALOG_LOAD_FOLDER);
-						showDialog(DIALOG_LOAD_FOLDER);
-					}
-				});
-			if ( !mChosenFile.equals(File.separator))
-				builder.setNegativeButton(R.string.bt_choose_back,new OnClickListener() {
+			case DIALOG_LOAD_FOLDER:
+			{
+				loadFolderList();
+				builder.setTitle("Choose your folder");
+				if(mFileList == null || mFileList.length == 0) {
+					Log.e(TAG, "Showing file picker before loading the file list");
+					mFileList = new String[]{"(There are no more directories)"};
+					builder.setItems(mFileList, new DialogInterface.OnClickListener(){
+						public void onClick(DialogInterface dialog,int which) {}}
+					);
+				}
+				else
+					builder.setItems(mFileList, new DialogInterface.OnClickListener(){
+						public void onClick(DialogInterface dialog, int which){
+							directoryTree.push(mChosenFile);
+							mChosenFile += File.separator + mFileList[which];
+							removeDialog(DIALOG_LOAD_FOLDER);
+							showDialog(DIALOG_LOAD_FOLDER);
+						}
+					});
+				if ( !mChosenFile.equals(File.separator))
+					builder.setNegativeButton(R.string.bt_choose_back,new OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							if ( !directoryTree.empty())
+								mChosenFile = directoryTree.pop();
+							else
+								mChosenFile = File.separator;
+							removeDialog(DIALOG_LOAD_FOLDER);
+							showDialog(DIALOG_LOAD_FOLDER);
+						}
+					});
+				builder.setNeutralButton(R.string.bt_choose,new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						if ( !directoryTree.empty())
-							mChosenFile = directoryTree.pop();
+						SharedPreferences customSharedPreference = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+						SharedPreferences.Editor editor = customSharedPreference
+						.edit();
+	
+						editor.putString(folderSelectPref,mPath.toString());
+						editor.commit();
+						String path = mPath.toString();
+						mPath = new File(path +  File.separator + "RouterKeygen.dic");
+						if ( !mPath.exists() )
+							Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_notfound) + " " + path,
+									Toast.LENGTH_SHORT).show();
 						else
-							mChosenFile = File.separator;
-						removeDialog(DIALOG_LOAD_FOLDER);
-						showDialog(DIALOG_LOAD_FOLDER);
+							Toast.makeText(getBaseContext(),mPath.toString() +  " " + getResources().getString(R.string.pref_msg_found),
+									Toast.LENGTH_SHORT).show();
 					}
 				});
-			builder.setNeutralButton(R.string.bt_choose,new OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					SharedPreferences customSharedPreference = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-					SharedPreferences.Editor editor = customSharedPreference
-					.edit();
+	
+				break;
+			}
+			case DIALOG_ABOUT:
+			{
+				builder.setTitle(R.string.pref_about); 
+				builder.setMessage(R.string.pref_about_desc);
+				builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						removeDialog(DIALOG_ABOUT);
+	
+					}
+				});
+				break;
+			}
+			case DIALOG_ASK_DOWNLOAD:
+			{
+				builder.setTitle(R.string.pref_download);
+				builder.setMessage(R.string.msg_dicislarge);
+				builder.setCancelable(false);
+				builder.setPositiveButton(R.string.bt_yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// Check if we have the latest dictionary version.
+						final File myDicFile = new File(PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+							.getString(folderSelectPref,
+								Environment.getExternalStorageDirectory().getAbsolutePath())
+								+ File.separator + "RouterKeygen.dic");
+						
+						if(myDicFile.exists());
+						{
+							removeDialog(DIALOG_ASK_DOWNLOAD);
+							showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+							  new Thread(new Runnable() {
+								    public void run() {
 
-					editor.putString(folderSelectPref,mPath.toString());
-					editor.commit();
-					String path = mPath.toString();
-					mPath = new File(path +  File.separator + "RouterKeygen.dic");
-					if ( !mPath.exists() )
-						Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_notfound) + " " + path,
-								Toast.LENGTH_SHORT).show();
-					else
-						Toast.makeText(getBaseContext(),mPath.toString() +  " " + getResources().getString(R.string.pref_msg_found),
-								Toast.LENGTH_SHORT).show();
-				}
-			});
+										// Comparing this version with the online version
+										try {
+											InputStream is = new FileInputStream(myDicFile);
+											URLConnection con = new URL(PUB_DIC_CFV).openConnection();
+											DataInputStream dis = new DataInputStream(con.getInputStream());
+											if(con.getContentLength() != 18)
+												throw new Exception();
+											
+											dis.read(Preferences.cfvTable);
+											
+											// Check our version
+											is.read(dicVersion);
+											
+											int thisVersion, onlineVersion;
+											thisVersion = dicVersion[0] << 8 | dicVersion[1];
+											onlineVersion = cfvTable[0] << 8 | cfvTable[1];
+											
+											if(thisVersion == onlineVersion)
+											{
+												// It is the latest version, but is it not corrupt?
+												if(checkDicMD5(myDicFile.getPath()))
+												{
+													// All is well
+													messHand.sendEmptyMessage(6);
+													return;
+												}
+											}
+											if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
+											{
+												// Online version is too advanced
+												messHand.sendEmptyMessage(5);
+												return;
+											}
+											messHand.sendEmptyMessage(7);
+											
+										} 
+										catch ( FileNotFoundException e ){
+											messHand.sendEmptyMessage(7);
+										}
+										catch (Exception e)
+										{
+											messHand.sendEmptyMessage(-1);
+											return;
+										}
+									}
+								  }).start();
 
-			break;
-		}
-		case DIALOG_ABOUT:
-		{
-			builder.setTitle(R.string.pref_about); 
-			builder.setMessage(R.string.pref_about_desc);
-			builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					removeDialog(DIALOG_ABOUT);
-
-				}
-			});
-			break;
-		}
+						}									
+		           }
+		       } );
+		       builder.setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                removeDialog(DIALOG_ASK_DOWNLOAD);
+		           }
+		       });
+		       break;
+			}
+			case DIALOG_CHECK_DOWNLOAD_SERVER:
+			{
+				pbarDialog = new ProgressDialog(Preferences.this);
+				pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				pbarDialog.setMessage(getString(R.string.msg_wait));
+				return pbarDialog;
+			}
+			case DIALOG_ERROR_TOO_ADVANCED:
+			{
+				builder.setTitle(R.string.msg_error)
+				.setMessage(R.string.msg_err_online_too_adv);
+				break;
+			}
+			case DIALOG_DOWNLOAD:
+			{
+				pbarDialog = new ProgressDialog(Preferences.this);
+				pbarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
+				pbarDialog.setMax(100);
+				pbarDialog.setTitle(R.string.msg_dl_dlingdic);
+				pbarDialog.setCancelable(false);
+				pbarDialog.setOnDismissListener(new OnDismissListener() {
+					public void onDismiss(DialogInterface dialog) {
+						downloader.stopRequested = true;
+					}
+				});
+				pbarDialog.setButton(getString(R.string.bt_pause), new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						downloader.stopRequested = true;
+						removeDialog(DIALOG_DOWNLOAD);
+					}
+				});
+				pbarDialog.setButton2(getString(R.string.bt_manual_cancel), new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						downloader.deleteTemp = true;
+						downloader.stopRequested = true;
+						removeDialog(DIALOG_DOWNLOAD);
+					}
+				});
+				return pbarDialog;
+			}
+			case DIALOG_ERROR:
+			{
+				builder.setTitle(R.string.msg_error)
+				.setMessage(R.string.msg_err_unkown);
+				break;
+			}
+			case DIALOG_ERROR_NOMEMORYONSD:
+			{
+				builder.setTitle(R.string.msg_error)
+				.setMessage(R.string.msg_nomemoryonsdcard);
+				break;
+			}
+			case DIALOG_ERROR_NOSD:
+			{
+				builder.setTitle(R.string.msg_error)
+				.setMessage(R.string.msg_nosdcard);
+				break;
+			}
+			case DIALOG_CHECKING_DOWNLOAD:
+			{
+				pbarDialog = new ProgressDialog(Preferences.this);
+				pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				pbarDialog.setMessage(getString(R.string.msg_wait));
+				return pbarDialog;
+			}
 		}
 		dialog = builder.show();
 		return dialog;
