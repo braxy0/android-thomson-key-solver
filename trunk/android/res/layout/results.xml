@@ -20,5 +20,7 @@
 				android:headerDividersEnabled="false"
 				android:footerDividersEnabled="false"
 				android:gravity="center" 
+				android:cacheColorHint="#00000000"
+				
 				/>
 </LinearLayout>

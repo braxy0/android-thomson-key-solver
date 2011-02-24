@@ -158,8 +158,8 @@ public class RouterKeygen extends Activity {
 		    LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 		    View layout = inflater.inflate(R.layout.results,
 		                                   (ViewGroup) findViewById(R.id.layout_root));
-		    ListView list1 = (ListView) layout.findViewById(R.id.list_keys);
-			list1.setOnItemClickListener(new OnItemClickListener() {
+		    ListView list = (ListView) layout.findViewById(R.id.list_keys);
+			list.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					String key = ((TextView)view).getText().toString();
@@ -174,7 +174,7 @@ public class RouterKeygen extends Activity {
 				}
 			});
 			
-			list1.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_key)); 
+			list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_key)); 
 			builder.setNeutralButton(RouterKeygen.this.getResources().getString(R.string.bt_share),
 						new OnClickListener() {	
 							public void onClick(DialogInterface dialog, int which) {
