@@ -9,12 +9,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,11 +26,13 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.ClipboardManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -152,15 +156,17 @@ public class RouterKeygen extends Activity {
 			return progressDialog;
 		}
 		case KEY_LIST: {
-			Dialog dialog = new Dialog(this);
-			dialog.setContentView(R.layout.results);
-			dialog.setTitle(RouterKeygen.this.router);
-
-			ListView list = (ListView) dialog.findViewById(R.id.list_keys);	
-			list.setOnItemClickListener(new OnItemClickListener() {
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setTitle(RouterKeygen.this.router);
+		    Context mContext = getApplicationContext();
+		    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+		    View layout = inflater.inflate(R.layout.results,
+		                                   (ViewGroup) findViewById(R.id.layout_root));
+		    ListView list1 = (ListView) layout.findViewById(R.id.list_keys);
+			list1.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					String key =((TextView)((RelativeLayout) view).getChildAt(0)).getText().toString();
+					String key = ((TextView)view).getText().toString();
 					Toast.makeText(getApplicationContext(), key + " " 							
 							+ RouterKeygen.this.getResources().getString(R.string.msg_copied),
 							Toast.LENGTH_SHORT).show();
@@ -171,36 +177,38 @@ public class RouterKeygen extends Activity {
 					startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 				}
 			});
-			list.setAdapter(new KeylistAdapter(list_key , this));
-			Button share = ( Button ) dialog.findViewById(R.id.bt_share);
-			share.setOnClickListener(new View.OnClickListener(){
-				public void onClick(View arg0) {
-					try
-					{
-						Intent i = new Intent(Intent.ACTION_SEND);
-						i.setType("text/plain");
-						i.putExtra(Intent.EXTRA_SUBJECT, router + 
-								RouterKeygen.this.getResources().getString(R.string.share_msg_begin));
-						Iterator<String> it = list_key.iterator();
-						String message = RouterKeygen.this.getResources().getString(R.string.share_msg_begin)
-						+ ":\n";
-						while ( it.hasNext() )
-							message += it.next() + "\n";
-						
-						i.putExtra(Intent.EXTRA_TEXT, message);
-						message = RouterKeygen.this.getResources().getString(R.string.share_title);
-						startActivity(Intent.createChooser(i, message));
-					}
-					catch(Exception e)
-					{
-						Toast.makeText( RouterKeygen.this , 
-								RouterKeygen.this.getResources().getString(R.string.msg_err_sendto) , 
-								Toast.LENGTH_SHORT).show();
-						return;
-					}
-				}
-			});
-			return dialog;
+			
+			list1.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, list_key)); 
+			builder.setNeutralButton(RouterKeygen.this.getResources().getString(R.string.bt_share),
+						new OnClickListener() {	
+							public void onClick(DialogInterface dialog, int which) {
+								try
+								{
+									Intent i = new Intent(Intent.ACTION_SEND);
+									i.setType("text/plain");
+									i.putExtra(Intent.EXTRA_SUBJECT, router + 
+											RouterKeygen.this.getResources().getString(R.string.share_msg_begin));
+									Iterator<String> it = list_key.iterator();
+									String message = RouterKeygen.this.getResources().getString(R.string.share_msg_begin)
+									+ ":\n";
+									while ( it.hasNext() )
+										message += it.next() + "\n";
+									
+									i.putExtra(Intent.EXTRA_TEXT, message);
+									message = RouterKeygen.this.getResources().getString(R.string.share_title);
+									startActivity(Intent.createChooser(i, message));
+								}
+								catch(Exception e)
+								{
+									Toast.makeText( RouterKeygen.this , 
+											RouterKeygen.this.getResources().getString(R.string.msg_err_sendto) , 
+											Toast.LENGTH_SHORT).show();
+									return;
+								}
+							}
+						});
+			builder.setView(layout);
+			return builder.show();
 		}
 		case MANUAL_CALC: {
 			Dialog dialog = new Dialog(this);
@@ -215,7 +223,7 @@ public class RouterKeygen extends Activity {
 					if ( router.equals("") )
 						return;
 					begin =  System.currentTimeMillis();
-					WifiNetwork wifi = new WifiNetwork(router, "" , 0 ,"" , RouterKeygen.this);
+					WifiNetwork wifi = new WifiNetwork("SKY12345", "11:22:33:44:55:66" , 0 ,"" , RouterKeygen.this);
 					calcKeys(wifi);
 
 				}
@@ -252,8 +260,7 @@ public class RouterKeygen extends Activity {
 
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.wifi, menu);
+		getMenuInflater().inflate(R.menu.wifi, menu);
 		return true;
 	}
 
@@ -348,6 +355,9 @@ public class RouterKeygen extends Activity {
 							break;
 				case ONO_WEP: RouterKeygen.this.calculator = 
 							new OnoKeygen(RouterKeygen.this);
+							break;
+				case SKY_V1: RouterKeygen.this.calculator = 
+							new SkyV1Keygen(RouterKeygen.this);
 							break;			
 			}
 		}catch(LinkageError e){

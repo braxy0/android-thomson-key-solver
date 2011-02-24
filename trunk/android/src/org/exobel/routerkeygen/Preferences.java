@@ -399,6 +399,7 @@ public class Preferences extends PreferenceActivity {
 			}
 			case DIALOG_ASK_DOWNLOAD:
 			{
+				
 				builder.setTitle(R.string.pref_download);
 				builder.setMessage(R.string.msg_dicislarge);
 				builder.setCancelable(false);
