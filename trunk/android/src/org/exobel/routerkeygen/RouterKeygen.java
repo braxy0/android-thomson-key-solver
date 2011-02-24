@@ -87,8 +87,6 @@ public class RouterKeygen extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				router = vulnerable.get(position);
-				router.supported = true;
-				router.type = TYPE.SKY_V1;
 				if (router.newThomson)
 				{
 					Toast.makeText( RouterKeygen.this ,
