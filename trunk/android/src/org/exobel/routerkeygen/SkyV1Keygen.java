@@ -24,7 +24,7 @@ public class SkyV1Keygen extends KeygenThread{
 		super(par);
 	}
 
-	final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVXYWZ";
+	final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	public void run(){
 		if ( router == null)
@@ -49,9 +49,6 @@ public class SkyV1Keygen extends KeygenThread{
 		byte [] hash = md.digest();
 		String key ="";
 		int index = hash[1] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		index = hash[1] & 0xFF;
 		index %= 26;
 		key += ALPHABET.substring(index,index+1 );
 		index = hash[3] & 0xFF;

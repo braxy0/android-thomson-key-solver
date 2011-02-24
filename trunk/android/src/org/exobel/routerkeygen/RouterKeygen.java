@@ -36,7 +36,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -51,7 +50,7 @@ public class RouterKeygen extends Activity {
 	BroadcastReceiver scanFinished;
 	BroadcastReceiver stateChanged;
 	List<WifiNetwork> vulnerable;
-	String router;
+	WifiNetwork router;
 	long begin;
 	static final String TAG = "RouterKeygen";
 		final String welcomeScreenShownPref = "welcomeScreenShown";
@@ -87,17 +86,17 @@ public class RouterKeygen extends Activity {
 		scanResuls.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				router = ((TextView)((RelativeLayout) view).getChildAt(2)).getText().toString();
-
-
-				if (vulnerable.get(position).newThomson)
+				router = vulnerable.get(position);
+				router.supported = true;
+				router.type = TYPE.SKY_V1;
+				if (router.newThomson)
 				{
 					Toast.makeText( RouterKeygen.this ,
 							RouterKeygen.this.getResources().getString(R.string.msg_newthomson) ,
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
-				calcKeys(vulnerable.get(position));
+				calcKeys(router);
 			}
 		});
 		stateChanged = new WifiStateReceiver(wifi);
@@ -157,9 +156,8 @@ public class RouterKeygen extends Activity {
 		}
 		case KEY_LIST: {
 			AlertDialog.Builder builder = new Builder(this);
-			builder.setTitle(RouterKeygen.this.router);
-		    Context mContext = getApplicationContext();
-		    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+			builder.setTitle(router.ssid);
+		    LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 		    View layout = inflater.inflate(R.layout.results,
 		                                   (ViewGroup) findViewById(R.id.layout_root));
 		    ListView list1 = (ListView) layout.findViewById(R.id.list_keys);
@@ -178,7 +176,7 @@ public class RouterKeygen extends Activity {
 				}
 			});
 			
-			list1.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, list_key)); 
+			list1.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_key)); 
 			builder.setNeutralButton(RouterKeygen.this.getResources().getString(R.string.bt_share),
 						new OnClickListener() {	
 							public void onClick(DialogInterface dialog, int which) {
@@ -219,12 +217,12 @@ public class RouterKeygen extends Activity {
 			Button calc = ( Button ) dialog.findViewById(R.id.bt_manual_calc);
 			calc.setOnClickListener(new View.OnClickListener(){
 				public void onClick(View arg0) {
-					router = edit.getText().toString().trim();
-					if ( router.equals("") )
+					String ssid = edit.getText().toString().trim();
+					if ( ssid.equals("") )
 						return;
 					begin =  System.currentTimeMillis();
-					WifiNetwork wifi = new WifiNetwork("SKY12345", "11:22:33:44:55:66" , 0 ,"" , RouterKeygen.this);
-					calcKeys(wifi);
+					router = new WifiNetwork(ssid, "" , 0 ,"" , RouterKeygen.this);
+					calcKeys(router);
 
 				}
 			});
