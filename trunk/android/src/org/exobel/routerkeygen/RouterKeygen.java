@@ -31,10 +31,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -210,8 +211,12 @@ public class RouterKeygen extends Activity {
 			Dialog dialog = new Dialog(this);
 			dialog.setContentView(R.layout.manual);
 			dialog.setTitle(RouterKeygen.this.getResources().getString(R.string.menu_manual));
-			final EditText edit = (EditText ) dialog.findViewById(R.id.manual_edittext);
-
+			String[] routers = getResources().getStringArray(R.array.supported_routers);
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+									android.R.layout.simple_dropdown_item_1line, routers);
+			final AutoCompleteTextView edit = (AutoCompleteTextView) dialog.findViewById(R.id.manual_autotext);
+			edit.setAdapter(adapter);
+			edit.setThreshold(1);
 			Button calc = ( Button ) dialog.findViewById(R.id.bt_manual_calc);
 			calc.setOnClickListener(new View.OnClickListener(){
 				public void onClick(View arg0) {
@@ -221,7 +226,8 @@ public class RouterKeygen extends Activity {
 					begin =  System.currentTimeMillis();
 					router = new WifiNetwork(ssid, "" , 0 ,"" , RouterKeygen.this);
 					calcKeys(router);
-
+					InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
 				}
 			});
 			Button cancel = ( Button ) dialog.findViewById(R.id.bt_manual_cancel);

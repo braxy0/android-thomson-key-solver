@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string-array name="supported_routers">
+        <item>Thomson</item>
+        <item>SpeedTouch</item>
+        <item>O2Wireless</item>
+        <item>Orange-</item>
+        <item>INFINITUM</item>
+        <item>BigPond</item>
+        <item>Otenet</item>
+        <item>Bbox-</item>
+        <item>DMAX</item>
+        <item>privat</item>
+        <item>DLink-</item>
+        <item>Discus--</item>
+        <item>eircom</item>
+        <item>FASTWEB-1-</item>
+        <item>Alice-</item>
+        <item>WLAN_</item>
+		<item>JAZZTEL_</item>
+        <item>SKY</item>
+    </string-array>
     <string name="app_name">Router Keygen</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_manual">Manual Input</string>
