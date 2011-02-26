@@ -9,7 +9,7 @@ import android.widget.Toast;
 public class WifiStateReceiver extends BroadcastReceiver {
 
 	WifiManager wifi;
-	public WifiStateReceiver(WifiManager wifi){
+	public WifiStateReceiver(WifiManager wifi ){
 		this.wifi = wifi;
 	}
 	@Override

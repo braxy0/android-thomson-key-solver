@@ -5,18 +5,13 @@ import java.security.NoSuchAlgorithmException;
 
 
 /*
- * 
-; The following creates an array for easy lookup of the Passphrase.
-; 00 = A, 01 = B, 02 = C, etc until Z is reached, 
-; then we kick back to A: 19 = Z, 1a = A, 1b = B
-; The 8 hex values for the Passphrase can be found in the hash
-; at these locations:
-; Position 3,7,11,15,19,23,27,31 - an example using 1's and 0's,
-; where the 1's are the Passphrase hex values:
-; 00110011001100110011001100110011
-; So if the above MD5SUM = 00990011001100110011001100110011
-; Then via the array-lookup, the Passphrase is:XRRRRRRR
-; X=99, R=11
+ * This is the algorithm to generate the WPA passphrase 
+ * for the SKYv1.
+ * Generate the md5 hash form the mac.
+ * Use the numbers in the following positions on the hash.
+ *  Position 3,7,11,15,19,23,27,31 ,
+ *  Use theses numbers, modulus 26, to find the correct letter
+ *  and append to the key.
  */
 public class SkyV1Keygen extends KeygenThread{
 

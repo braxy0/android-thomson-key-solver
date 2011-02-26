@@ -176,6 +176,14 @@ public class RouterKeygen extends Activity {
 			});
 			
 			list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_key)); 
+			builder.setPositiveButton(RouterKeygen.this.getResources().getString(R.string.bt_connect),
+					new OnClickListener() {	
+						public void onClick(DialogInterface dialog, int which) {
+							registerReceiver(new AutoConnectManager(wifi, list_key , router), new IntentFilter(
+									WifiManager.NETWORK_STATE_CHANGED_ACTION));
+
+						}
+			});
 			builder.setNeutralButton(RouterKeygen.this.getResources().getString(R.string.bt_share),
 						new OnClickListener() {	
 							public void onClick(DialogInterface dialog, int which) {
