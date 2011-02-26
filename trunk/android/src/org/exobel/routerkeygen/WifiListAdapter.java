@@ -3,6 +3,7 @@ package org.exobel.routerkeygen;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,12 +52,21 @@ public class WifiListAdapter extends BaseAdapter {
 	    	 icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_possible));
 	     
 	     ImageView networkS = (ImageView)itemLayout.findViewById(R.id.strenght);
-	     
-	     if ( strenght >= -55 )
-	    	 networkS.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_wifi_verystrong));
-	     else
-	    	 if ( strenght >= -70 )
-	    		 networkS.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_wifi_medium));
+	     int pic = WifiManager.calculateSignalLevel(strenght, 4);
+	     switch (pic){
+	     	case 0: networkS.setImageDrawable(context.getResources().
+		    		 		getDrawable(R.drawable.ic_wifi_weak));
+		     		break;
+	     	case 1: networkS.setImageDrawable(context.getResources().
+	 						getDrawable(R.drawable.ic_wifi_medium));
+	     			break;
+	     	case 2: networkS.setImageDrawable(context.getResources().
+						getDrawable(R.drawable.ic_wifi_strong));
+	     			break;
+	     	case 3: networkS.setImageDrawable(context.getResources().
+					getDrawable(R.drawable.ic_wifi_verystrong));
+     				break;
+	     }
 		return  itemLayout;
 	}
 
