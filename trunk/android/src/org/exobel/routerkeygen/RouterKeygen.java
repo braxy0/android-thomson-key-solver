@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -122,148 +123,167 @@ public class RouterKeygen extends Activity {
 			super.onStop();
 			unregisterReceiver(scanFinished);
 			unregisterReceiver(stateChanged);
-			removeDialog(KEY_LIST);
-			removeDialog(MANUAL_CALC); 
+			removeDialog(DIALOG_KEY_LIST);
+			removeDialog(DIALOG_MANUAL_CALC); 
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	ProgressDialog progressDialog;
-	private static final int THOMSON3G = 0; 
-	private static final int KEY_LIST = 1;
-	private static final int MANUAL_CALC = 2;
-	private static final int NATIVE_CALC = 3;
+	private static final int DIALOG_THOMSON3G = 0; 
+	private static final int DIALOG_KEY_LIST = 1;
+	private static final int DIALOG_MANUAL_CALC = 2;
+	private static final int DIALOG_NATIVE_CALC = 3;
+	private static final int DIALOG_AUTO_CONNECT = 4;
 	protected Dialog onCreateDialog(int id ) {
 		switch (id) {
-		case THOMSON3G: {
-			progressDialog = new ProgressDialog(RouterKeygen.this);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressDialog.setTitle(RouterKeygen.this.getResources().getString(R.string.dialog_thomson3g));
-			progressDialog.setMessage(RouterKeygen.this.getResources().getString(R.string.dialog_thomson3g_msg));
-			progressDialog.setCancelable(false);
-			progressDialog.setProgress(0);
-			progressDialog.setButton(RouterKeygen.this.getResources().getString(R.string.bt_manual_cancel),
-					new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface dialog, int which) {
-					RouterKeygen.this.calculator.stopRequested = true;
-					removeDialog(THOMSON3G);
-				}
-			});
-			progressDialog.setIndeterminate(false);
-			return progressDialog;
-		}
-		case KEY_LIST: {
-			AlertDialog.Builder builder = new Builder(this);
-			builder.setTitle(router.ssid);
-		    LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-		    View layout = inflater.inflate(R.layout.results,
-		                                   (ViewGroup) findViewById(R.id.layout_root));
-		    ListView list = (ListView) layout.findViewById(R.id.list_keys);
-			list.setOnItemClickListener(new OnItemClickListener() {
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					String key = ((TextView)view).getText().toString();
-					Toast.makeText(getApplicationContext(), key + " " 							
-							+ RouterKeygen.this.getResources().getString(R.string.msg_copied),
-							Toast.LENGTH_SHORT).show();
-					ClipboardManager clipboard = 
-						(ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
-
-					clipboard.setText(key);
-					startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-				}
-			});
-			
-			list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_key)); 
-			builder.setPositiveButton(RouterKeygen.this.getResources().getString(R.string.bt_connect),
-					new OnClickListener() {	
-						public void onClick(DialogInterface dialog, int which) {
-							registerReceiver(new AutoConnectManager(wifi, list_key , router), new IntentFilter(
-									WifiManager.NETWORK_STATE_CHANGED_ACTION));
-
-						}
-			});
-			builder.setNeutralButton(RouterKeygen.this.getResources().getString(R.string.bt_share),
+			case DIALOG_THOMSON3G: {
+				progressDialog = new ProgressDialog(RouterKeygen.this);
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.setTitle(RouterKeygen.this.getResources().getString(R.string.dialog_thomson3g));
+				progressDialog.setMessage(RouterKeygen.this.getResources().getString(R.string.dialog_thomson3g_msg));
+				progressDialog.setCancelable(false);
+				progressDialog.setProgress(0);
+				progressDialog.setButton(RouterKeygen.this.getResources().getString(R.string.bt_manual_cancel),
+						new DialogInterface.OnClickListener(){
+					public void onClick(DialogInterface dialog, int which) {
+						RouterKeygen.this.calculator.stopRequested = true;
+						removeDialog(DIALOG_THOMSON3G);
+					}
+				});
+				progressDialog.setIndeterminate(false);
+				return progressDialog;
+			}
+			case DIALOG_KEY_LIST: {
+				AlertDialog.Builder builder = new Builder(this);
+				builder.setTitle(router.ssid);
+			    LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+			    View layout = inflater.inflate(R.layout.results,
+			                                   (ViewGroup) findViewById(R.id.layout_root));
+			    ListView list = (ListView) layout.findViewById(R.id.list_keys);
+				list.setOnItemClickListener(new OnItemClickListener() {
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						String key = ((TextView)view).getText().toString();
+						Toast.makeText(getApplicationContext(), key + " " 							
+								+ RouterKeygen.this.getResources().getString(R.string.msg_copied),
+								Toast.LENGTH_SHORT).show();
+						ClipboardManager clipboard = 
+							(ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
+	
+						clipboard.setText(key);
+						startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+					}
+				});
+				
+				list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_key)); 
+				builder.setPositiveButton(RouterKeygen.this.getResources().getString(R.string.bt_connect),
 						new OnClickListener() {	
 							public void onClick(DialogInterface dialog, int which) {
-								try
-								{
-									Intent i = new Intent(Intent.ACTION_SEND);
-									i.setType("text/plain");
-									i.putExtra(Intent.EXTRA_SUBJECT, router + 
-											RouterKeygen.this.getResources().getString(R.string.share_msg_begin));
-									Iterator<String> it = list_key.iterator();
-									String message = RouterKeygen.this.getResources().getString(R.string.share_msg_begin)
-									+ ":\n";
-									while ( it.hasNext() )
-										message += it.next() + "\n";
-									
-									i.putExtra(Intent.EXTRA_TEXT, message);
-									message = RouterKeygen.this.getResources().getString(R.string.share_title);
-									startActivity(Intent.createChooser(i, message));
-								}
-								catch(Exception e)
-								{
-									Toast.makeText( RouterKeygen.this , 
-											RouterKeygen.this.getResources().getString(R.string.msg_err_sendto) , 
-											Toast.LENGTH_SHORT).show();
-									return;
-								}
+								wifi.disconnect();
+								AutoConnectManager auto = new AutoConnectManager(wifi, list_key , 
+														router , RouterKeygen.this , handler);
+								auto.activate();
+								registerReceiver( auto, new IntentFilter(
+										WifiManager.NETWORK_STATE_CHANGED_ACTION));showDialog(DIALOG_AUTO_CONNECT);
 							}
-						});
-			builder.setView(layout);
-			return builder.show();
-		}
-		case MANUAL_CALC: {
-			Dialog dialog = new Dialog(this);
-			dialog.setContentView(R.layout.manual);
-			dialog.setTitle(RouterKeygen.this.getResources().getString(R.string.menu_manual));
-			String[] routers = getResources().getStringArray(R.array.supported_routers);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
-									android.R.layout.simple_dropdown_item_1line, routers);
-			final AutoCompleteTextView edit = (AutoCompleteTextView) dialog.findViewById(R.id.manual_autotext);
-			edit.setAdapter(adapter);
-			edit.setThreshold(1);
-			Button calc = ( Button ) dialog.findViewById(R.id.bt_manual_calc);
-			calc.setOnClickListener(new View.OnClickListener(){
-				public void onClick(View arg0) {
-					String ssid = edit.getText().toString().trim();
-					if ( ssid.equals("") )
-						return;
-					begin =  System.currentTimeMillis();
-					router = new WifiNetwork(ssid, "" , 0 ,"" , RouterKeygen.this);
-					calcKeys(router);
-					InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
-				}
-			});
-			Button cancel = ( Button ) dialog.findViewById(R.id.bt_manual_cancel);
-			cancel.setOnClickListener(new View.OnClickListener(){
-				public void onClick(View arg0) {
-					removeDialog(MANUAL_CALC);
-				}
-			});
-
-			return dialog;
-		}
-		case NATIVE_CALC: {
-			progressDialog = new ProgressDialog(RouterKeygen.this);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressDialog.setTitle(RouterKeygen.this.getResources().getString(R.string.dialog_nativecalc));
-			progressDialog.setMessage(RouterKeygen.this.getResources().getString(R.string.dialog_nativecalc_msg));
-			progressDialog.setCancelable(false);
-			progressDialog.setProgress(0);
-			progressDialog.setButton(RouterKeygen.this.getResources().getString(R.string.bt_manual_cancel),
-					new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface dialog, int which) {
-					RouterKeygen.this.calculator.stopRequested = true;
-					removeDialog(THOMSON3G);
-				}
-			});
-			progressDialog.setIndeterminate(false);
-			return progressDialog;
-		}
+				});
+				builder.setNeutralButton(RouterKeygen.this.getResources().getString(R.string.bt_share),
+							new OnClickListener() {	
+								public void onClick(DialogInterface dialog, int which) {
+									try
+									{
+										Intent i = new Intent(Intent.ACTION_SEND);
+										i.setType("text/plain");
+										i.putExtra(Intent.EXTRA_SUBJECT, router.ssid + 
+												RouterKeygen.this.getResources().getString(R.string.share_msg_begin));
+										Iterator<String> it = list_key.iterator();
+										String message = RouterKeygen.this.getResources().getString(R.string.share_msg_begin)
+										+ ":\n";
+										while ( it.hasNext() )
+											message += it.next() + "\n";
+										
+										i.putExtra(Intent.EXTRA_TEXT, message);
+										message = RouterKeygen.this.getResources().getString(R.string.share_title);
+										startActivity(Intent.createChooser(i, message));
+									}
+									catch(Exception e)
+									{
+										Toast.makeText( RouterKeygen.this , 
+												RouterKeygen.this.getResources().getString(R.string.msg_err_sendto) , 
+												Toast.LENGTH_SHORT).show();
+										return;
+									}
+								}
+							});
+				builder.setView(layout);
+				return builder.show();
+			}
+			case DIALOG_MANUAL_CALC: {
+				Dialog dialog = new Dialog(this);
+				dialog.setContentView(R.layout.manual);
+				dialog.setTitle(RouterKeygen.this.getResources().getString(R.string.menu_manual));
+				String[] routers = getResources().getStringArray(R.array.supported_routers);
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+										android.R.layout.simple_dropdown_item_1line, routers);
+				final AutoCompleteTextView edit = (AutoCompleteTextView) dialog.findViewById(R.id.manual_autotext);
+				edit.setAdapter(adapter);
+				edit.setThreshold(1);
+				Button calc = ( Button ) dialog.findViewById(R.id.bt_manual_calc);
+				calc.setOnClickListener(new View.OnClickListener(){
+					public void onClick(View arg0) {
+						String ssid = edit.getText().toString().trim();
+						if ( ssid.equals("") )
+							return;
+						begin =  System.currentTimeMillis();
+						router = new WifiNetwork(ssid, "" , 0 ,"" , RouterKeygen.this);
+						calcKeys(router);
+						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+					}
+				});
+				Button cancel = ( Button ) dialog.findViewById(R.id.bt_manual_cancel);
+				cancel.setOnClickListener(new View.OnClickListener(){
+					public void onClick(View arg0) {
+						removeDialog(DIALOG_MANUAL_CALC);
+					}
+				});
+	
+				return dialog;
+			}
+			case DIALOG_NATIVE_CALC: {
+				progressDialog = new ProgressDialog(RouterKeygen.this);
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.setTitle(RouterKeygen.this.getResources().getString(R.string.dialog_nativecalc));
+				progressDialog.setMessage(RouterKeygen.this.getResources().getString(R.string.dialog_nativecalc_msg));
+				progressDialog.setCancelable(false);
+				progressDialog.setProgress(0);
+				progressDialog.setButton(RouterKeygen.this.getResources().getString(R.string.bt_manual_cancel),
+						new DialogInterface.OnClickListener(){
+					public void onClick(DialogInterface dialog, int which) {
+						RouterKeygen.this.calculator.stopRequested = true;
+						removeDialog(DIALOG_THOMSON3G);
+					}
+				});
+				progressDialog.setIndeterminate(false);
+				return progressDialog;
+			}
+			case DIALOG_AUTO_CONNECT:
+			{
+				progressDialog = new ProgressDialog(RouterKeygen.this);
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				progressDialog.setMessage("Connecting");
+				progressDialog.setMax(list_key.size() + 1);
+				progressDialog.setTitle(R.string.msg_dl_dlingdic);
+				progressDialog.setCancelable(false);
+				progressDialog.setButton(getString(R.string.bt_close), new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						removeDialog(DIALOG_AUTO_CONNECT);
+					}
+				});
+				return progressDialog;
+			}
 		}
 		return null;
 	}
@@ -309,7 +329,7 @@ public class RouterKeygen extends Activity {
 			scan();
 			return true;
 		case R.id.manual_input:
-			showDialog(MANUAL_CALC);
+			showDialog(DIALOG_MANUAL_CALC);
 			return true;
 		case R.id.pref:
 			startActivity( new Intent(this , Preferences.class ));
@@ -381,11 +401,11 @@ public class RouterKeygen extends Activity {
 		RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 		begin =  System.currentTimeMillis();//debugging
 		RouterKeygen.this.calculator.start();
-		removeDialog(KEY_LIST);
-		removeDialog(MANUAL_CALC);
+		removeDialog(DIALOG_KEY_LIST);
+		removeDialog(DIALOG_MANUAL_CALC);
 		if (  wifi.type == TYPE.THOMSON && thomson3g )
-			showDialog(THOMSON3G);
-		removeDialog(KEY_LIST);
+			showDialog(DIALOG_THOMSON3G);
+		removeDialog(DIALOG_KEY_LIST);
 	}
 
 	boolean wifiOn;
@@ -412,16 +432,17 @@ public class RouterKeygen extends Activity {
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if ( thomson3g)
-				removeDialog(THOMSON3G);
+				removeDialog(DIALOG_THOMSON3G);
 			if ( nativeCalc )
-				removeDialog(NATIVE_CALC);
-			if ( msg.what == 0 )
+				removeDialog(DIALOG_NATIVE_CALC);
+			if ( msg.what == 0 ) /*Got Keys*/
 			{
 				begin = System.currentTimeMillis()-begin;
 				Log.d(TAG, "Time to solve:" + begin);
-				showDialog(KEY_LIST);
+				showDialog(DIALOG_KEY_LIST);
+				return;
 			}
-			else if ( msg.what == 1 )
+			if ( msg.what == 1 ) /*Error message*/
 			{
 				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
 				{
@@ -443,16 +464,27 @@ public class RouterKeygen extends Activity {
 						RouterKeygen.this.calculator.router = tmp;
 						RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 						RouterKeygen.this.calculator.start();
-						showDialog(NATIVE_CALC);
+						showDialog(DIALOG_NATIVE_CALC);
 						return;
 					}
 
 				}
-
 				Toast.makeText( RouterKeygen.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
-
+				return;
+			}
+			if ( msg.what == 2 )
+			{
+				progressDialog.setProgress(progressDialog.getProgress() +1);
+				return;
+			}
+			if ( msg.what == 3 )
+			{
+				removeDialog(DIALOG_AUTO_CONNECT);
+				Toast.makeText( RouterKeygen.this , (CharSequence) msg.obj , Toast.LENGTH_SHORT).show();
+				return;
 			}
 		}
+		
 	};
 
 
