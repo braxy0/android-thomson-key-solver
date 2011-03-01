@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.DetailedState;
-import android.net.NetworkInfo.State;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -24,9 +23,8 @@ public class AutoConnectManager extends BroadcastReceiver {
 	String tryingKey = "";
 	Handler mess;
 	int attempts = 0;
-	int timeouts = 0;
 	/* Since this receiver is waiting for
-	 * a brodacast that can happen anytime
+	 * a broadcast that can happen anytime
 	 * I want it to wait until I need him.*/
 	boolean activated = false;
 	public AutoConnectManager(WifiManager wifi , List<String> keys , 
@@ -76,7 +74,7 @@ public class AutoConnectManager extends BroadcastReceiver {
 			}
 			if ( state.equals(DetailedState.FAILED) )
 			{
-				wifi.disconnect();
+				wifi.reassociate();
 				testKey();
 				return;
 			}

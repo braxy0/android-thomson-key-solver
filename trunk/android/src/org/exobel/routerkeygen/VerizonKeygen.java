@@ -22,7 +22,16 @@ public class VerizonKeygen extends KeygenThread {
         inverse[2] = ssid.charAt(2);
 		inverse[3] = ssid.charAt(1);
 		inverse[4] = ssid.charAt(0);
-		int result = Integer.valueOf(String.copyValueOf(inverse), 36);
+		
+		int result = 0;
+		try{
+			result = Integer.valueOf(String.copyValueOf(inverse), 36);
+		}catch(NumberFormatException e){
+			pwList.add(parent.getResources().getString(R.string.msg_err_verizon_ssid));
+			parent.list_key =  pwList;
+			parent.handler.sendEmptyMessage(1);
+			return;
+		}
 	    if ( !router.mac.equals(""))
 	    {
 	    	pwList.add(router.mac.substring(3,5) + router.mac.substring(6,8) + 

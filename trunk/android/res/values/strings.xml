@@ -112,4 +112,5 @@
     <string name="msg_dic_updated_finished">Your dictionary is now latest version.</string>
     <string name="err_misbuilt_apk">Your apk was not correctly build. Please remember to build the native part first.</string>
     <string name="bt_connect">Auto connect</string>
+     <string name="msg_err_verizon_ssid">Error processing this SSID.</string>
 </resources>
