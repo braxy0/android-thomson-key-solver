@@ -446,6 +446,9 @@ public class RouterKeygen extends Activity {
 							break;
 				case SKY_V1: RouterKeygen.this.calculator = 
 							new SkyV1Keygen(RouterKeygen.this);
+							break;	
+				case WLAN6: RouterKeygen.this.calculator = 
+							new Wlan6Keygen(RouterKeygen.this);
 							break;			
 			}
 		}catch(LinkageError e){
@@ -505,7 +508,7 @@ public class RouterKeygen extends Activity {
 				return;
 			}
 			if ( msg.what == 1 ) /*Error message*/
-			{
+			{//TODO:this handler sucks, must remake it
 				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
 				{
 					if ( ((ThomsonKeygen)calculator).errorDict )

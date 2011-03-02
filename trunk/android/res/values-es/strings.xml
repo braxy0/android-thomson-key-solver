@@ -72,7 +72,7 @@
 <string name="dialog_thomson3g_msg">Recogiendo Keys...</string>
 <string name="msg_startingnativecalc">Error con el Diccionario. Comienza Cálculo en modo Nativo</string>
 <string name="msg_rotation_nativecalc">Cálculo Cancelado. Por favor, no ROTES el teléfono mientras se realiza el cáculo.</string>
-<string name="msg_err_essidhuawei">El SSID calculado no concuerda con el proporcionado.</string>
+<string name="msg_err_essid_no_match">El SSID calculado no concuerda con el proporcionado.</string>
 <string name="msg_err_native">Error en el Cáculo Nativo. Informa al KnD Taldea.</string>
 <string name="msg_results">Haz Click una de las keys para copiarla. Después se abrirón los Wifi Settings donde las puedes "probar" ;).</string>
 <string name="menu_tester">Tester</string>

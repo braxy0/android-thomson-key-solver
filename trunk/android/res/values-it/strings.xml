@@ -71,7 +71,7 @@
 	<string name="dialog_thomson3g_msg">Recuperando le chiavi...</string>
 	<string name="msg_startingnativecalc">Errore con il dizionario. Inizio del calcolo nativo.</string>
 	<string name="msg_rotation_nativecalc">Calcolo cancellato. Per favore non ruotare il cellulare durante l\'elaborazione del calcolo.</string>
-	<string name="msg_err_essidhuawei">L\'SSID calcolato non corrisponde a quello inserito.</string>
+	<string name="msg_err_essid_no_match">L\'SSID calcolato non corrisponde a quello inserito.</string>
 	<string name="msg_err_native">Errore nel calcolo nativo. Per favore informa il team.</string>
 	<string name="msg_results">Clicca su una delle chiavi per copiarla. Appariranno le opzioni del Wifi dove potrai usarla per fare dei test.</string>
 	<string name="msg_nomemoryonsdcard">Lo spazio esterno non ha sufficiente memoria.</string>

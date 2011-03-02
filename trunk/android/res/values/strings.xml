@@ -17,6 +17,7 @@
         <item>FASTWEB-1-</item>
         <item>Alice-</item>
         <item>WLAN_</item>
+        <item>WLAN</item>
 		<item>JAZZTEL_</item>
         <item>SKY</item>
     </string-array>
@@ -90,7 +91,7 @@
 	<string name="dialog_thomson3g_msg">Fetching Keys...</string>
 	<string name="msg_startingnativecalc">Error with dictionary. Starting native calculation.</string>
 	<string name="msg_rotation_nativecalc">Calculation Cancelled. Please do not rotate your phone while doing the calculation.</string>
-	<string name="msg_err_essidhuawei">The calculated SSID does not match the provided one.</string>
+	<string name="msg_err_essid_no_match">The calculated SSID does not match the provided one.</string>
 	<string name="msg_err_native">Error in the Native Calculation.Please inform the team.</string>
 	<string name="msg_results">Click on one of the keys to copy it.\nThen the Wifi Settings will open where you can test it.</string>
 	<string name="msg_nomemoryonsdcard">The external storage has not enough free memory.</string>

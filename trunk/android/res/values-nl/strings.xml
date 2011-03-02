@@ -71,7 +71,7 @@
 	<string name="dialog_thomson3g_msg">Sleutels Ophalen...</string>
 	<string name="msg_startingnativecalc">Fout in dictionary, start met primitieve berekening.</string>
 	<string name="msg_rotation_nativecalc">Berekening geannuleerd. Kantel de telefoon niet terwijl de berekening bezig is.</string>
-	<string name="msg_err_essidhuawei">De berekende SSID kwam niet overeen met de opgegeven SSID.</string>
+	<string name="msg_err_essid_no_match">De berekende SSID kwam niet overeen met de opgegeven SSID.</string>
 	<string name="msg_err_native">­Fout in de primitieve berekening, neem a.u.b. contact op met de ontwikkelaar.</string>
 	<string name="msg_results">Klik op 1 van de sleutels om die te kopieren.\nVervolgens zullen de WiFi instellingen openen zodat u het kunt testen.</string>
 	<string name="msg_nomemoryonsdcard">De externe opslag heeft niet genoeg vrije ruimte.</string>

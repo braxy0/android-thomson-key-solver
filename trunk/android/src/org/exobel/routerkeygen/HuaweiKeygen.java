@@ -111,7 +111,7 @@ public class HuaweiKeygen extends KeygenThread {
 		if ( !router.getEssid().equalsIgnoreCase(ssidFinal) && 
 				router.ssid.startsWith("INFINITUM") )
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_err_essidhuawei));
+			pwList.add(parent.getResources().getString(R.string.msg_err_essid_no_match));
 			parent.list_key =  pwList;
 			parent.handler.sendEmptyMessage(1);
 		}
