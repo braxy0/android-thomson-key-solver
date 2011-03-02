@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,17 +25,20 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.ClipboardManager;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -221,36 +223,92 @@ public class RouterKeygen extends Activity {
 				return builder.show();
 			}
 			case DIALOG_MANUAL_CALC: {
-				Dialog dialog = new Dialog(this);
-				dialog.setContentView(R.layout.manual);
-				dialog.setTitle(RouterKeygen.this.getResources().getString(R.string.menu_manual));
+				AlertDialog.Builder builder = new Builder(this); 
+				final LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+				final View layout = inflater.inflate(R.layout.manual_input,
+                        (ViewGroup) findViewById(R.id.manual_root));
+				builder.setTitle(getString(R.string.menu_manual));
 				String[] routers = getResources().getStringArray(R.array.supported_routers);
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
 										android.R.layout.simple_dropdown_item_1line, routers);
-				final AutoCompleteTextView edit = (AutoCompleteTextView) dialog.findViewById(R.id.manual_autotext);
+				final AutoCompleteTextView edit = (AutoCompleteTextView) layout.findViewById(R.id.manual_autotext);
 				edit.setAdapter(adapter);
 				edit.setThreshold(1);
-				Button calc = ( Button ) dialog.findViewById(R.id.bt_manual_calc);
-				calc.setOnClickListener(new View.OnClickListener(){
-					public void onClick(View arg0) {
+				InputFilter filterSsid = new InputFilter() { 
+			        public CharSequence filter(CharSequence source, int start, int end, 
+			        		Spanned dest, int dstart, int dend) { 
+			        		                for (int i = start; i < end; i++) { 
+			        		                        if (!Character.isLetterOrDigit(source.charAt(i)) &&
+			        		                        		source.charAt(i) != '-' ) { 
+			        		                                return ""; 
+			        		                        } 
+			        		                } 
+			        		                return null; 
+			        		        }
+	     		};
+			    edit.setFilters(new InputFilter[]{filterSsid});
+			    if ( manualMac )
+			    {
+			    	layout.findViewById(R.id.manual_mac_root).setVisibility(View.VISIBLE);
+			    	edit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+				    EditText mac1 = (EditText) layout.findViewById(R.id.input_mac_pair1);
+				    EditText mac2 = (EditText) layout.findViewById(R.id.input_mac_pair2);
+				    EditText mac3 = (EditText) layout.findViewById(R.id.input_mac_pair3);
+				    EditText mac4 = (EditText) layout.findViewById(R.id.input_mac_pair4);
+				    EditText mac5 = (EditText) layout.findViewById(R.id.input_mac_pair5);
+				    EditText mac6 = (EditText) layout.findViewById(R.id.input_mac_pair6);
+	
+	        		InputFilter filterMac = new InputFilter() { 
+				        public CharSequence filter(CharSequence source, int start, int end, 
+				        		Spanned dest, int dstart, int dend) { 
+				        		                try{/*TODO:Lazy mode programming, improve in the future*/
+				        		                	Integer.parseInt((String) source , 16);
+				        		                }
+				        		                catch( Exception e){
+				        		                	return "";
+				        		                }
+				        		                return null; 
+				        		        }
+				        		}; 
+				    mac1.setFilters(new InputFilter[]{filterMac});
+				    mac2.setFilters(new InputFilter[]{filterMac});
+				    mac3.setFilters(new InputFilter[]{filterMac});
+				    mac4.setFilters(new InputFilter[]{filterMac});
+				    mac5.setFilters(new InputFilter[]{filterMac});
+				    mac6.setFilters(new InputFilter[]{filterMac});
+			    }
+				builder.setNeutralButton(getString(R.string.bt_manual_calc), new OnClickListener() {			
+					public void onClick(DialogInterface dialog, int which) {
 						String ssid = edit.getText().toString().trim();
+						String mac = "";
+						if ( manualMac )
+						{
+						    EditText mac1 = (EditText) layout.findViewById(R.id.input_mac_pair1);
+						    EditText mac2 = (EditText) layout.findViewById(R.id.input_mac_pair2);
+						    EditText mac3 = (EditText) layout.findViewById(R.id.input_mac_pair3);
+						    EditText mac4 = (EditText) layout.findViewById(R.id.input_mac_pair4);
+						    EditText mac5 = (EditText) layout.findViewById(R.id.input_mac_pair5);
+						    EditText mac6 = (EditText) layout.findViewById(R.id.input_mac_pair6);
+						    mac= mac1.getText().toString()+':'+mac2.getText().toString()+':'+
+						    	 mac3.getText().toString()+':'+mac4.getText().toString()+':'+
+						    	 mac5.getText().toString()+':'+mac6.getText().toString();
+					    }
 						if ( ssid.equals("") )
 							return;
 						begin =  System.currentTimeMillis();
-						router = new WifiNetwork(ssid, "" , 0 ,"" , RouterKeygen.this);
+						router = new WifiNetwork(ssid, mac , 0 ,"" , RouterKeygen.this);
 						calcKeys(router);
 						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-						imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+						imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);						
 					}
 				});
-				Button cancel = ( Button ) dialog.findViewById(R.id.bt_manual_cancel);
-				cancel.setOnClickListener(new View.OnClickListener(){
-					public void onClick(View arg0) {
+				builder.setNegativeButton(getString(R.string.bt_manual_cancel), new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
 						removeDialog(DIALOG_MANUAL_CALC);
 					}
 				});
-	
-				return dialog;
+				builder.setView(layout);
+				return builder.show();
 			}
 			case DIALOG_NATIVE_CALC: {
 				progressDialog = new ProgressDialog(RouterKeygen.this);
@@ -411,17 +469,21 @@ public class RouterKeygen extends Activity {
 	boolean wifiOn;
 	boolean thomson3g;
 	boolean nativeCalc;
+	boolean manualMac;
 	String folderSelect;
 	final String folderSelectPref = "folderSelect";
 	final String wifiOnPref = "wifion";
 	final String thomson3gPref = "thomson3g";
 	final String nativeCalcPref = "nativethomson";
+	final String manualMacPref = "manual_mac";
+
 	private void getPrefs() {
 		SharedPreferences prefs = PreferenceManager
 		.getDefaultSharedPreferences(getBaseContext());
 		wifiOn = prefs.getBoolean(wifiOnPref , true);
 		thomson3g = prefs.getBoolean(thomson3gPref, false);
 		nativeCalc = prefs.getBoolean(nativeCalcPref, true);
+		manualMac = prefs.getBoolean(manualMacPref, false);
 		folderSelect = prefs.getString(folderSelectPref, 
 				Environment.getExternalStorageDirectory().getAbsolutePath());
 	}

@@ -43,6 +43,7 @@ public class AutoConnectManager extends BroadcastReceiver {
 		if ( info != null )
 		{
 			DetailedState state = info.getDetailedState();
+			@SuppressWarnings("unused")
 			String ola = tryingKey;
 			if ( state.equals(DetailedState.CONNECTED) )
 			{

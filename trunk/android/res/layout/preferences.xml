@@ -7,7 +7,17 @@
                         android:defaultValue="true"
                         android:summaryOn="@string/pref_hinton_wifion"
                         android:summaryOff="@string/pref_hintoff_wifion"
-                        android:key="wifion" />     
+                        android:key="wifion" />  
+                  <CheckBoxPreference
+                        android:title="@string/pref_manual_mac"
+                        android:defaultValue="false"
+                        android:summaryOn="@string/pref_hinton_manual_mac"
+                        android:summaryOff="@string/pref_hintoff_manual_mac"
+                        android:key="manual_mac" />            
+        </PreferenceCategory>
+                        
+           <PreferenceCategory
+                android:title="@string/pref_thomson_section">                
                  <CheckBoxPreference
                         android:title="@string/pref_thomson3g"
                         android:defaultValue="false"
@@ -27,7 +37,7 @@
 		        <Preference
 		                android:title="@string/pref_folder_select"
 		                android:summary="@string/pref_folder_select_des"
-		                android:key="folderSelect" />
+		                android:key="folderSelect" />		                
         </PreferenceCategory>
         <PreferenceCategory
                 android:title="@string/pref_2section">

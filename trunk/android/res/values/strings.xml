@@ -113,4 +113,10 @@
     <string name="err_misbuilt_apk">Your apk was not correctly build. Please remember to build the native part first.</string>
     <string name="bt_connect">Auto connect</string>
      <string name="msg_err_verizon_ssid">Error processing this SSID.</string>
+     <string name="lb_manual_bssid">MAC address</string>
+     <string name="pref_hinton_manual_mac">Manual input has also a MAC field</string>
+     <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string>
+     <string name="pref_thomson_section">Thomson Options</string>
+     <string name="pref_manual_mac">MAC manual input</string>
+     <string name="manual_mac_separator">:</string>
 </resources>
