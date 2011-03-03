@@ -1,5 +1,9 @@
 package org.exobel.routerkeygen;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 /**
  * <b>This only calculates the keys for some WLAN_xx</b>
  * <br> 
@@ -10,8 +14,9 @@ package org.exobel.routerkeygen;
 
 public class Wlan2Keygen extends KeygenThread {
 
-	public Wlan2Keygen(RouterKeygen par) {
-		super(par);
+	public Wlan2Keygen(Handler h, Resources res) {
+		super(h, res);
+		// TODO Auto-generated constructor stub
 	}
 
 	public void run() {
@@ -22,9 +27,8 @@ public class Wlan2Keygen extends KeygenThread {
 		String mac = router.getMac();
 
 		if (mac.length() != 12) {
-			pwList.add(parent.getResources().getString(R.string.msg_errpirelli));
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errpirelli)));
 			return;
 		}
 
@@ -71,8 +75,7 @@ public class Wlan2Keygen extends KeygenThread {
 		}
 	
 		pwList.add(String.valueOf(key, 0, 26));
-		parent.list_key = pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 }

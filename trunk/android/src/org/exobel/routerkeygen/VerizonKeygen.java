@@ -1,19 +1,21 @@
 package org.exobel.routerkeygen;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 public class VerizonKeygen extends KeygenThread {
 
-	public VerizonKeygen(RouterKeygen par) {
-		super(par);
+	public VerizonKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
 
-	
 	public void run(){
 		String ssid = router.ssid;
 		if ( ssid.length() != 5 )
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_shortessid5));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_shortessid5)));
 			return;
 		}
 		char [] inverse = new char[5];
@@ -27,26 +29,21 @@ public class VerizonKeygen extends KeygenThread {
 		try{
 			result = Integer.valueOf(String.copyValueOf(inverse), 36);
 		}catch(NumberFormatException e){
-			pwList.add(parent.getResources().getString(R.string.msg_err_verizon_ssid));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_err_verizon_ssid)));
 			return;
 		}
 	    if ( !router.mac.equals(""))
 	    {
 	    	pwList.add(router.mac.substring(3,5) + router.mac.substring(6,8) + 
 	    					Integer.toHexString(result).toUpperCase());
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(0);
-			return;
 	    }
 	    else
 	    {
 	    	pwList.add("1801" + Integer.toHexString(result).toUpperCase());
 	    	pwList.add("1F90" + Integer.toHexString(result).toUpperCase());
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(0);
-			return;
 	    }
+	    handler.sendEmptyMessage(RESULTS_READY);
+		return;
 	}
 }

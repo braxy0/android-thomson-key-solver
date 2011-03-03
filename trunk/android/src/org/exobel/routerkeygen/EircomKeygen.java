@@ -4,19 +4,23 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class EircomKeygen extends KeygenThread {
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
 
-	public EircomKeygen(RouterKeygen par) {
-		super(par);
+public class EircomKeygen extends KeygenThread  {
+
+	public EircomKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
+
 	public void run(){
 		String mac=  router.getMacEnd();
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
-			pwList.add(parent.getResources().getString(R.string.msg_nosha1));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nosha1)));
 			return;
 		}
 		byte [] routerMAC = new byte[4];
@@ -39,8 +43,7 @@ public class EircomKeygen extends KeygenThread {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		parent.list_key =  pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 	

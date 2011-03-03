@@ -1,67 +1,58 @@
 package org.exobel.routerkeygen;
 
-public class Wlan6Keygen extends KeygenThread {
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
 
-	public Wlan6Keygen(RouterKeygen par) {
-		super(par);
+public class Wlan6Keygen extends KeygenThread {
+	
+	public Wlan6Keygen(Handler h, Resources res) {
+		super(h, res);
 	}
-	
-	
+
 	public void run()
 	{
 		if ( router == null )
 			return;
 		if ( router.getMac().equals("") ) 
-		{
-			pwList.add(parent.getResources().getString(R.string.msg_nomac));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+		{	
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nomac)));
 			return;
 		}
 		String ssidStr = router.getEssid();
 		String macStr = router.mac;
-		char [] ESSID = {
-				'W', 'L', 'A', 'N', '1', '2','3', '4', '5','6'
-		    };
-		char [] BSSID = {
-		        '1', '1', ':', '2', '2', ':', '3', '3', ':', '4', 
-		    '4', ':', '5', '5', ':', '6', '6'
-		    };
-		ESSID[4] = ssidStr.charAt(0);
-		ESSID[5] = ssidStr.charAt(1);
-		ESSID[6] = ssidStr.charAt(2);
-		ESSID[7] = ssidStr.charAt(3);
-		ESSID[8] = ssidStr.charAt(4);
-		ESSID[9] = ssidStr.charAt(5);
-		BSSID[15] = macStr.charAt(15);
-		BSSID[16] = macStr.charAt(16);
-		int k = 4;
-		while (k <= 9)
-		{ 
-		    if( ESSID[k] >= 'A')
-		        ESSID[k] = (char)(ESSID[k] - 55);
-		    k++;
-		}
-		k = 15;
-		while (k <= 16)
-		{
-		    if(BSSID[k] >= 'A' )
-		        BSSID[k] = (char)(BSSID[k] - 55);
-		    k++;	
-		}
+		char [] ssidSubPart = {'1', '2','3', '4', '5','6' };/*These values are not revelant.*/
+		char [] bssidLastByte = { '6', '6' };
+		ssidSubPart[0] = ssidStr.charAt(0);
+		ssidSubPart[1] = ssidStr.charAt(1);
+		ssidSubPart[2] = ssidStr.charAt(2);
+		ssidSubPart[3] = ssidStr.charAt(3);
+		ssidSubPart[4] = ssidStr.charAt(4);
+		ssidSubPart[5] = ssidStr.charAt(5);
+		bssidLastByte[0] = macStr.charAt(15);
+		bssidLastByte[1] = macStr.charAt(16);
+		for ( int  k = 0; k < 6 ; ++k ) 
+		    if( ssidSubPart[k] >= 'A')
+		        ssidSubPart[k] = (char)(ssidSubPart[k] - 55);
+
+	    if(bssidLastByte[0] >= 'A' )
+	        bssidLastByte[0] = (char)(bssidLastByte[0] - 55);
+	    if(bssidLastByte[1] >= 'A' )
+	        bssidLastByte[1] = (char)(bssidLastByte[1] - 55);
 		for ( int i = 0; i < 10 ; ++i )
 		{
 			/*Do not change the order of this instructions*/
-			int aux = i + ( ESSID[7] & 0xf ) +  ( BSSID[15] & 0xf ) + ( BSSID[16] & 0xf );
-			int aux1 = ( ESSID[5] & 0xf ) + ( ESSID[6] & 0xf ) + ( ESSID[8] & 0xf ) + ( ESSID[9] & 0xf );
-			int second = aux ^ ( ESSID[9] & 0xf );
-			int sixth = aux ^ ( ESSID[8] & 0xf );
-			int tenth = aux ^ ( ESSID[7] & 0xf );
-			int third = aux1 ^ ( ESSID[6] & 0xf );
-			int seventh = aux1 ^  ( BSSID[15] & 0xf );
-			int eleventh = aux1 ^ ( BSSID[16] & 0xf );
-			int fourth =  ( BSSID[15] & 0xf ) ^ ( ESSID[9] & 0xf );
-			int eighth = ( BSSID[16] & 0xf ) ^ ( ESSID[8] & 0xf );
+			int aux = i + ( ssidSubPart[3] & 0xf ) +  ( bssidLastByte[0] & 0xf ) + ( bssidLastByte[1] & 0xf );
+			int aux1 = ( ssidSubPart[1] & 0xf ) + ( ssidSubPart[2] & 0xf ) + ( ssidSubPart[4] & 0xf ) + ( ssidSubPart[5] & 0xf );
+			int second = aux ^ ( ssidSubPart[5] & 0xf );
+			int sixth = aux ^ ( ssidSubPart[4] & 0xf );
+			int tenth = aux ^ ( ssidSubPart[3] & 0xf );
+			int third = aux1 ^ ( ssidSubPart[2] & 0xf );
+			int seventh = aux1 ^  ( bssidLastByte[0] & 0xf );
+			int eleventh = aux1 ^ ( bssidLastByte[1] & 0xf );
+			int fourth =  ( bssidLastByte[0] & 0xf ) ^ ( ssidSubPart[5] & 0xf );
+			int eighth = ( bssidLastByte[1] & 0xf ) ^ ( ssidSubPart[4] & 0xf );
 			int twelfth = aux ^ aux1;
 			int fifth = second ^ eighth;
 			int ninth = seventh ^ eleventh;
@@ -77,14 +68,11 @@ public class Wlan6Keygen extends KeygenThread {
 			
 			pwList.add(key.toUpperCase());
 		}
-		parent.list_key =  pwList;
-		parent.handler.sendEmptyMessage(0);
-		if ( ( ESSID[4] != macStr.charAt(10) ) || ( ESSID[5] != macStr.charAt(12) ) ||( ESSID[6] != macStr.charAt(13) ) )
+		handler.sendEmptyMessage(RESULTS_READY);
+		if ( ( ssidSubPart[0] != macStr.charAt(10) ) || ( ssidSubPart[1] != macStr.charAt(12) ) ||( ssidSubPart[2] != macStr.charAt(13) ) )
 		{
-			pwList.clear();
-			pwList.add(parent.getResources().getString(R.string.msg_err_essid_no_match));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_err_essid_no_match)));
 		}
 		return;
 	}

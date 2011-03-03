@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +27,8 @@ public class Downloader extends Thread{
 		int fileLen, byteRead;
 		byte[] buf;
 		try {
+			
+			 
 			con = new URL(urlDownload).openConnection();
 			myDicFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "DicTemp.dic");
 			

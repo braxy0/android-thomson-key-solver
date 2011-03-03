@@ -19,11 +19,14 @@ import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,6 +70,14 @@ public class Preferences extends PreferenceActivity {
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference)
 					{
+						ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+					    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+					    if (netInfo == null || !netInfo.isConnectedOrConnecting()) {
+					    	Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_no_network),
+								Toast.LENGTH_SHORT).show();
+					        return true;
+					    }
+						
 						showDialog(DIALOG_ASK_DOWNLOAD);
 						return true;
 					}

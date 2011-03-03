@@ -1,10 +1,15 @@
 package org.exobel.routerkeygen;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 public class DlinkKeygen extends KeygenThread {
 
-	public DlinkKeygen(RouterKeygen par) {
-		super(par);
+	public DlinkKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
+
 	public void run(){
 		 char hash[] =  { 'X', 'r', 'q', 'a', 'H', 'N',
 				 			'p', 'd', 'S', 'Y', 'w', 
@@ -12,9 +17,8 @@ public class DlinkKeygen extends KeygenThread {
 		 
 		if ( router.mac.equals("") ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_nomac));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nomac)));
 			return;
 		}
 		char[] key = new char[20];
@@ -63,17 +67,15 @@ public class DlinkKeygen extends KeygenThread {
 					index = t-'A'+10;
 				else
 				{
-					pwList.add(parent.getResources().getString(R.string.msg_dlinkerror));
-					parent.list_key =  pwList;
-					parent.handler.sendEmptyMessage(1);
+					handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+							resources.getString(R.string.msg_dlinkerror)));
 					return;
 				}
 			}
 			newkey[i]=hash[index];
 		}
 		pwList.add(String.valueOf(newkey, 0, 20));
-		parent.list_key =  pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 }

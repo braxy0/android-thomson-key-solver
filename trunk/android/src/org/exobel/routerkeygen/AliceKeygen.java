@@ -4,12 +4,17 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 public class AliceKeygen extends KeygenThread {
 
-	public AliceKeygen(RouterKeygen par) {
-		super(par);
+	public AliceKeygen(Handler h, Resources res) {
+		super(h, res);
+		// TODO Auto-generated constructor stub
 	}
-	
+
 	final private String preInitCharset =
 			 "0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvWxyz0123";
 	 
@@ -30,25 +35,22 @@ public class AliceKeygen extends KeygenThread {
 			return;
 		if ( router.supportedAlice == null )
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_erralicenotsupported));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_erralicenotsupported)));
 			return;
 		}
 		if ( router.supportedAlice.isEmpty() )
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_erralicenotsupported));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_erralicenotsupported)));
 			return;
 		}
 		
 		try {
 			md = MessageDigest.getInstance("SHA256");
 		} catch (NoSuchAlgorithmException e1) {
-			pwList.add(parent.getResources().getString(R.string.msg_nosha256));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nosha256)));
 			return;
 		}
 		for ( int j = 0 ; j <router.supportedAlice.size() ; ++j )
@@ -107,8 +109,7 @@ public class AliceKeygen extends KeygenThread {
 			}
 			if ( macEth.equals(router.getMac().substring(0,6)) )
 			{
-				parent.list_key = pwList;
-				parent.handler.sendEmptyMessage(0);
+				handler.sendEmptyMessage(RESULTS_READY);
 				return;
 			}
 			
@@ -132,8 +133,7 @@ public class AliceKeygen extends KeygenThread {
 			if ( !pwList.contains(key)  ) 
 				pwList.add(key);
 		}
-		parent.list_key = pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 }

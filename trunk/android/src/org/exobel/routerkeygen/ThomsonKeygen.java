@@ -10,7 +10,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import android.content.res.Resources;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 
 public class ThomsonKeygen extends KeygenThread {
 
@@ -30,10 +34,12 @@ public class ThomsonKeygen extends KeygenThread {
 	boolean thomson3g;
 	boolean errorDict;
 	int len = 0;
+	String folderSelect;
 	final String onlineDict = "http://paginas.fe.up.pt/~ee08281/webdic/";
 
-	public ThomsonKeygen(RouterKeygen par ,boolean thomson3g ) {
-		super(par);
+	public ThomsonKeygen(Handler h, Resources res , String folder , boolean thomson3g ) {
+		super(h, res);
+		this.folderSelect = folder;
 		this.cp = new byte[12];
 		this.hash = new byte[19];
 		this.table= new byte[1282];
@@ -48,16 +54,14 @@ public class ThomsonKeygen extends KeygenThread {
 		try {
 			md = MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e1) {
-			pwList.add(parent.getResources().getString(R.string.msg_nosha1));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nosha1)));
 			return;
 		}
 		if ( router.getEssid().length() != 6 ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_shortessid6)));
 			return;
 		}
 		
@@ -79,13 +83,11 @@ public class ThomsonKeygen extends KeygenThread {
 
 		if(pwList.toArray().length == 0)
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_errnomatches));
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errnomatches)));
 			return;
 		}
-		parent.list_key = pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 	private boolean internetCalc(){
@@ -102,9 +104,8 @@ public class ThomsonKeygen extends KeygenThread {
 		
 		if ( onlineFile == null )
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_errthomson3g));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errthomson3g)));
 			return false;
 		}
 		this.entry = new byte[2000];
@@ -126,23 +127,21 @@ public class ThomsonKeygen extends KeygenThread {
 
 	private boolean localCalc(){
 
-		
+		String test  = Environment.getExternalStorageState();
 		if ( !Environment.getExternalStorageState().equals("mounted")  && 
 		     !Environment.getExternalStorageState().equals("mounted_ro")	)
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_nosdcard));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nosdcard)));
 			errorDict = true;
 			return false;
 		}
 		RandomAccessFile fis;
 		try {
-			fis = new RandomAccessFile(parent.folderSelect + File.separator + "RouterKeygen.dic", "r");
+			fis = new RandomAccessFile(folderSelect + File.separator + "RouterKeygen.dic", "r");
 		} catch (FileNotFoundException e2) {
-			pwList.add(parent.getResources().getString(R.string.msg_dictnotfound));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_dictnotfound)));
 			errorDict = true;
 			return false;
 		}
@@ -150,9 +149,8 @@ public class ThomsonKeygen extends KeygenThread {
 		try {
 			if ( fis.read(table) == -1 )
 			{
-				pwList.add(parent.getResources().getString(R.string.msg_errordict));
-				parent.list_key =  pwList;
-				parent.handler.sendEmptyMessage(1);
+				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+						resources.getString(R.string.msg_errordict)));
 				errorDict = true;
 				return false;
 			}
@@ -173,9 +171,8 @@ public class ThomsonKeygen extends KeygenThread {
 			fis.seek(totalOffset);
 			if ( fis.read(table,0,1024) == -1 )
 			{
-				pwList.add(parent.getResources().getString(R.string.msg_errordict));
-				parent.list_key =  pwList;
-				parent.handler.sendEmptyMessage(1);
+				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+						resources.getString(R.string.msg_errordict)));
 				errorDict = true;
 				return false;
 			}	
@@ -210,24 +207,21 @@ public class ThomsonKeygen extends KeygenThread {
 			}
 			if ( len == -1 )
 			{
-				pwList.add(parent.getResources().getString(R.string.msg_errordict));
-				parent.list_key =  pwList;
-				parent.handler.sendEmptyMessage(1);
+				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+						resources.getString(R.string.msg_errordict)));
 				errorDict = true;
 				return false;
 			}
 		} catch (IOException e1) {
 			errorDict = true;
-			pwList.add(parent.getResources().getString(R.string.msg_errordict));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errordict)));
 			return false;
 		}
 		if ( version > 3 )
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_errversion));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errversion)));
 			errorDict = true;
 			return false;
 		}
@@ -256,9 +250,8 @@ public class ThomsonKeygen extends KeygenThread {
 			try{
 				results = 	this.thirdDicNative(routerESSID , entry , entry.length);
 			}catch (Exception e) {
-				pwList.add(parent.getResources().getString(R.string.msg_err_native));
-				parent.list_key = pwList;
-				parent.handler.sendEmptyMessage(1);
+				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+						resources.getString(R.string.msg_err_native)));
 				return false;
 			}
 			if ( stopRequested )

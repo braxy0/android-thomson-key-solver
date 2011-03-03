@@ -3,6 +3,10 @@ package org.exobel.routerkeygen;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 
 /*
  * This is the algorithm to generate the WPA passphrase 
@@ -15,8 +19,8 @@ import java.security.NoSuchAlgorithmException;
  */
 public class SkyV1Keygen extends KeygenThread{
 
-	public SkyV1Keygen(RouterKeygen par) {
-		super(par);
+	public SkyV1Keygen(Handler h, Resources res) {
+		super(h, res);
 	}
 
 	final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -26,17 +30,15 @@ public class SkyV1Keygen extends KeygenThread{
 			return;
 		if ( router.getMac().length() != 12 ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_nomac));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nomac)));
 			return;
 		}
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
-			pwList.add(parent.getResources().getString(R.string.msg_nomd5));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nomd5)));
 			return;
 		}
 		md.reset();
@@ -69,8 +71,7 @@ public class SkyV1Keygen extends KeygenThread{
 		key += ALPHABET.substring(index,index+1 );
 		
 		pwList.add(key);
-		parent.list_key = pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 }

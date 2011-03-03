@@ -4,36 +4,34 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.res.Resources;
+import android.os.Handler;
+
 
 public class KeygenThread extends Thread {
 	
 	MessageDigest md;
 	WifiNetwork router;
-	RouterKeygen parent;
 	boolean stopRequested = false;
 	List<String> pwList;
+	static final int RESULTS_READY = 1000;
+	static final int ERROR_MSG = 1001;
+	Handler handler;
+	Resources resources;
 	
-	
 
-	public WifiNetwork getRouter() {
-		return router;
-	}
-
-	public void setRouter(WifiNetwork router) {
-		this.router = router;
-	}
-
-	public KeygenThread( RouterKeygen par )
+	public KeygenThread( Handler h , Resources res)
 	{
-		this.parent = par;
+		this.handler = h;
+		this.resources = res;
 		this.pwList = new ArrayList<String>();
 
 	}
-	
-	@SuppressWarnings("unused")
-	private byte[] makeSHA1Hash(byte[] input) {
-		md.update(input);
-		return md.digest();
+
+
+	public List<String> getResults() {
+		return pwList;
 	}
 
+	
 }

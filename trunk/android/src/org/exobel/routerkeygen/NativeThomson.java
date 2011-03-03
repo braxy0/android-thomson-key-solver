@@ -1,16 +1,19 @@
 package org.exobel.routerkeygen;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 public class NativeThomson extends KeygenThread{
 
-	public NativeThomson(RouterKeygen par) {
-		super(par);
+	public NativeThomson(Handler h, Resources res) {
+		super(h, res);
 	}
-	
+
 
 	static {
 		System.loadLibrary("thomson");
     }
-	
 	
     		  
   /** 
@@ -24,9 +27,8 @@ public class NativeThomson extends KeygenThread{
 			return;
 		if ( router.getEssid().length() != 6 ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_shortessid6)));
 			return;
 		}
 		byte [] routerESSID = new byte[3];
@@ -38,9 +40,8 @@ public class NativeThomson extends KeygenThread{
 		try{
 			results = this.thomson(routerESSID);
 		}catch (Exception e) {
-			pwList.add(parent.getResources().getString(R.string.msg_err_native));
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_err_native)));
 			return;
 		}
 		if ( stopRequested )
@@ -50,13 +51,11 @@ public class NativeThomson extends KeygenThread{
 		
 		if(pwList.toArray().length == 0)
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_errnomatches));
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errnomatches)));
 			return;
 		}
-		parent.list_key = pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(0);
 		return;
 	}
 

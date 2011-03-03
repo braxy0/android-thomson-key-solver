@@ -1,5 +1,9 @@
 package org.exobel.routerkeygen;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -219,6 +223,42 @@ public class RouterKeygen extends Activity {
 									}
 								}
 							});
+				builder.setNegativeButton(getString(R.string.bt_save_sd), new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						removeDialog(DIALOG_MANUAL_CALC);
+						if ( !Environment.getExternalStorageState().equals("mounted")  && 
+							     !Environment.getExternalStorageState().equals("mounted_ro")	)
+						{
+							Toast.makeText( RouterKeygen.this , 
+								RouterKeygen.this.getResources().getString(R.string.msg_nosdcard),
+								Toast.LENGTH_SHORT).show();
+							return ;
+						}
+						try {
+							BufferedWriter out = new BufferedWriter(
+									new FileWriter(folderSelect + File.separator + router.ssid + ".txt"));
+							out.write(router.ssid + " KEYS");
+							out.newLine();
+							for ( String s : list_key )
+							{
+								out.write(s);
+								out.newLine();
+							}
+							out.close();
+						}
+						catch (IOException e)
+						{
+							Toast.makeText( RouterKeygen.this , 
+									RouterKeygen.this.getResources().getString(R.string.msg_err_saving_key_file),
+									Toast.LENGTH_SHORT).show();
+							return ;
+						}
+						Toast.makeText( RouterKeygen.this , router.ssid + ".txt " + 
+								RouterKeygen.this.getResources().getString(R.string.msg_saved_key_file),
+								Toast.LENGTH_SHORT).show();
+					}
+				});
+				
 				builder.setView(layout);
 				return builder.show();
 			}
@@ -307,6 +347,7 @@ public class RouterKeygen extends Activity {
 						removeDialog(DIALOG_MANUAL_CALC);
 					}
 				});
+				
 				builder.setView(layout);
 				return builder.show();
 			}
@@ -409,46 +450,46 @@ public class RouterKeygen extends Activity {
 			switch( wifi.type )
 			{
 				case THOMSON: RouterKeygen.this.calculator = 
-							new ThomsonKeygen(RouterKeygen.this , thomson3g);
+							new ThomsonKeygen(handler,getResources(), folderSelect , thomson3g);
 							break;
 				case DISCUS: RouterKeygen.this.calculator = 
-							new DiscusKeygen(RouterKeygen.this);
+							new DiscusKeygen(handler,getResources());
 							break;
 				case EIRCOM: RouterKeygen.this.calculator = 
-							new EircomKeygen(RouterKeygen.this);
+							new EircomKeygen(handler,getResources());
 							break;
 				case DLINK: RouterKeygen.this.calculator = 
-							new DlinkKeygen(RouterKeygen.this);
+							new DlinkKeygen(handler,getResources());
 							break;
 				case VERIZON: RouterKeygen.this.calculator = 
-							new VerizonKeygen(RouterKeygen.this);
+							new VerizonKeygen(handler,getResources());
 							break;
 				case PIRELLI: RouterKeygen.this.calculator = 
-							new PirelliKeygen(RouterKeygen.this);
+							new PirelliKeygen(handler,getResources());
 							break;
 				case TELSEY: RouterKeygen.this.calculator = 
-							new TelseyKeygen(RouterKeygen.this);
+							new TelseyKeygen(handler,getResources());
 							break;
 				case ALICE:	 RouterKeygen.this.calculator = 
-							new AliceKeygen(RouterKeygen.this);
+							new AliceKeygen(handler,getResources());
 							break;
 				case WLAN4:	 RouterKeygen.this.calculator = 
-							new Wlan4Keygen(RouterKeygen.this);
+							new Wlan4Keygen(handler,getResources());
 							break;
 				case HUAWEI: RouterKeygen.this.calculator = 
-							new HuaweiKeygen(RouterKeygen.this);
+							new HuaweiKeygen(handler,getResources());
 							break;
 				case WLAN2:	 RouterKeygen.this.calculator = 
-							new Wlan2Keygen(RouterKeygen.this);
+							new Wlan2Keygen(handler,getResources());
 							break;
 				case ONO_WEP: RouterKeygen.this.calculator = 
-							new OnoKeygen(RouterKeygen.this);
+							new OnoKeygen(handler,getResources());
 							break;
 				case SKY_V1: RouterKeygen.this.calculator = 
-							new SkyV1Keygen(RouterKeygen.this);
+							new SkyV1Keygen(handler,getResources());
 							break;	
 				case WLAN6: RouterKeygen.this.calculator = 
-							new Wlan6Keygen(RouterKeygen.this);
+							new Wlan6Keygen(handler,getResources());
 							break;			
 			}
 		}catch(LinkageError e){
@@ -491,24 +532,22 @@ public class RouterKeygen extends Activity {
 				Environment.getExternalStorageDirectory().getAbsolutePath());
 	}
 
-	public List<String> getResults() {
-		return list_key;
-	}
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if ( thomson3g)
 				removeDialog(DIALOG_THOMSON3G);
 			if ( nativeCalc )
 				removeDialog(DIALOG_NATIVE_CALC);
-			if ( msg.what == 0 ) /*Got Keys*/
+			if ( msg.what == KeygenThread.RESULTS_READY ) /*Got Keys*/
 			{
 				begin = System.currentTimeMillis()-begin;
+				list_key = RouterKeygen.this.calculator.getResults();
 				Log.d(TAG, "Time to solve:" + begin);
 				showDialog(DIALOG_KEY_LIST);
 				return;
 			}
-			if ( msg.what == 1 ) /*Error message*/
-			{//TODO:this handler sucks, must remake it
+			if ( msg.what == KeygenThread.ERROR_MSG ) 
+			{
 				if ( nativeCalc && ( calculator instanceof ThomsonKeygen ) )
 				{
 					if ( ((ThomsonKeygen)calculator).errorDict )
@@ -519,7 +558,7 @@ public class RouterKeygen extends Activity {
 						
 						WifiNetwork tmp = RouterKeygen.this.calculator.router;
 						try{
-							RouterKeygen.this.calculator = new NativeThomson(RouterKeygen.this);
+							RouterKeygen.this.calculator = new NativeThomson(this ,RouterKeygen.this.getResources() );
 						}catch(LinkageError e){
 							Toast.makeText( RouterKeygen.this ,
 									RouterKeygen.this.getResources().getString(R.string.err_misbuilt_apk), 
@@ -534,7 +573,8 @@ public class RouterKeygen extends Activity {
 					}
 
 				}
-				Toast.makeText( RouterKeygen.this , list_key.get(0) , Toast.LENGTH_SHORT).show();
+				String message = (String) msg.obj;
+				Toast.makeText( RouterKeygen.this , message , Toast.LENGTH_SHORT).show();
 				return;
 			}
 			if ( msg.what == 2 )
@@ -552,11 +592,4 @@ public class RouterKeygen extends Activity {
 		
 	};
 
-
-	public KeygenThread getWorker(){
-		return calculator;
-	}
-	public void setWorker(KeygenThread k){
-		this.calculator = k;
-	}
 }

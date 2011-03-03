@@ -4,17 +4,23 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 
 public class PirelliKeygen extends KeygenThread{
-
-	public PirelliKeygen(RouterKeygen par) {
-		super(par);
+	
+	public PirelliKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
+	
 	final byte[] saltMD5 = {
 			0x22, 0x33, 0x11, 0x34, 0x02,
 		    (byte) 0x81, (byte) 0xFA, 0x22, 0x11, 0x41,
 			0x68, 0x11,	0x12, 0x01, 0x05,
 			0x22, 0x71, 0x42, 0x10, 0x66 };
+	
 	public void run(){
 
 		if ( router == null)
@@ -22,16 +28,14 @@ public class PirelliKeygen extends KeygenThread{
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
-			pwList.add(parent.getResources().getString(R.string.msg_nomd5));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nomd5)));
 			return;
 		}
 		if ( router.getEssid().length() != 12 ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_errpirelli));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errpirelli)));
 			return;
 		}
 		
@@ -57,8 +61,7 @@ public class PirelliKeygen extends KeygenThread{
 		try {
 			pwList.add(StringUtils.getHexString(key).toUpperCase());
 		} catch (UnsupportedEncodingException e) {}
-		parent.list_key = pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 

@@ -1,12 +1,16 @@
 package org.exobel.routerkeygen;
 
+import android.content.res.Resources;
+import android.os.Handler;
+
 public class DiscusKeygen extends KeygenThread {
 
-	final int essidConst = 0xD0EC31;
-	public DiscusKeygen(RouterKeygen par) {
-		super(par);
+	public DiscusKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
-	
+
+	final int essidConst = 0xD0EC31;
+
 	public void run(){
 		byte [] routerESSID = new byte [3];
 		
@@ -18,8 +22,7 @@ public class DiscusKeygen extends KeygenThread {
 		( (0xFF & routerESSID[1])  << 8 ) | (0xFF & routerESSID[2]);
 		int result  = ( routerEssid - essidConst )>>2;
 		pwList.add("YW0" + Integer.toString(result));
-		parent.list_key =  pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 		
 	}

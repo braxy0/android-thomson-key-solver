@@ -2,6 +2,10 @@ package org.exobel.routerkeygen;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
 /*
  * The algorithm for the type of network
  * whose SSID must be in the form of [pP]1XXXXXX0000X
@@ -17,8 +21,8 @@ import java.security.NoSuchAlgorithmException;
  * */
 public class OnoKeygen extends KeygenThread {
 
-	public OnoKeygen(RouterKeygen par) {
-		super(par);
+	public OnoKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
 
 	public void run(){
@@ -26,9 +30,8 @@ public class OnoKeygen extends KeygenThread {
 			return;
 		if ( router.ssid.length() != 13 ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_shortessid6));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_shortessid6)));
 			return;
 		}
 		String val = router.ssid.substring(0,12)+ 
@@ -57,9 +60,8 @@ public class OnoKeygen extends KeygenThread {
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
-			pwList.add(parent.getResources().getString(R.string.msg_nomd5));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nomd5)));
 			return;
 		}
 		md.reset();
@@ -68,8 +70,7 @@ public class OnoKeygen extends KeygenThread {
 		for ( int i = 0 ; i < 13 ; ++i )
 			key += StringUtils.getHexString((short)hash[i]);
 		pwList.add(key.toUpperCase());
-		parent.list_key = pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 	

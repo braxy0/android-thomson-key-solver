@@ -4,11 +4,17 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 public class Wlan4Keygen extends KeygenThread {
 
-	public Wlan4Keygen(RouterKeygen par) {
-		super(par);
+	public Wlan4Keygen(Handler h, Resources res) {
+		super(h, res);
 	}
+	
+	
 	final String magic = "bcgbghgg";
 	public void run(){
 		if ( router == null)
@@ -16,16 +22,14 @@ public class Wlan4Keygen extends KeygenThread {
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
-			pwList.add(parent.getResources().getString(R.string.msg_nomd5));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nomd5)));
 			return;
 		}
 		if ( router.getMac().length() != 12 ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_errpirelli));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errpirelli)));
 			return;
 		}
 		String macMod = router.getMac().substring(0,8) + router.getEssid();
@@ -36,8 +40,7 @@ public class Wlan4Keygen extends KeygenThread {
 			md.update(router.getMac().getBytes("ASCII"));
 			byte [] hash = md.digest();
 			pwList.add(StringUtils.getHexString(hash).substring(0,20).toUpperCase());
-			parent.list_key = pwList;
-			parent.handler.sendEmptyMessage(0);
+			handler.sendEmptyMessage(RESULTS_READY);
 			return;
 		} catch (UnsupportedEncodingException e) {}
 		

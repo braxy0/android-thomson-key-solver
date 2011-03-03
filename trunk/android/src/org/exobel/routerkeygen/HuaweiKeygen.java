@@ -1,10 +1,23 @@
 package org.exobel.routerkeygen;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+/*
+*
+* Algorithm:
+* Can be consulted here:
+* http://websec.ca/blog/view/mac2wepkey_huawei
+* It has nice graphics that explain it all.
+* */
 public class HuaweiKeygen extends KeygenThread {
 
-	public HuaweiKeygen(RouterKeygen par) {
-		super(par);
+	
+	
+	public HuaweiKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
+
 	// Java adaptation of mac2wepkey.py from
 	// http://websec.ca/blog/view/mac2wepkey_huawei
 	final int [] a0= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -64,9 +77,8 @@ public class HuaweiKeygen extends KeygenThread {
 			return;
 		if ( router.getMac().length() != 12 ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_errpirelli));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_errpirelli)));
 			return;
 		}
 		int [] mac = new int [12];
@@ -106,14 +118,13 @@ public class HuaweiKeygen extends KeygenThread {
 		pwList.add(Integer.toString(key[ya]) + Integer.toString(key[yb]) + 
 				Integer.toString(key[yc]) + Integer.toString(key[yd]) + 
 				Integer.toString(key[ye]) );
-		parent.list_key =  pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		if ( !router.getEssid().equalsIgnoreCase(ssidFinal) && 
 				router.ssid.startsWith("INFINITUM") )
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_err_essid_no_match));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_err_essid_no_match)));
 		}
 		return;
 	}

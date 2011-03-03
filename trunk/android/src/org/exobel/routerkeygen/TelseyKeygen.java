@@ -1,5 +1,9 @@
 package org.exobel.routerkeygen;
 
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
+
 /*
  * The algorithm for the FASTWEB Telsey
  * SSID of the form:
@@ -24,11 +28,10 @@ package org.exobel.routerkeygen;
  */
 public class TelseyKeygen extends KeygenThread {
 
-	public TelseyKeygen(RouterKeygen par) {
-		super(par);
+	public TelseyKeygen(Handler h, Resources res) {
+		super(h, res);
 	}
 
-	
 	//Scramble Function
 	long[] scrambler(String mac){
 		long[]vector = new long [64];
@@ -173,9 +176,8 @@ public class TelseyKeygen extends KeygenThread {
 		Hash hash = new Hash();
 		if ( router.getMac().equals("") ) 
 		{
-			pwList.add(parent.getResources().getString(R.string.msg_nomac));
-			parent.list_key =  pwList;
-			parent.handler.sendEmptyMessage(1);
+			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+					resources.getString(R.string.msg_nomac)));
 			return;
 		}
 		long [] key = scrambler(router.getMac());
@@ -209,8 +211,7 @@ public class TelseyKeygen extends KeygenThread {
 		while ( S2.length() < 8 )
 			S2 = "0" + S2;
 		pwList.add(S1.substring(S1.length() - 5) +  S2.substring(0, 5));
-		parent.list_key =  pwList;
-		parent.handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 	
