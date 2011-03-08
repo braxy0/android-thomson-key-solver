@@ -1,98 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="app_name">Router Keygen</string>
-<string name="menu_scan">Scan</string>
-<string name="menu_manual">Introduccion Manual</string>
-<string name="menu_preferences">Preferencias</string>
-<string name="bt_manual_cancel">Cancelar</string>
-<string name="bt_manual_calc">Calcular</string>
-<string name="lb_manual">Introduce tu ESSID:</string>
-<string name="pref_hinton_wifion">Activar la Wifi Automaticamente</string>
-<string name="pref_hintoff_wifion">No activar la Wifi Automaticamente</string>
-<string name="pref_wifion">Auto Wifi On</string>
-<string name="pref_wifioff">Auto Wifi Off</string>
-<string name="bt_share">Compartir Keys</string>
-<string name="pref_folder_select">Seleccion de Carpeta</string>
-<string name="pref_folder_select_des">Selecciona la carpeta del diccionario</string>
-<string name="bt_choose">Abrir</string>
-<string name="bt_choose_back">Arriba</string>
-<string name="pref_1section">Opciones Generales</string>
-<string name="pref_2section">Acerca de</string>
-<string name="pref_donate">Dona</string>
-<string name="pref_donate_why">dóname para un café si te gusta la aplicación</string>
-<string name="pref_about">Acerca de Router Keygen</string>
-<string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.</string>
-<string name="bt_close">Cerrar</string>
-<string name="msg_newthomson">Nuevo Thomson cuya Key todavía no sí calcula!</string>
-<string name="msg_unspported">Este ESSID no esta soportado!</string>
-<string name="share_msg_begin">Keys</string>
-<string name="share_title">Compartir Keys</string>
-<string name="msg_nowifidetected">No se detectan redes WIFI!</string>
-<string name="msg_copied">  se ha copiado en el portapapeles!</string>
-<string name="msg_nowifi">Wifi no activada! Activa la Wifi, por favor!</string>
-<string name="msg_scanstarted">Inicio de Scanneo</string>
-<string name="msg_scanfailed">Scanneo Falló!</string>
-<string name="msg_wifienabling">Habilitando Wifi</string>
-<string name="msg_wifibroken">Faillo activando Wifi</string>
-<string name="msg_shortessid6">ESSID inválido! Debe tener 6 caracteres.</string>
-<string name="msg_errordict">Error leyendo el diccionario!</string>
-<string name="msg_errnomatches">No se encontraron coincidencias!</string>
-<string name="msg_shortessid5">ESSID inválido! Debe tener 6 caracteres.</string>
-<string name="msg_nomac">Esta key no se puede generar sin la MAC address</string>
-<string name="msg_dlinkerror">Error en el cálculo de la key D-Link</string>
-<string name="msg_dictnotfound">El Diccionario no se ha encontrado en la SDCard!</string>
-<string name="pref_msg_notfound">El Dictionario no está en </string>
-<string name="pref_msg_found">seleccionado.</string>
+    <!-- Translation by KaMPaNiTa -->
 
-<string name="bt_ok">Ok</string>
-<string name="bt_yes">Sí</string>
-<string name="bt_no">No</string>
-<string name="msg_welcome_title">Router Keygen</string>
-<string name="msg_welcome_text">Si te gusta, hazme una donación. El link esta en el menú de preferencias. Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de c�digo abierto.</string>
-<string name="pref_download_des">Se necesita el Diccionario para las keys del Thomson</string>
-<string name="pref_download">Descargar el Diccionario</string>
-<string name="pref_thomson3g">Usar 3G para los Thomson</string>
-<string name="pref_hinton_thomson3g">Recogiendo keys desde Internet</string>
-<string name="pref_hintoff_thomson3g">Usar el dictionario para generar las keys.</string>
-<string name="msg_nosdcard">La SD card esta desmontada!</string>
-<string name="msg_nomd5">Este teléfono no puede procesar un hash MD5.</string>
-<string name="msg_nosha1">Este teléfono no puede procesar un hash SHA1.</string>
-<string name="msg_nosha256">Este teléfono no puede procesar un hash SHA256.</string>
-<string name="msg_errpirelli">La MAC address is inválida.</string>
-<string name="msg_errthomson3g">Error conectando con el web service.</string>
-<string name="msg_erralicenotsupported">Esta serie de Alice no esta soportada todavía!</string>
-<string name="msg_errversion">Version desconocida del Diccionario.</string>
-<string name="pref_native">Cálculo Nativo</string>
-<string name="pref_hinton_native">Calcular en el objetivo si falla al encontrar el diccionario</string>
-<string name="pref_hintoff_native">Sólo avisa si falla al encontrar el diccionario</string>
-<string name="dialog_nativecalc">Calculando Keys</string>
-<string name="dialog_nativecalc_msg">Esto puede llevar hasta unos 2 minutos, se paciente y espera un poco, por favor.</string>
-<string name="dialog_thomson3g">Thomson 3G</string>
+    <!-- MISC STRINGS -->
+	<string name="app_name">Router Keygen</string>
+	<string name="msg_welcome_title">Router Keygen</string>
+	<string name="msg_welcome_text">Si te gusta, hazme una donación. El link esta en el menú de preferencias. Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de código abierto.</string>
+	<string name="menu_scan">Scan</string>
+	<string name="menu_manual">Introduccion Manual</string>
+	<string name="menu_preferences">Preferencias</string>
+	<string name="share_msg_begin">Keys</string>
+	<string name="share_title">Compartir Keys</string>
+	<string name="msg_copied">  se ha copiado en el portapapeles!</string>
+	<string name="msg_scanstarted">Inicio de Scanneo</string>
+	<string name="msg_wifienabling">Habilitando Wifi</string>
+	<string name="msg_results">Haz Click una de las keys para copiarla. Después se abrirón los Wifi Settings donde las puedes "probar" ;).</string>
+    
+    
+    <!-- BUTTONS STRINGS -->
+	<string name="bt_manual_cancel">Cancelar</string>
+	<string name="bt_manual_calc">Calcular</string>
+	<string name="bt_share">Compartir Keys</string>
+	<string name="bt_choose">Abrir</string>
+	<string name="bt_choose_back">Arriba</string>
+	<string name="bt_close">Cerrar</string>
+	<string name="bt_ok">Ok</string>
+	<string name="bt_yes">Sí</string>
+	<string name="bt_no">No</string>
+	<string name="bt_pause">Pausa</string>
+	
+	<!-- DIALOG STRINGS -->
+	<string name="lb_manual">Introduce tu ESSID:</string>
+	<string name="dialog_nativecalc">Calculando Keys</string>
+	<string name="dialog_nativecalc_msg">Esto puede llevar hasta unos 2 minutos, se paciente y espera un poco, por favor.</string>
+	<string name="dialog_thomson3g">Thomson 3G</string>
+	<string name="dialog_thomson3g_msg">Recogiendo Keys...</string>
+	<string name="msg_dicislarge">El tamaño del diccionario es de 28 MBs. Te avisamos de que estas usando una conexion Wi-fi.\nEstas seguro de querer continuar ?</string>
+	<string name="msg_dl_estimating">Estimando la velocidad de descarga y el tiempo restante...</string>
+	<string name="msg_dl_dlingdic">Descargando el Diccionario</string>
+	<string name="msg_dl_speed">Velocidad de bajada</string>
+    <string name="msg_dl_eta">Tiempo pendiende estimado</string>
+    <string name="msg_dic_updated">Tu Diccionario ya esta en la última versión.</string>
+    <string name="msg_dic_updated_finished">Tu Diccionario esta ahora en su última versión.</string>
+	<string name="msg_wait">Espera por favor...</string>
+	
+    <!-- PREFERENCES STRINGS -->
+	<string name="pref_hinton_wifion">Activar la Wifi Automaticamente</string>
+	<string name="pref_hintoff_wifion">No activar la Wifi Automaticamente</string>
+	<string name="pref_wifion">Auto Wifi On</string>
+	<string name="pref_wifioff">Auto Wifi Off</string>
+	<string name="pref_folder_select">Seleccion de Carpeta</string>
+	<string name="pref_folder_select_des">Selecciona la carpeta del diccionario</string>
+	<string name="pref_1section">Opciones Generales</string>
+	<string name="pref_2section">Acerca de</string>
+	<string name="pref_donate">Dona</string>
+	<string name="pref_donate_why">dóname para un café si te gusta la aplicación</string>
+	<string name="pref_about">Acerca de Router Keygen</string>
+	<string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.</string>
+	<string name="pref_msg_found">seleccionado.</string>
+	<string name="pref_download_des">Se necesita el Diccionario para las keys del Thomson</string>
+	<string name="pref_download">Descargar el Diccionario</string>
+	<string name="pref_thomson3g">Usar 3G para los Thomson</string>
+	<string name="pref_hinton_thomson3g">Recogiendo keys desde Internet</string>
+	<string name="pref_hintoff_thomson3g">Usar el dictionario para generar las keys.</string>
+	<string name="pref_native">Cálculo Nativo</string>
+	<string name="pref_hinton_native">Calcular en el objetivo si falla al encontrar el diccionario</string>
+	<string name="pref_hintoff_native">Sólo avisa si falla al encontrar el diccionario</string>
 
-<string name="dialog_thomson3g_msg">Recogiendo Keys...</string>
-<string name="msg_startingnativecalc">Error con el Diccionario. Comienza Cálculo en modo Nativo</string>
-<string name="msg_rotation_nativecalc">Cálculo Cancelado. Por favor, no ROTES el teléfono mientras se realiza el cáculo.</string>
-<string name="msg_err_essid_no_match">El SSID calculado no concuerda con el proporcionado.</string>
-<string name="msg_err_native">Error en el Cáculo Nativo. Informa al KnD Taldea.</string>
-<string name="msg_results">Haz Click una de las keys para copiarla. Después se abrirón los Wifi Settings donde las puedes "probar" ;).</string>
-<string name="menu_tester">Tester</string>
-
-<string name="msg_nomemoryonsdcard">La tarjeta de memoria externa no tiene suficiente espacio libre</string>
+	<!-- ERROR MESSAGE STRINGS -->
+	<string name="msg_newthomson">Nuevo Thomson cuya Key todavía no sí calcula!</string>
+	<string name="msg_unspported">Este ESSID no esta soportado!</string>
+	<string name="msg_nowifidetected">No se detectan redes WIFI!</string>
+	<string name="msg_nowifi">Wifi no activada! Activa la Wifi, por favor!</string>
+	<string name="msg_scanfailed">Scanneo Falló!</string>
+	<string name="msg_wifibroken">Faillo activando Wifi</string>
+	<string name="msg_shortessid6">ESSID inválido! Debe tener 6 caracteres.</string>
+	<string name="msg_errordict">Error leyendo el diccionario!</string>
+	<string name="msg_errnomatches">No se encontraron coincidencias!</string>
+	<string name="msg_shortessid5">ESSID inválido! Debe tener 6 caracteres.</string>
+	<string name="msg_nomac">Esta key no se puede generar sin la MAC address</string>
+	<string name="msg_dlinkerror">Error en el cálculo de la key D-Link</string>
+	<string name="msg_dictnotfound">El Diccionario no se ha encontrado en la SDCard!</string>
+	<string name="pref_msg_notfound">El Dictionario no está en </string>
+	<string name="msg_nosdcard">La SD card esta desmontada!</string>
+	<string name="msg_nomd5">Este teléfono no puede procesar un hash MD5.</string>
+	<string name="msg_nosha1">Este teléfono no puede procesar un hash SHA1.</string>
+	<string name="msg_nosha256">Este teléfono no puede procesar un hash SHA256.</string>
+	<string name="msg_errpirelli">La MAC address is inválida.</string>
+	<string name="msg_errthomson3g">Error conectando con el web service.</string>
+	<string name="msg_erralicenotsupported">Esta serie de Alice no esta soportada todavía!</string>
+	<string name="msg_errversion">Version desconocida del Diccionario.</string>
+	<string name="msg_startingnativecalc">Error con el Diccionario. Comienza Cálculo en modo Nativo</string>
+	<string name="msg_rotation_nativecalc">Cálculo Cancelado. Por favor, no ROTES el teléfono mientras se realiza el cáculo.</string>
+	<string name="msg_err_essid_no_match">El SSID calculado no concuerda con el proporcionado.</string>
+	<string name="msg_err_native">Error en el Cáculo Nativo. Informa al KnD Taldea.</string>
+	<string name="msg_nomemoryonsdcard">La tarjeta de memoria externa no tiene suficiente espacio libre</string>
 	<string name="msg_error">Error</string>
 	<string name="pref_msg_err_backup_dic">Error moviendo el anterior Diccionario a la copia de seguridad</string>
 	<string name="pref_msg_err_rename_dic">Error renombrando el Diccionario descargado.</string>
 	<string name="msg_err_sendto">Ha ocurrido un error tratando de compartir las Keys.</string>
-	<string name="msg_dicislarge">El tamaño del diccionario es de 28 MBs. Te avisamos de que estas usando una conexion Wi-fi.\nEstas seguro de querer continuar ?</string>
-	<string name="msg_dl_estimating">Estimando la velocidad de descarga y el tiempo restante...</string>
-	<string name="msg_dl_dlingdic">Descargando el Diccionario</string>
     <string name="msg_shortessid13">ESSID inválido! Debe tener 13 caracteres.</string>
-    <string name="bt_pause">Pausa</string>
-    <string name="msg_wait">Espera por favor...</string>
     <string name="msg_err_unkown">Ha ocurrido un error desconocido.</string>
     <string name="msg_err_online_too_adv">La versión Online del diccionario es demasiado avanzada para este programa.\nPiensa en udpdatearlo.</string>
-    <string name="msg_dl_speed">Velocidad de bajada</string>
-    <string name="msg_dl_eta">Tiempo pendiende estimado</string>
-    <string name="msg_dic_updated">Tu Diccionario ya esta en la última versión.</string>
-    <string name="msg_dic_updated_finished">Tu Diccionario esta ahora en su última versión.</string>
-</resources>
-<!-- Translation by KaMPaNiTa -->
+ </resources>
