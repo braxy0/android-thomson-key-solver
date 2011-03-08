@@ -102,4 +102,16 @@
     <string name="msg_shortessid13">ESSID inválido! Debe tener 13 caracteres.</string>
     <string name="msg_err_unkown">Ha ocurrido un error desconocido.</string>
     <string name="msg_err_online_too_adv">La versión Online del diccionario es demasiado avanzada para este programa.\nPiensa en udpdatearlo.</string>
- </resources>
+
+    <!-- UNTRANSLATED STRINGS -->
+	<string name="bt_save_sd">Save to the SD</string>
+	<string name="bt_connect">Auto connect</string>
+	<string name="lb_manual_bssid">MAC address</string>
+	<string name="pref_hinton_manual_mac">Manual input has also a MAC field</string>
+    <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string>
+    <string name="pref_thomson_section">Thomson Options</string>
+    <string name="pref_manual_mac">MAC manual input</string>
+    <string name="msg_err_verizon_ssid">Error processing this SSID.</string>
+    <string name="msg_err_saving_key_file">Error while saving file with the keys.</string>
+    <string name="msg_saved_key_file">saved to the SD card.</string>
+    <string name="pref_msg_no_network">There is no network access.</string> </resources>
