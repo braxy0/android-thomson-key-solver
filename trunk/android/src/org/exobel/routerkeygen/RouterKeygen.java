@@ -361,7 +361,8 @@ public class RouterKeygen extends Activity {
 				progressDialog.setButton(RouterKeygen.this.getResources().getString(R.string.bt_manual_cancel),
 						new DialogInterface.OnClickListener(){
 					public void onClick(DialogInterface dialog, int which) {
-						RouterKeygen.this.calculator.stopRequested = true;
+						if ( RouterKeygen.this.calculator != null )
+							RouterKeygen.this.calculator.stopRequested = true;
 						removeDialog(DIALOG_THOMSON3G);
 					}
 				});
