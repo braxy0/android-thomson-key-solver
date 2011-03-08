@@ -127,7 +127,6 @@ public class ThomsonKeygen extends KeygenThread {
 
 	private boolean localCalc(){
 
-		String test  = Environment.getExternalStorageState();
 		if ( !Environment.getExternalStorageState().equals("mounted")  && 
 		     !Environment.getExternalStorageState().equals("mounted_ro")	)
 		{
