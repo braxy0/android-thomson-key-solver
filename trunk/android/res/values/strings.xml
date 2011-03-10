@@ -47,6 +47,13 @@
     <string name="msg_dic_updated_finished">Your dictionary is now latest version.</string>
 	<string name="msg_wait">Please wait...</string>
 	<string name="lb_manual_bssid">MAC address</string>
+	<string name="dialog_about_credits">Acknowledgements</string>
+	<string name="dialog_about_credits_desc">The team would like to acknowledge the following people for their invaluable contribution:\n
+												<b>Ângela Igreja</b> - for the Portuguese Translation\n
+												<b>Simone Guidi</b> - for the Italian Translation\n
+												<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> - for the Dutch Translation\n
+												<b>KaMPaNiTa</b> - for the Spanish Translation\n
+												<a href="http://www.google.com">Google</a></string>
 	
 	
     <!-- PREFERENCES STRINGS -->

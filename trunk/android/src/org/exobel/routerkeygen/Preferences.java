@@ -36,8 +36,16 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TabHost.TabContentFactory;
+import android.widget.TabHost.TabSpec;
 
 public class Preferences extends PreferenceActivity {
 	
@@ -398,14 +406,29 @@ public class Preferences extends PreferenceActivity {
 			}
 			case DIALOG_ABOUT:
 			{
-				builder.setTitle(R.string.pref_about); 
-				builder.setMessage(R.string.pref_about_desc);
+				LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+			    View layout = inflater.inflate(R.layout.about_dialog,
+			                                   (ViewGroup) findViewById(R.id.tabhost));
+			    TabHost tabs = (TabHost) layout.findViewById(R.id.tabhost);
+			    tabs.setup();
+			    TabSpec tspec1 = tabs.newTabSpec("about");
+			    tspec1.setIndicator(getString(R.string.pref_about));
+			    
+			    tspec1.setContent(R.id.text_about_scroll);		   
+			    tabs.addTab(tspec1);
+			    TabSpec tspec2 = tabs.newTabSpec("credits");
+			    tspec2.setIndicator(getString(R.string.dialog_about_credits));
+			    tspec2.setContent(R.id.about_credits_scroll);		   
+			    ((TextView)layout.findViewById(R.id.about_credits))
+			    .setMovementMethod(LinkMovementMethod.getInstance());
+			    tabs.addTab(tspec2);
 				builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						removeDialog(DIALOG_ABOUT);
 	
 					}
 				});
+				builder.setView(layout);
 				break;
 			}
 			case DIALOG_ASK_DOWNLOAD:
