@@ -31,7 +31,6 @@
 	<string name="bt_save_sd">Save to the SD</string>
 	<string name="bt_connect">Auto connect</string>
 	
-	
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Input your ESSID here:</string>
 	<string name="dialog_nativecalc">Calculating Keys</string>
@@ -54,7 +53,6 @@
 												<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> - for the Dutch Translation\n
 												<b>KaMPaNiTa</b> - for the Spanish Translation\n
 												<a href="http://www.google.com">Google</a></string>
-	
 	
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
@@ -118,11 +116,11 @@
     <string name="msg_shortessid13">Invalid ESSID! It must have 13 characters.</string>
     <string name="msg_err_unkown">An unknown error has occurred.</string>
     <string name="msg_err_online_too_adv">Online version of the dictionary is too advanced for this program.\nPlease consider updating.</string>
-    <string name="err_misbuilt_apk">Your apk was not correctly build. Please remember to build the native part first.</string>
-     <string name="msg_err_verizon_ssid">Error processing this SSID.</string>
-     <string name="msg_err_saving_key_file">Error while saving file with the keys.</string>
-     <string name="msg_saved_key_file">saved to the SD card.</string>
-     <string name="pref_msg_no_network">There is no network access.</string>
+    <string name="err_misbuilt_apk">Your APK was not correctly build. Please remember to build the native part first.</string>
+    <string name="msg_err_verizon_ssid">Error processing this SSID.</string>
+    <string name="msg_err_saving_key_file">Error while saving file with the keys.</string>
+    <string name="msg_saved_key_file">saved to the SD card.</string>
+    <string name="pref_msg_no_network">There is no network access.</string>
      
      
        <!-- AUTOCOMPLETE SUPPORT -->

@@ -15,7 +15,7 @@
 	<string name="msg_scanstarted">Gestart met scannen</string>
 	<string name="msg_wifienabling">WiFi opzetten...</string>
 	<string name="msg_results">Klik op 1 van de sleutels om die te kopieren.\nVervolgens zullen de WiFi instellingen openen zodat u het kunt testen.</string>
-    
+    <string name="manual_mac_separator">:</string>
     
     <!-- BUTTONS STRINGS -->
 	<string name="bt_manual_cancel">Annuleer</string>
@@ -28,6 +28,8 @@
 	<string name="bt_yes">Ja</string>
 	<string name="bt_no">Nee</string>	
 	<string name="bt_pause">Pauze</string>
+	<string name="bt_save_sd">Save to the SD</string> <!-- UNTRANSLATED -->
+	<string name="bt_connect">Auto connect</string> <!-- UNTRANSLATED -->
 	
 	<!-- DIALOG STRINGS -->	
 	<string name="lb_manual">Voer hier uw ESSID in:</string>
@@ -43,6 +45,14 @@
     <string name="msg_dic_updated">Uw dictionary is al de laatste versie.</string>
     <string name="msg_dic_updated_finished">Uw dictionary is nu de laatste versie.</string>
     <string name="msg_wait">Ogenblik geduld...</string>
+	<string name="lb_manual_bssid">MAC address</string> <!-- UNTRANSLATED -->
+	<string name="dialog_about_credits">Acknowledgements</string> <!-- UNTRANSLATED -->
+	<string name="dialog_about_credits_desc">The team would like to acknowledge the following people for their invaluable contribution:\n
+												<b>Ângela Igreja</b> - for the Portuguese Translation\n
+												<b>Simone Guidi</b> - for the Italian Translation\n
+												<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> - for the Dutch Translation\n
+												<b>KaMPaNiTa</b> - for the Spanish Translation\n
+												<a href="http://www.google.com">Google</a></string> <!-- UNTRANSLATED -->
 	
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Activeer WiFi automatisch</string>
@@ -55,17 +65,21 @@
 	<string name="pref_2section">Info</string>
 	<string name="pref_donate">Doneer</string>
 	<string name="pref_donate_why">Trakteer mij op een koffie als je deze app leuk vond</string>
-	<string name="pref_msg_found">geselecteerd.</string>
 	<string name="pref_about">Over Router Keygen</string>
 	<string name="pref_about_desc">Router Keygen berekent paswoorden voor verschillende soorten routers</string>
+	<string name="pref_msg_found">geselecteerd.</string>
+	<string name="pref_native">Primitieve Berekening</string>
+	<string name="pref_hinton_native">Berekenen op doel als de dictionary niet gevonden is.</string>
+	<string name="pref_hintoff_native">Alleen waarschuwen als de dictionary niet kan worden gevonden.</string>
 	<string name="pref_download_des">dictionary nodig voor Thomson sleutels</string>
 	<string name="pref_download">Download dictionary</string>
 	<string name="pref_thomson3g">Gebruik 3G voor Thomson</string>
 	<string name="pref_hinton_thomson3g">Sleutels ophalen van het internet.</string>
 	<string name="pref_hintoff_thomson3g">Gebruik dictionary om sleutels te genereren.</string>
-	<string name="pref_native">Primitieve Berekening</string>
-	<string name="pref_hinton_native">Berekenen op doel als de dictionary niet gevonden is.</string>
-	<string name="pref_hintoff_native">Alleen waarschuwen als de dictionary niet kan worden gevonden.</string>
+    <string name="pref_hinton_manual_mac">Manual input has also a MAC field</string> <!-- UNTRANSLATED -->
+    <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string> <!-- UNTRANSLATED -->
+    <string name="pref_thomson_section">Thomson Options</string> <!-- UNTRANSLATED -->
+    <string name="pref_manual_mac">MAC manual input</string> <!-- UNTRANSLATED -->
 	
 	<!-- ERROR MESSAGE STRINGS -->
 	<string name="msg_newthomson">Dat is een nieuwe Thomson router, deze sleutel kan niet berekend worden!</string>
@@ -102,17 +116,9 @@
 	<string name="msg_shortessid13">Ongeldig ESSID. Lengte moet 13 zijn.</string>
     <string name="msg_err_unkown">Er is een onbekende error opgetreden.</string>
     <string name="msg_err_online_too_adv">De online versie van het dictionary is te geavanceerd voor dit programma.\nMogelijk is een update nodig.</string>
-    <string name="err_misbuilt_apk">Uw apk is niet juist gecompileerd. Denk er aan eerst het primitieve gedeelte te compileren.</string>
-
-    <!-- UNTRANSLATED STRINGS -->
-	<string name="bt_save_sd">Save to the SD</string>
-	<string name="bt_connect">Auto connect</string>
-	<string name="lb_manual_bssid">MAC address</string>
-	<string name="pref_hinton_manual_mac">Manual input has also a MAC field</string>
-    <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string>
-    <string name="pref_thomson_section">Thomson Options</string>
-    <string name="pref_manual_mac">MAC manual input</string>
-    <string name="msg_err_verizon_ssid">Error processing this SSID.</string>
-    <string name="msg_err_saving_key_file">Error while saving file with the keys.</string>
-    <string name="msg_saved_key_file">saved to the SD card.</string>
-    <string name="pref_msg_no_network">There is no network access.</string></resources>
+    <string name="err_misbuilt_apk">Uw APK is niet juist gecompileerd. Denk er aan eerst het primitieve gedeelte te compileren.</string>
+    <string name="msg_err_verizon_ssid">Error processing this SSID.</string> <!-- UNTRANSLATED -->
+    <string name="msg_err_saving_key_file">Error while saving file with the keys.</string> <!-- UNTRANSLATED -->
+    <string name="msg_saved_key_file">saved to the SD card.</string> <!-- UNTRANSLATED -->
+    <string name="pref_msg_no_network">There is no network access.</string> <!-- UNTRANSLATED -->
+</resources>

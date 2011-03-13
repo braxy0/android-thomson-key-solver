@@ -15,7 +15,7 @@
     <string name="msg_scanstarted">Pesquisa iniciada</string>
     <string name="msg_wifienabling">Activando Wifi</string>
     <string name="msg_results">Seleccione uma das senhas para copiá-la.\nAs Preferências de Wifi irão abrir onde pode usá-la para teste.</string>
-    
+    <string name="manual_mac_separator">:</string>
     
     <!-- BUTTONS STRINGS -->
     <string name="bt_manual_cancel">Cancelar</string>
@@ -28,6 +28,8 @@
     <string name="bt_yes">Sim</string>
     <string name="bt_no">Não</string>
     <string name="bt_pause">Pausar</string>
+	<string name="bt_save_sd">Save to the SD</string> <!-- UNTRANSLATED -->
+	<string name="bt_connect">Auto connect</string> <!-- UNTRANSLATED -->
  
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Introduza o ESSID:</string>
@@ -43,6 +45,14 @@
     <string name="msg_dic_updated">O seu dicionário já é a versão mais recente.</string>
     <string name="msg_dic_updated_finished">O seu dicionário é agora a versão mais recente.</string>
     <string name="msg_wait">Por favor aguarde...</string>
+	<string name="lb_manual_bssid">MAC address</string> <!-- UNTRANSLATED -->
+	<string name="dialog_about_credits">Acknowledgements</string> <!-- UNTRANSLATED -->
+	<string name="dialog_about_credits_desc">The team would like to acknowledge the following people for their invaluable contribution:\n
+												<b>Ângela Igreja</b> - for the Portuguese Translation\n
+												<b>Simone Guidi</b> - for the Italian Translation\n
+												<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> - for the Dutch Translation\n
+												<b>KaMPaNiTa</b> - for the Spanish Translation\n
+												<a href="http://www.google.com">Google</a></string> <!-- UNTRANSLATED -->
  	
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activar automaticamente o Wifi</string>
@@ -57,8 +67,20 @@
     <string name="pref_donate_why">Ofereça-me um café se gostou desta aplicação</string>
     <string name="pref_about">Sobre Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcula senhas de origem para vários routers.</string>
- 	
- 	
+ 	<string name="pref_msg_found">seleccionado.</string>
+ 	<string name="pref_native">Cálculo Nativo</string>
+    <string name="pref_hinton_native">Calcular no telemóvel se falhar ao procurar o dicionário</string>
+    <string name="pref_hintoff_native">Só avisa se não conseguir encontrar no dicionário</string>
+ 	<string name="pref_download_des">Dicionário necessário para as chaves Thomson</string>
+    <string name="pref_download">Descarregar Dicionário</string>
+    <string name="pref_thomson3g">Usar Internet para Thomson</string>
+    <string name="pref_hinton_thomson3g">Procurar chaves usando a Internet</string>
+    <string name="pref_hintoff_thomson3g">Usar o dicionário para gerar as chaves.</string>
+    <string name="pref_hinton_manual_mac">Manual input has also a MAC field</string> <!-- UNTRANSLATED -->
+    <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string> <!-- UNTRANSLATED -->
+    <string name="pref_thomson_section">Thomson Options</string> <!-- UNTRANSLATED -->
+    <string name="pref_manual_mac">MAC manual input</string> <!-- UNTRANSLATED -->
+    
  	<!-- ERROR MESSAGE STRINGS -->
     <string name="msg_newthomson">Este é um novo Thomson router que a sua password não pode ser calculada!</string>
     <string name="msg_unspported">Este ESSID não é suportado!</string>
@@ -74,7 +96,6 @@
     <string name="msg_dlinkerror">Erro no cálculo da chave D-Link</string>
     <string name="msg_dictnotfound">Dicionário não encontrado no SDCard.</string>
     <string name="pref_msg_notfound">Dicionário não encontrado no </string>
-    <string name="pref_msg_found">seleccionado.</string>
     <string name="msg_nosdcard">O armazenamento externo não está disponível.</string>
     <string name="msg_nomd5">Este telefone não consegue produzir uma hash MD5.</string>
     <string name="msg_nosha1">Este telefone não consegue produzir uma hash SHA1.</string>
@@ -83,10 +104,7 @@
     <string name="msg_errthomson3g">Erro na conexão com o serviço web.</string>
     <string name="msg_erralicenotsupported">Esta série Alice ainda não é suportado!</string>
     <string name="msg_errversion">Versão do dicionário desconhecida.</string>
-    <string name="pref_native">Cálculo Nativo</string>
-    <string name="pref_hinton_native">Calcular no telemóvel se falhar ao procurar o dicionário</string>
-    <string name="pref_hintoff_native">Só avisa se não conseguir encontrar no dicionário</string>
-     <string name="msg_startingnativecalc">Erro com o dicionário. Começando cálculo nativo.</string>
+    <string name="msg_startingnativecalc">Erro com o dicionário. Começando cálculo nativo.</string>
     <string name="msg_rotation_nativecalc">Cálculo cancelado.Por favor, não rode o seu telefone enquanto o cálculo está a ser efectuado.</string>
     <string name="msg_err_essid_no_match">O SSID calculado não corresponde ao previsto.</string>
     <string name="msg_err_native">Error no cálculo nativo.Por favor informe a equipa.</string>
@@ -98,18 +116,9 @@
     <string name="msg_shortessid13">ESSID Inválido! Deve ter 13 caracteres.</string>
     <string name="msg_err_unkown">Ocorreu um erro desconhecido.</string>
     <string name="msg_err_online_too_adv">Versão online do dicionário é demasiado avançada para este programa.\nPor favor considere actualizar-lo.</string>
-    <string name="err_misbuilt_apk">O seu apk não foi construído correctamente. Por favor lembre-se de fazer build à parte nativa primeiro.</string>
-
-    <!-- UNTRANSLATED STRINGS -->
-	<string name="bt_save_sd">Save to the SD</string>
-	<string name="bt_connect">Auto connect</string>
-	<string name="lb_manual_bssid">MAC address</string>
-	<string name="pref_hinton_manual_mac">Manual input has also a MAC field</string>
-    <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string>
-    <string name="pref_thomson_section">Thomson Options</string>
-    <string name="pref_manual_mac">MAC manual input</string>
-    <string name="msg_err_verizon_ssid">Error processing this SSID.</string>
-    <string name="msg_err_saving_key_file">Error while saving file with the keys.</string>
-    <string name="msg_saved_key_file">saved to the SD card.</string>
-    <string name="pref_msg_no_network">There is no network access.</string>
+    <string name="err_misbuilt_apk">O seu APK não foi construído correctamente. Por favor lembre-se de fazer build à parte nativa primeiro.</string>
+    <string name="msg_err_verizon_ssid">Error processing this SSID.</string> <!-- UNTRANSLATED -->
+    <string name="msg_err_saving_key_file">Error while saving file with the keys.</string> <!-- UNTRANSLATED -->
+    <string name="msg_saved_key_file">saved to the SD card.</string> <!-- UNTRANSLATED -->
+    <string name="pref_msg_no_network">There is no network access.</string>  <!-- UNTRANSLATED -->
 </resources>
