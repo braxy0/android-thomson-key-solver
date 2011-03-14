@@ -26,11 +26,10 @@
 				        android:id="@+id/text_about"
 				        android:layout_width="fill_parent"
 				        android:layout_height="fill_parent" 
-				        android:textSize="20sp"
+				        android:textSize="17sp"
 				   		android:text="@string/pref_about_desc"
 						/>
 				</ScrollView> 
-					 
 				<ScrollView
 	               	android:id="@+id/about_credits_scroll"
 	                android:layout_width="fill_parent" 
@@ -40,11 +39,24 @@
 		               	android:id="@+id/about_credits"
 				        android:layout_width="fill_parent"
 				        android:layout_height="fill_parent" 
-				        android:textSize="20sp"
+				        android:textSize="17sp"
 				   		android:text="@string/dialog_about_credits_desc"
 					/>
 				</ScrollView> 
-					
+				
+				<ScrollView
+	               	android:id="@+id/about_license_scroll"
+	                android:layout_width="fill_parent" 
+	                android:layout_height="fill_parent" 
+	                xmlns:android="http://schemas.android.com/apk/res/android">
+		            <TextView
+		               	android:id="@+id/about_license"
+				        android:layout_width="fill_parent"
+				        android:layout_height="fill_parent" 
+				        android:textSize="17sp"
+				   		android:text="@string/dialog_about_license_desc"
+					/>
+				</ScrollView> 	
 		</FrameLayout>
 	    </LinearLayout>
 </TabHost>

@@ -44,7 +44,6 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 
 public class Preferences extends PreferenceActivity {
@@ -64,11 +63,13 @@ public class Preferences extends PreferenceActivity {
 		"market://details?id=org.exobel.routerkeygen.donate";
 	private static final String PUB_DOWNLOAD = 
 		"http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
-		//"http://dl.dropbox.com/u/7566036/RouterKeygen.dic";
 	private static final String PUB_DIC_CFV =
 		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	
 	private static final String folderSelectPref = "folderSelect";
+	private static final String VERSION = "2.4.0";
+	private static final String LAUNCH_DATE = "15/03/2011";
+
 
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -414,7 +415,10 @@ public class Preferences extends PreferenceActivity {
 			    TabSpec tspec1 = tabs.newTabSpec("about");
 			    tspec1.setIndicator(getString(R.string.pref_about));
 			    
-			    tspec1.setContent(R.id.text_about_scroll);		   
+			    tspec1.setContent(R.id.text_about_scroll);	
+			    TextView text = ((TextView)layout.findViewById(R.id.text_about));
+			    text.setMovementMethod(LinkMovementMethod.getInstance());
+			    text.setText(getString(R.string.pref_about_desc) + VERSION + "\n" + LAUNCH_DATE);
 			    tabs.addTab(tspec1);
 			    TabSpec tspec2 = tabs.newTabSpec("credits");
 			    tspec2.setIndicator(getString(R.string.dialog_about_credits));
@@ -422,6 +426,12 @@ public class Preferences extends PreferenceActivity {
 			    ((TextView)layout.findViewById(R.id.about_credits))
 			    .setMovementMethod(LinkMovementMethod.getInstance());
 			    tabs.addTab(tspec2);
+			    TabSpec tspec3 = tabs.newTabSpec("license");
+			    tspec3.setIndicator(getString(R.string.dialog_about_license));
+			    tspec3.setContent(R.id.about_license_scroll);		   
+			    ((TextView)layout.findViewById(R.id.about_license))
+			    .setMovementMethod(LinkMovementMethod.getInstance());
+			    tabs.addTab(tspec3);
 				builder.setNeutralButton(R.string.bt_close, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						removeDialog(DIALOG_ABOUT);
