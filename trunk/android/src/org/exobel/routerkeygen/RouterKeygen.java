@@ -76,8 +76,8 @@ public class RouterKeygen extends Activity {
 
 		if (!welcomeScreenShown) {
 
-			String whatsNewTitle = getResources().getString(R.string.msg_welcome_title);
-			String whatsNewText = getResources().getString(R.string.msg_welcome_text);
+			String whatsNewTitle = getString(R.string.msg_welcome_title);
+			String whatsNewText = getString(R.string.msg_welcome_text);
 			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(whatsNewTitle).setMessage(whatsNewText).setPositiveButton(
 					R.string.bt_ok, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
@@ -97,8 +97,7 @@ public class RouterKeygen extends Activity {
 				router = vulnerable.get(position);
 				if (router.newThomson)
 				{
-					Toast.makeText( RouterKeygen.this ,
-							RouterKeygen.this.getResources().getString(R.string.msg_newthomson) ,
+					Toast.makeText( RouterKeygen.this , getString(R.string.msg_newthomson) ,
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -115,8 +114,7 @@ public class RouterKeygen extends Activity {
 		if ( wifiOn )
 		{
 			if ( !wifi.setWifiEnabled(true))
-				Toast.makeText( RouterKeygen.this , 
-						RouterKeygen.this.getResources().getString(R.string.msg_wifibroken),
+				Toast.makeText( RouterKeygen.this , getString(R.string.msg_wifibroken),
 						Toast.LENGTH_SHORT).show();
 			else
 				wifi_state = true;
@@ -147,14 +145,15 @@ public class RouterKeygen extends Activity {
 			case DIALOG_THOMSON3G: {
 				progressDialog = new ProgressDialog(RouterKeygen.this);
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				progressDialog.setTitle(RouterKeygen.this.getResources().getString(R.string.dialog_thomson3g));
-				progressDialog.setMessage(RouterKeygen.this.getResources().getString(R.string.dialog_thomson3g_msg));
+				progressDialog.setTitle(getString(R.string.dialog_thomson3g));
+				progressDialog.setMessage(getString(R.string.dialog_thomson3g_msg));
 				progressDialog.setCancelable(false);
 				progressDialog.setProgress(0);
-				progressDialog.setButton(RouterKeygen.this.getResources().getString(R.string.bt_manual_cancel),
+				progressDialog.setButton(getString(R.string.bt_manual_cancel),
 						new DialogInterface.OnClickListener(){
 					public void onClick(DialogInterface dialog, int which) {
-						RouterKeygen.this.calculator.stopRequested = true;
+						if ( RouterKeygen.this.calculator != null )
+							RouterKeygen.this.calculator.stopRequested = true;
 						removeDialog(DIALOG_THOMSON3G);
 					}
 				});
@@ -173,7 +172,7 @@ public class RouterKeygen extends Activity {
 							int position, long id) {
 						String key = ((TextView)view).getText().toString();
 						Toast.makeText(getApplicationContext(), key + " " 							
-								+ RouterKeygen.this.getResources().getString(R.string.msg_copied),
+								+ getString(R.string.msg_copied),
 								Toast.LENGTH_SHORT).show();
 						ClipboardManager clipboard = 
 							(ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
@@ -185,6 +184,7 @@ public class RouterKeygen extends Activity {
 				
 				list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_key)); 
 				/*
+				 * TODO: Auto connect
 				 * Still not working as wished though it works +-.
 				 
 				builder.setPositiveButton(RouterKeygen.this.getResources().getString(R.string.bt_connect),
@@ -205,22 +205,19 @@ public class RouterKeygen extends Activity {
 									{
 										Intent i = new Intent(Intent.ACTION_SEND);
 										i.setType("text/plain");
-										i.putExtra(Intent.EXTRA_SUBJECT, router.ssid + 
-												RouterKeygen.this.getResources().getString(R.string.share_msg_begin));
+										i.putExtra(Intent.EXTRA_SUBJECT, router.ssid + getString(R.string.share_msg_begin));
 										Iterator<String> it = list_key.iterator();
-										String message = RouterKeygen.this.getResources().getString(R.string.share_msg_begin)
-										+ ":\n";
+										String message = router.ssid + getString(R.string.share_msg_begin) + ":\n";
 										while ( it.hasNext() )
 											message += it.next() + "\n";
 										
 										i.putExtra(Intent.EXTRA_TEXT, message);
-										message = RouterKeygen.this.getResources().getString(R.string.share_title);
+										message = getString(R.string.share_title);
 										startActivity(Intent.createChooser(i, message));
 									}
 									catch(Exception e)
 									{
-										Toast.makeText( RouterKeygen.this , 
-												RouterKeygen.this.getResources().getString(R.string.msg_err_sendto) , 
+										Toast.makeText( RouterKeygen.this , getString(R.string.msg_err_sendto) , 
 												Toast.LENGTH_SHORT).show();
 										return;
 									}
@@ -232,8 +229,7 @@ public class RouterKeygen extends Activity {
 						if ( !Environment.getExternalStorageState().equals("mounted")  && 
 							     !Environment.getExternalStorageState().equals("mounted_ro")	)
 						{
-							Toast.makeText( RouterKeygen.this , 
-								RouterKeygen.this.getResources().getString(R.string.msg_nosdcard),
+							Toast.makeText( RouterKeygen.this , getString(R.string.msg_nosdcard),
 								Toast.LENGTH_SHORT).show();
 							return ;
 						}
@@ -251,13 +247,11 @@ public class RouterKeygen extends Activity {
 						}
 						catch (IOException e)
 						{
-							Toast.makeText( RouterKeygen.this , 
-									RouterKeygen.this.getResources().getString(R.string.msg_err_saving_key_file),
+							Toast.makeText( RouterKeygen.this , getString(R.string.msg_err_saving_key_file),
 									Toast.LENGTH_SHORT).show();
 							return ;
 						}
-						Toast.makeText( RouterKeygen.this , router.ssid + ".txt " + 
-								RouterKeygen.this.getResources().getString(R.string.msg_saved_key_file),
+						Toast.makeText( RouterKeygen.this , router.ssid + ".txt " + getString(R.string.msg_saved_key_file),
 								Toast.LENGTH_SHORT).show();
 					}
 				});
@@ -556,16 +550,14 @@ public class RouterKeygen extends Activity {
 				{
 					if ( ((ThomsonKeygen)calculator).errorDict )
 					{
-						Toast.makeText( RouterKeygen.this , 
-								RouterKeygen.this.getResources().getString(R.string.msg_startingnativecalc) , 
+						Toast.makeText( RouterKeygen.this , getString(R.string.msg_startingnativecalc) , 
 								Toast.LENGTH_SHORT).show();
 						
 						WifiNetwork tmp = RouterKeygen.this.calculator.router;
 						try{
 							RouterKeygen.this.calculator = new NativeThomson(this ,RouterKeygen.this.getResources() );
 						}catch(LinkageError e){
-							Toast.makeText( RouterKeygen.this ,
-									RouterKeygen.this.getResources().getString(R.string.err_misbuilt_apk), 
+							Toast.makeText( RouterKeygen.this ,getString(R.string.err_misbuilt_apk), 
 									Toast.LENGTH_SHORT).show();
 							return;
 						}
@@ -577,8 +569,7 @@ public class RouterKeygen extends Activity {
 					}
 
 				}
-				String message = (String) msg.obj;
-				Toast.makeText( RouterKeygen.this , message , Toast.LENGTH_SHORT).show();
+				Toast.makeText( RouterKeygen.this , msg.obj.toString() , Toast.LENGTH_SHORT).show();
 				return;
 			}
 			if ( msg.what == 2 )
@@ -589,7 +580,7 @@ public class RouterKeygen extends Activity {
 			if ( msg.what == 3 )
 			{
 				removeDialog(DIALOG_AUTO_CONNECT);
-				Toast.makeText( RouterKeygen.this , (CharSequence) msg.obj , Toast.LENGTH_SHORT).show();
+				Toast.makeText( RouterKeygen.this ,msg.obj.toString() , Toast.LENGTH_SHORT).show();
 				return;
 			}
 		}

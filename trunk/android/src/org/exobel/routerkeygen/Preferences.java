@@ -418,7 +418,7 @@ public class Preferences extends PreferenceActivity {
 			    tspec1.setContent(R.id.text_about_scroll);	
 			    TextView text = ((TextView)layout.findViewById(R.id.text_about));
 			    text.setMovementMethod(LinkMovementMethod.getInstance());
-			    text.setText(getString(R.string.pref_about_desc) + VERSION + "\n" + LAUNCH_DATE);
+			    text.append(VERSION + "\n" + LAUNCH_DATE);
 			    tabs.addTab(tspec1);
 			    TabSpec tspec2 = tabs.newTabSpec("credits");
 			    tspec2.setIndicator(getString(R.string.dialog_about_credits));
