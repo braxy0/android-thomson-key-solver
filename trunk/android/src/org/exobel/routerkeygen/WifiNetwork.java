@@ -150,6 +150,8 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			if( aliceReader.supportedAlice.isEmpty() )
 				return false;
 			supportedAlice = aliceReader.supportedAlice;
+			if ( getMac().length() < 6 )
+				mac = supportedAlice.get(0).mac;
 			return true;
 		}
 		if (  ( ssid.startsWith("WLAN_") && ssid.length() == 9 ) ||
