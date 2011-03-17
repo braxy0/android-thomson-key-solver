@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>  
-
+	<!-- Main file and reference for the others.-->
     
     <!-- MISC STRINGS -->
     <string name="app_name">Router Keygen</string>
@@ -48,8 +48,8 @@
 	<string name="lb_manual_bssid">MAC address</string>
 	<string name="dialog_about_credits">Credits</string>
 	<string name="dialog_about_credits_desc">Router Keygen is the result of the invaluable contribution from the  following people/organizations:\n\n
-								<b>Rui Araújo</b> - Lots of code\n
-								<b>Luís Fonseca</b> - Lots of code\n
+								<b>Rui Araújo</b> - Exobel Team Member\n
+								<b>Luís Fonseca</b> - Exobel Team Member\n
 								<b>Ângela Igreja</b> for the Portuguese Translation\n
 								<b>Ângela Igreja</b> for the Portuguese Translation\n
 								<b>Simone Guidi</b> for the Italian Translation\n

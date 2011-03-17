@@ -28,7 +28,7 @@
     <string name="bt_yes">Sim</string>
     <string name="bt_no">Não</string>
     <string name="bt_pause">Pausar</string>
-	<string name="bt_save_sd">Save to the SD</string> <!-- UNTRANSLATED -->
+	<string name="bt_save_sd">Guardar no SD</string>
 	<string name="bt_connect">Auto connect</string> <!-- UNTRANSLATED -->
  
 	<!-- DIALOG STRINGS -->
@@ -45,25 +45,26 @@
     <string name="msg_dic_updated">O seu dicionário já está na versão mais recente.</string>
     <string name="msg_dic_updated_finished">O seu dicionário foi actualizado para a versão mais recente.</string>
     <string name="msg_wait">Por favor aguarde...</string>
-	<string name="lb_manual_bssid">MAC address</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_credits">Credits</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_credits_desc">Router Keygen is the result of the invaluable contribution from the  following people/organizations:\n\n
-								<b>Rui Araújo</b> - Lots of code\n
-								<b>Luís Fonseca</b> - Lots of code\n
-								<b>Ângela Igreja</b> for the Portuguese Translation\n
-								<b>Simone Guidi</b> for the Italian Translation\n
-								<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> for the Dutch Translation\n
-								<b>KaMPaNiTa</b> for the Spanish Translation and the WLAN_XX implementation\n
-								<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> for the Thomson algorithm\n
-								<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> for the Alice and FASTWEB algorithms\n
-								<b>Fred Williams</b> for the Verizon FiOS algorithm\n
-								<b>Muris Kurgaš </b> for the Discus algorithm\n
-								<b><a href="http://websec.ca/">Pedro Joaquim</a></b> for the Huawei algorithm\n
-								<b>chaeo</b> for the SKY V1 algorithm.
-								</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_license">License</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms 
-									<a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.</string> <!-- UNTRANSLATED -->
+	<string name="lb_manual_bssid">Endereço MAC</string>
+	<string name="dialog_about_credits">Créditos</string>
+	<string name="dialog_about_credits_desc">Router Keygen é o resultado das contribuições valiosas das
+								das seguintes pessoas/organizações:\n\n
+								<b>Rui Araújo</b> - Membro da Equipa Exobel\n
+								<b>Luís Fonseca</b> - Membro da Equipa Exobel\n
+								<b>Ângela Igreja</b> pela tradução portuguesa\n
+								<b>Simone Guidi</b> pela tradução italiana\n
+								<b>Matthijs de Rijk</b> e <b>Van Hove Sven</b> pela tradução holandesa\n
+								<b>KaMPaNiTa</b> pela tradução espanhola e pela implementação de WLAN_XX\n
+								<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> pelo algoritmo dos Thomson\n
+								<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> pelos algoritmos dos Alice e FASTWEB\n
+								<b>Fred Williams</b> pelo algoritmo do Verizon FiOS\n
+								<b>Muris Kurgaš </b> pelo algoritmo do Discus\n
+								<b><a href="http://websec.ca/">Pedro Joaquim</a></b> pelo algoritmo do Huawei\n
+								<b>chaeo</b> pelo algoritmo do SKY V1.
+								</string>
+	<string name="dialog_about_license">Licença</string>
+	<string name="dialog_about_license_desc">Esta aplicação está sobre a GPLv3.\n\nPode ler os termos desta 
+									<a href="http://www.gnu.org/licenses/gpl-3.0.html">aqui</a>.</string>
 									 	
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activar automaticamente o Wifi</string>
@@ -78,7 +79,7 @@
     <string name="pref_donate_why">Ofereça-me um café se gostou desta aplicação</string>
     <string name="pref_about">Sobre Router Keygen</string>
     <string name="pref_about_desc">Router Keygen calcula senhas de origem para vários routers.\n\n
-			<a href="http://code.google.com/p/android-thomson-key-solver/">Project\'s Website</a>\n\nVersion: </string> <!-- UNTRANSLATED -->
+			<a href="http://code.google.com/p/android-thomson-key-solver/">Website do Projecto</a>\n\nVersão: </string>
  	<string name="pref_msg_found">seleccionado.</string>
  	<string name="pref_native">Cálculo Nativo</string>
     <string name="pref_hinton_native">Calcular no telemóvel se falhar ao procurar o dicionário</string>
@@ -88,10 +89,10 @@
     <string name="pref_thomson3g">Usar Internet para Thomson</string>
     <string name="pref_hinton_thomson3g">Procurar chaves usando a Internet</string>
     <string name="pref_hintoff_thomson3g">Usar o dicionário para gerar as chaves.</string>
-    <string name="pref_hinton_manual_mac">Manual input has also a MAC field</string> <!-- UNTRANSLATED -->
-    <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string> <!-- UNTRANSLATED -->
-    <string name="pref_thomson_section">Thomson Options</string> <!-- UNTRANSLATED -->
-    <string name="pref_manual_mac">MAC manual input</string> <!-- UNTRANSLATED -->
+    <string name="pref_hinton_manual_mac">Entrada manual também tem um campo para o MAC</string>
+    <string name="pref_hintoff_manual_mac">Entrada manual apenas tem um campo para o SSID</string>
+    <string name="pref_thomson_section">Opções do Thomson</string>
+    <string name="pref_manual_mac">Entrada manual do MAC</string>
     
  	<!-- ERROR MESSAGE STRINGS -->
     <string name="msg_newthomson">Este é um novo Thomson router que a sua password não pode ser calculada!</string>
@@ -129,8 +130,8 @@
     <string name="msg_err_unkown">Ocorreu um erro desconhecido.</string>
     <string name="msg_err_online_too_adv">Versão online do dicionário é demasiado avançada para este programa.\nPor favor considere actualizar-lo.</string>
     <string name="err_misbuilt_apk">O seu APK não foi construído correctamente. Por favor lembre-se de fazer build à parte nativa primeiro.</string>
-    <string name="msg_err_verizon_ssid">Error processing this SSID.</string> <!-- UNTRANSLATED -->
-    <string name="msg_err_saving_key_file">Error while saving file with the keys.</string> <!-- UNTRANSLATED -->
-    <string name="msg_saved_key_file">saved to the SD card.</string> <!-- UNTRANSLATED -->
-    <string name="pref_msg_no_network">There is no network access.</string>  <!-- UNTRANSLATED -->
+    <string name="msg_err_verizon_ssid">Error ao processar este SSID.</string>
+    <string name="msg_err_saving_key_file">Erro ao guardar ficheiro com as senhas.</string>
+    <string name="msg_saved_key_file">guardado no cartão SD.</string>
+    <string name="pref_msg_no_network">Não há acesso à rede.</string>
 </resources>
