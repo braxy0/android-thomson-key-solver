@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- This translation was kindly done by Matthijs de Rijk and Van Hove Sven and  -->
+    <!-- This translation was kindly done by Sven Van Hove en Matthijs de Rijk -->
     
     <!-- MISC STRINGS -->
     <string name="app_name">Router Keygen</string>
@@ -28,8 +28,8 @@
 	<string name="bt_yes">Ja</string>
 	<string name="bt_no">Nee</string>	
 	<string name="bt_pause">Pauze</string>
-	<string name="bt_save_sd">Save to the SD</string> <!-- UNTRANSLATED -->
-	<string name="bt_connect">Auto connect</string> <!-- UNTRANSLATED -->
+	<string name="bt_save_sd">Opslaan op de SD kaart</string>
+	<string name="bt_connect">Automatisch verbinden</string>
 	
 	<!-- DIALOG STRINGS -->	
 	<string name="lb_manual">Voer hier uw ESSID in:</string>
@@ -45,25 +45,25 @@
     <string name="msg_dic_updated">Uw dictionary is al de laatste versie.</string>
     <string name="msg_dic_updated_finished">Uw dictionary is nu de laatste versie.</string>
     <string name="msg_wait">Ogenblik geduld...</string>
-	<string name="lb_manual_bssid">MAC address</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_credits">Credits</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_credits_desc">Router Keygen is the result of the invaluable contribution from the  following people/organizations:\n\n
-								<b>Rui Araújo</b> - Exobel Team Member\n
+	<string name="lb_manual_bssid">MAC adres</string>
+	<string name="dialog_about_credits">Credits</string>
+	<string name="dialog_about_credits_desc">Router Keygen kon niet bestaan zonder de onschatbare bijdrages van volgende mensen/bedrijven:\n\n
 								<b>Luís Fonseca</b> - Exobel Team Member\n
-								<b>Ângela Igreja</b> for the Portuguese Translation\n
-								<b>Simone Guidi</b> for the Italian Translation\n
-								<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> for the Dutch Translation\n
-								<b>KaMPaNiTa</b> for the Spanish Translation and the WLAN_XX implementation\n
-								<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> for the Thomson algorithm\n
-								<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> for the Alice and FASTWEB algorithms\n
-								<b>Fred Williams</b> for the Verizon FiOS algorithm\n
-								<b>Muris Kurgaš </b> for the Discus algorithm\n
-								<b><a href="http://websec.ca/">Pedro Joaquim</a></b> for the Huawei algorithm\n
-								<b>chaeo</b> for the SKY V1 algorithm.
-								</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_license">License</string> <!-- UNTRANSLATED -->
-	<string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms 
-									<a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.</string> <!-- UNTRANSLATED -->
+								<b>Rui Araújo</b> - Exobel Team Member\n
+								<b>Ângela Igreja</b> - Portuguese Vertaling\n
+								<b>Simone Guidi</b> - Italiaanse Vertaling\n
+								<b>Matthijs de Rijk</b> and <b>Sven Van Hove</b> - Nederlandse Vertaling\n
+								<b>KaMPaNiTa</b> - Spaanse Vertaling en de WLAN_XX implementatie\n
+								<b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> voor het Thomson algoritme\n
+								<b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> voor de Alice en FASTWEB algoritmes\n
+								<b>Fred Williams</b> voor het Verizon FiOS algoritme\n
+								<b>Muris Kurgaš </b> voor het Discus algoritme\n
+								<b><a href="http://websec.ca/">Pedro Joaquim</a></b> voor het Huawei algoritme\n
+								<b>chaeo</b> voor het SKY V1 algorithm.
+								</string>
+	<string name="dialog_about_license">Licentie</string>
+	<string name="dialog_about_license_desc">Deze applicatie is uitgebracht onder de GPLv3.\n\nU kan de voorwaarden 
+									<a href="http://www.gnu.org/licenses/gpl-3.0.html">hier</a>nalezen.</string>
 		
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Activeer WiFi automatisch</string>
@@ -78,7 +78,7 @@
 	<string name="pref_donate_why">Trakteer mij op een koffie als je deze app leuk vond</string>
 	<string name="pref_about">Over Router Keygen</string>
 	<string name="pref_about_desc">Router Keygen berekent paswoorden voor verschillende soorten routers\n\n
-			<a href="http://code.google.com/p/android-thomson-key-solver/">Project\'s Website</a>\n\nVersion: </string> <!-- UNTRANSLATED -->
+			<a href="http://code.google.com/p/android-thomson-key-solver/">Project Website</a>\n\nVersie: </string>
 	<string name="pref_msg_found">geselecteerd.</string>
 	<string name="pref_native">Primitieve Berekening</string>
 	<string name="pref_hinton_native">Berekenen op doel als de dictionary niet gevonden is.</string>
@@ -88,10 +88,10 @@
 	<string name="pref_thomson3g">Gebruik 3G voor Thomson</string>
 	<string name="pref_hinton_thomson3g">Sleutels ophalen van het internet.</string>
 	<string name="pref_hintoff_thomson3g">Gebruik dictionary om sleutels te genereren.</string>
-    <string name="pref_hinton_manual_mac">Manual input has also a MAC field</string> <!-- UNTRANSLATED -->
-    <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string> <!-- UNTRANSLATED -->
-    <string name="pref_thomson_section">Thomson Options</string> <!-- UNTRANSLATED -->
-    <string name="pref_manual_mac">MAC manual input</string> <!-- UNTRANSLATED -->
+    <string name="pref_hinton_manual_mac">Manuele invoer heeft ook een MAC veld.</string>
+    <string name="pref_hintoff_manual_mac">Manuele invoer heeft alleen een SSID veld.</string>
+    <string name="pref_thomson_section">Thomson Opties</string>
+    <string name="pref_manual_mac">MAC manuele invoer</string>
 	
 	<!-- ERROR MESSAGE STRINGS -->
 	<string name="msg_newthomson">Dat is een nieuwe Thomson router, deze sleutel kan niet berekend worden!</string>
@@ -129,8 +129,8 @@
     <string name="msg_err_unkown">Er is een onbekende error opgetreden.</string>
     <string name="msg_err_online_too_adv">De online versie van het dictionary is te geavanceerd voor dit programma.\nMogelijk is een update nodig.</string>
     <string name="err_misbuilt_apk">Uw APK is niet juist gecompileerd. Denk er aan eerst het primitieve gedeelte te compileren.</string>
-    <string name="msg_err_verizon_ssid">Error processing this SSID.</string> <!-- UNTRANSLATED -->
-    <string name="msg_err_saving_key_file">Error while saving file with the keys.</string> <!-- UNTRANSLATED -->
-    <string name="msg_saved_key_file">saved to the SD card.</string> <!-- UNTRANSLATED -->
-    <string name="pref_msg_no_network">There is no network access.</string> <!-- UNTRANSLATED -->
+    <string name="msg_err_verizon_ssid">Fout bij het verwerken van deze SSID.</string>
+    <string name="msg_err_saving_key_file">Fout bij het opslaan van de sleutels.</string>
+    <string name="msg_saved_key_file">opgeslagen op de SD kaart.</string>
+    <string name="pref_msg_no_network">Er is geen netwerkverbinding.</string>
 </resources>
