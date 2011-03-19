@@ -6,6 +6,7 @@
     <string name="app_name">Router Keygen</string>
     <string name="msg_welcome_title">Router Keygen</string>
     <string name="msg_welcome_text"> Obrigado por experimentar a aplicação Router Keygen. Se gostou da aplicação por favor considere a hipótese de comprar a versão Donativo. O link está no menu de preferências. O seu donativo irá motivar os autores a melhorar esta grande ferramenta open-source.</string>
+	<string name="msg_welcome_text_donate">Obrigado por ter comprado a versão paga de Router Keygen. O seu donativo irá motivar os autores a melhorar esta grande ferramenta open-source.</string>
     <string name="menu_scan">Pesquisa</string>
     <string name="menu_manual">Entrada Manual</string>
     <string name="menu_preferences">Preferências</string>

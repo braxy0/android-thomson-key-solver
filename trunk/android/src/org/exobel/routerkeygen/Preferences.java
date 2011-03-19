@@ -68,7 +68,7 @@ public class Preferences extends PreferenceActivity {
 	
 	private static final String folderSelectPref = "folderSelect";
 	private static final String VERSION = "2.4.0";
-	private static final String LAUNCH_DATE = "15/03/2011";
+	private static final String LAUNCH_DATE = "19/03/2011";
 
 
 	
