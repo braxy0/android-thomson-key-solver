@@ -55,7 +55,7 @@ public class NativeThomson extends KeygenThread{
 					resources.getString(R.string.msg_errnomatches)));
 			return;
 		}
-		handler.sendEmptyMessage(0);
+		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}
 
