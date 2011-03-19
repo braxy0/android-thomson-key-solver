@@ -53,7 +53,7 @@ public class Preferences extends PreferenceActivity {
 
 	ProgressDialog pbarDialog;
 	Downloader downloader;
-	int myProgress = 0, fileLen;
+	long myProgress = 0, fileLen;
 	long lastt, now = 0, downloadBegin = 0;
 	
 	byte[] dicVersion = new byte [2];
@@ -236,12 +236,19 @@ public class Preferences extends PreferenceActivity {
 				fileLen = msg.arg2;
 				if ( fileLen == 0 )
 					break;
-				long kbs =  (((myProgress- downloadBefore) / (now - downloadBegin))*1000/1024);
-				long eta = (fileLen - myProgress) / kbs / 1024;
+				
+				long kbs = 0;
+				try{
+					 kbs = (((myProgress- downloadBefore) / (now - downloadBegin))*1000/1024);
+					 
+				}catch(ArithmeticException e){
+					kbs = 0;
+				}
 				if(kbs == 0)
 					break;
-				
-				pbarDialog.setProgress(100 * myProgress/ fileLen);
+				long eta = (fileLen - myProgress) / kbs / 1024;
+				long progress = ( 100L * myProgress )/ fileLen;
+				pbarDialog.setProgress((int)progress);
 				pbarDialog.setMessage(getString(R.string.msg_dl_speed) + ": "
 						+ kbs + "kb/s\n"
 						+ getString(R.string.msg_dl_eta) + ": "
