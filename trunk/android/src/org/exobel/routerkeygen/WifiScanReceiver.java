@@ -27,7 +27,7 @@ class WiFiScanReceiver extends BroadcastReceiver {
 		if ( solver.wifi == null )
 			return;
 	    List<ScanResult> results = solver.wifi.getScanResults();
-	    List<WifiNetwork> list = new ArrayList<WifiNetwork>();
+	    ArrayList<WifiNetwork> list = new ArrayList<WifiNetwork>();
 	    Set<WifiNetwork> set = new TreeSet<WifiNetwork>();
 	    if ( results == null )/*He have had reports of this returning null instead of empty*/
 	    	return;

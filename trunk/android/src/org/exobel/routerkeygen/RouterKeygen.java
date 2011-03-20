@@ -4,8 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.exobel.routerkeygen.WifiNetwork.TYPE;
 
@@ -54,10 +54,10 @@ public class RouterKeygen extends Activity {
 	boolean wifi_state;
 	ListView scanResuls;
 	KeygenThread calculator;
-	List<String> list_key = null;
+	ArrayList<String> list_key = null;
 	BroadcastReceiver scanFinished;
 	BroadcastReceiver stateChanged;
-	List<WifiNetwork> vulnerable;
+	ArrayList<WifiNetwork> vulnerable;
 	WifiNetwork router;
 	long begin;
 	static final String TAG = "RouterKeygen";
@@ -106,6 +106,48 @@ public class RouterKeygen extends Activity {
 		});
 		stateChanged = new WifiStateReceiver(wifi);
 		scanFinished = new WiFiScanReceiver(this);
+	}
+	
+	protected void onSaveInstanceState (Bundle outState){	
+		try {
+			if ( calculator instanceof NativeThomson )
+			{
+				outState.putSerializable("warning", true);
+			}
+			outState.putSerializable("router", router);
+			outState.putSerializable("keys", list_key );
+			outState.putSerializable("networks", vulnerable );
+		}
+		catch(Exception e){}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void onRestoreInstanceState (Bundle savedInstanceState){
+		if ( savedInstanceState == null  )
+			return;
+		Boolean warning = (Boolean)savedInstanceState.getSerializable("warning");
+		if ( warning != null )
+		{
+			removeDialog(DIALOG_NATIVE_CALC);
+			if ( calculator != null )
+				calculator.stopRequested = true;
+		}
+		ArrayList<WifiNetwork> list_networks =(ArrayList<WifiNetwork>) savedInstanceState.getSerializable("networks");
+		if ( list_networks != null )
+		{
+			vulnerable = list_networks;
+			scanResuls.setAdapter(new WifiListAdapter(vulnerable, this));
+		}
+		WifiNetwork r = (WifiNetwork) savedInstanceState.getSerializable("warning");
+		if ( r != null )
+		{
+			router = r;
+		}
+		ArrayList<String> list_k =  (ArrayList<String>) savedInstanceState.getSerializable("keys");
+		if ( list_k != null )
+		{
+			list_key = list_k;
+		}
 	}
 
 	public void onStart() {
@@ -387,6 +429,7 @@ public class RouterKeygen extends Activity {
 
 
 	public boolean onCreateOptionsMenu(Menu menu) {
+
 		getMenuInflater().inflate(R.menu.wifi, menu);
 		return true;
 	}

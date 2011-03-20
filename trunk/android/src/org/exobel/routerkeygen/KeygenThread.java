@@ -2,7 +2,6 @@ package org.exobel.routerkeygen;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.res.Resources;
 import android.os.Handler;
@@ -13,7 +12,7 @@ public class KeygenThread extends Thread {
 	MessageDigest md;
 	WifiNetwork router;
 	boolean stopRequested = false;
-	List<String> pwList;
+	ArrayList<String> pwList;
 	static final int RESULTS_READY = 1000;
 	static final int ERROR_MSG = 1001;
 	Handler handler;
@@ -29,7 +28,7 @@ public class KeygenThread extends Thread {
 	}
 
 
-	public List<String> getResults() {
+	public ArrayList<String> getResults() {
 		return pwList;
 	}
 
