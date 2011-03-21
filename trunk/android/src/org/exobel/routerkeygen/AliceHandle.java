@@ -2,7 +2,6 @@ package org.exobel.routerkeygen;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -12,7 +11,7 @@ import org.xml.sax.helpers.DefaultHandler;
 class AliceHandle extends DefaultHandler implements Serializable{
 	private static final long serialVersionUID = -1867841551140131246L;
 	String alice;
-	List <AliceMagicInfo> supportedAlice;
+	ArrayList<AliceMagicInfo> supportedAlice;
 
 	public AliceHandle(String alice){
 		super();

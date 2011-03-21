@@ -64,6 +64,7 @@ public class RouterKeygen extends Activity {
 		final String welcomeScreenShownPref = "welcomeScreenShown";
 
 	/** Called when the activity is first created. */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -106,23 +107,6 @@ public class RouterKeygen extends Activity {
 		});
 		stateChanged = new WifiStateReceiver(wifi);
 		scanFinished = new WiFiScanReceiver(this);
-	}
-	
-	protected void onSaveInstanceState (Bundle outState){	
-		try {
-			if ( calculator instanceof NativeThomson )
-			{
-				outState.putSerializable("warning", true);
-			}
-			outState.putSerializable("router", router);
-			outState.putSerializable("keys", list_key );
-			outState.putSerializable("networks", vulnerable );
-		}
-		catch(Exception e){}
-	}
-
-	@SuppressWarnings("unchecked")
-	protected void onRestoreInstanceState (Bundle savedInstanceState){
 		if ( savedInstanceState == null  )
 			return;
 		Boolean warning = (Boolean)savedInstanceState.getSerializable("warning");
@@ -143,12 +127,28 @@ public class RouterKeygen extends Activity {
 		{
 			router = r;
 		}
+		else
+			router = new WifiNetwork("","",0,"",this);
 		ArrayList<String> list_k =  (ArrayList<String>) savedInstanceState.getSerializable("keys");
 		if ( list_k != null )
 		{
 			list_key = list_k;
 		}
 	}
+	
+	protected void onSaveInstanceState (Bundle outState){	
+		try {
+			if ( calculator instanceof NativeThomson )
+			{
+				outState.putSerializable("warning", true);
+			}
+			outState.putSerializable("router", router);
+			outState.putSerializable("keys", list_key );
+			outState.putSerializable("networks", vulnerable );
+		}
+		catch(Exception e){}
+	}
+
 
 	public void onStart() {
 		super.onStart();
@@ -172,9 +172,7 @@ public class RouterKeygen extends Activity {
 			removeDialog(DIALOG_KEY_LIST);
 			removeDialog(DIALOG_MANUAL_CALC); 
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		catch (Exception e) {}
 	}
 	ProgressDialog progressDialog;
 	private static final int DIALOG_THOMSON3G = 0; 

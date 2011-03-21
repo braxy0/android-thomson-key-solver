@@ -1,7 +1,7 @@
 package org.exobel.routerkeygen;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -11,7 +11,7 @@ import android.content.Context;
 
 public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 9017619358450514547L;
 	String ssid;
 	String mac;
 	String ssidSubpart;
@@ -19,7 +19,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	boolean supported;
 	boolean newThomson;
 	int level;
-	List <AliceMagicInfo> supportedAlice;
+	ArrayList <AliceMagicInfo> supportedAlice;
 	TYPE type;
 	static enum TYPE {
 		THOMSON , DLINK , DISCUS , VERIZON ,
