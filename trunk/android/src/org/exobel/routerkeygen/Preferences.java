@@ -102,6 +102,7 @@ public class Preferences extends PreferenceActivity {
 						return true;
 					}
 				});
+		
 		findPreference("about").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
@@ -357,7 +358,6 @@ public class Preferences extends PreferenceActivity {
 
 
 	protected Dialog onCreateDialog(int id) {
-		Dialog dialog = null;
 		AlertDialog.Builder builder = new Builder(this);
 		switch(id) {
 			case DIALOG_LOAD_FOLDER:
@@ -593,8 +593,7 @@ public class Preferences extends PreferenceActivity {
 				return pbarDialog;
 			}
 		}
-		dialog = builder.show();
-		return dialog;
+		return builder.create();
 	}
 };
 

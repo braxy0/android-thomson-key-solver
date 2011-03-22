@@ -297,7 +297,7 @@ public class RouterKeygen extends Activity {
 				});
 				
 				builder.setView(layout);
-				return builder.show();
+				return builder.create();
 			}
 			case DIALOG_MANUAL_CALC: {
 				AlertDialog.Builder builder = new Builder(this); 
@@ -386,7 +386,7 @@ public class RouterKeygen extends Activity {
 				});
 				
 				builder.setView(layout);
-				return builder.show();
+				return builder.create();
 			}
 			case DIALOG_NATIVE_CALC: {
 				progressDialog = new ProgressDialog(RouterKeygen.this);
