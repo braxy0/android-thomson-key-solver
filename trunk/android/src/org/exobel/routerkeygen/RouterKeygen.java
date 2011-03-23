@@ -529,6 +529,12 @@ public class RouterKeygen extends Activity {
 							break;	
 				case WLAN6: RouterKeygen.this.calculator = 
 							new Wlan6Keygen(handler,getResources());
+							break;
+				case TECOM: RouterKeygen.this.calculator = 
+							new TecomKeygen(handler,getResources());
+							break;
+				case INFOSTRADA: RouterKeygen.this.calculator = 
+							new InfostradaKeygen(handler,getResources());
 							break;			
 			}
 		}catch(LinkageError e){

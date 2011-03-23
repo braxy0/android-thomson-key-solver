@@ -225,6 +225,12 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.TECOM;
 			return true;
 		}
+		if ( ssid.matches("InfostradaWiFi-[0-9a-zA-Z]{6}") )
+		{
+			ssidSubpart = ssid;
+			type = TYPE.INFOSTRADA;
+			return true;
+		}
 		return false;
 	}
 	
