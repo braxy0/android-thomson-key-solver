@@ -40,6 +40,7 @@ public class Wlan6Keygen extends KeygenThread {
 	        bssidLastByte[0] = (char)(bssidLastByte[0] - 55);
 	    if(bssidLastByte[1] >= 'A' )
 	        bssidLastByte[1] = (char)(bssidLastByte[1] - 55);
+	    
 		for ( int i = 0; i < 10 ; ++i )
 		{
 			/*Do not change the order of this instructions*/

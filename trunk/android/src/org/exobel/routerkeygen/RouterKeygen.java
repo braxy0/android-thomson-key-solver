@@ -512,7 +512,7 @@ public class RouterKeygen extends Activity {
 				case ALICE:	 RouterKeygen.this.calculator = 
 							new AliceKeygen(handler,getResources());
 							break;
-				case WLAN4:	 RouterKeygen.this.calculator = 
+				case COMTREND_4X:	 RouterKeygen.this.calculator = 
 							new Wlan4Keygen(handler,getResources());
 							break;
 				case HUAWEI: RouterKeygen.this.calculator = 

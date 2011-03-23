@@ -18,10 +18,6 @@ import android.os.Message;
 
 public class ThomsonKeygen extends KeygenThread {
 
-	/*
-	 * Thomson Keygen Working variables. Here to save speed as this
-	 *  thread is created much sooner than needed.
-	 */
 	byte[] cp;
 	byte[] hash;
 	byte[] entry;

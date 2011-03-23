@@ -24,8 +24,8 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	static enum TYPE {
 		THOMSON , DLINK , DISCUS , VERIZON ,
 		EIRCOM , PIRELLI , TELSEY , ALICE ,
-		WLAN4 , HUAWEI, WLAN2 , ONO_WEP ,
-		SKY_V1 , WLAN6};
+		COMTREND_4X , HUAWEI, WLAN2 , ONO_WEP ,
+		SKY_V1 , WLAN6 ,TECOM , INFOSTRADA };
 	public WifiNetwork(String ssid, String mac, int level , String enc , Context con ){
 		this.ssid = ssid;
 		this.mac = mac.toUpperCase();
@@ -65,7 +65,9 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		     ( ssid.startsWith("Otenet") && ssid.length() == 12 ) ||
 		     ( ssid.startsWith("Bbox-") && ssid.length() == 11 ) ||
 		     ( ssid.startsWith("DMAX") && ssid.length() == 10 )  || 
-		     ( ssid.startsWith("privat") && ssid.length() == 12 ) )
+		     ( ssid.startsWith("privat") && ssid.length() == 12 ) ||
+		     ( ssid.startsWith("TN_private_") && ssid.length() == 17 ) || 
+		     ( ssid.startsWith("Cyta") && ssid.length() == 10 ))
 		{
 			ssidSubpart = ssid.substring(ssid.length()-6);
 			if ( !mac.equals("") )
@@ -158,7 +160,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			  ( ssid.startsWith("JAZZTEL_") && ssid.length() == 12 ))
 		{
 			ssidSubpart = ssid.substring(ssid.length()-4);
-			type = TYPE.WLAN4;
+			type = TYPE.COMTREND_4X;
 			return true;
 		}
 		if ( ( ssid.startsWith("INFINITUM") && ssid.length() == 13 ) ||
@@ -215,6 +217,12 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		{
 			ssidSubpart = ssid.substring(ssid.length()-5);
 			type = TYPE.SKY_V1;
+			return true;
+		}
+		if ( ssid.matches("TECOM-AH4021-[0-9a-zA-Z]{6}|TECOM-AH4222-[0-9a-zA-Z]{6}") )
+		{
+			ssidSubpart = ssid;
+			type = TYPE.TECOM;
 			return true;
 		}
 		return false;
