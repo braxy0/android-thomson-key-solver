@@ -24,7 +24,7 @@ public class InfostradaKeygen extends KeygenThread {
 					resources.getString(R.string.msg_errpirelli)));
 			return;
 		}
-		pwList.add("2"+router.getMac().toLowerCase());
+		pwList.add("2"+router.getMac().toUpperCase());
 		handler.sendEmptyMessage(RESULTS_READY);
 		return;
 	}

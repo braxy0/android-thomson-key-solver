@@ -20,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -305,6 +306,12 @@ public class RouterKeygen extends Activity {
 				final View layout = inflater.inflate(R.layout.manual_input,
                         (ViewGroup) findViewById(R.id.manual_root));
 				builder.setTitle(getString(R.string.menu_manual));
+				/*Need to do this to renew the dialog to show the MAC input*/
+				builder.setOnCancelListener(new OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						removeDialog(DIALOG_MANUAL_CALC);
+					}
+				});
 				String[] routers = getResources().getStringArray(R.array.supported_routers);
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
 										android.R.layout.simple_dropdown_item_1line, routers);

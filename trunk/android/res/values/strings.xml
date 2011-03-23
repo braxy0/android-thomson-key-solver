@@ -159,6 +159,11 @@
         <item>WLAN</item>
 		<item>JAZZTEL_</item>
         <item>SKY</item>
+        <item>TECOM-AH4222-</item>
+        <item>TECOM-AH4021-</item>
+        <item>InfostradaWiFi-</item>
+        <item>TN_private_</item>
+        <item>Cyta</item>
     </string-array>
 </resources>
 
