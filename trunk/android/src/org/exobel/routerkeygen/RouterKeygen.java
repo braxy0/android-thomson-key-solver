@@ -152,17 +152,20 @@ public class RouterKeygen extends Activity {
 
 
 	public void onStart() {
-		super.onStart();
-		getPrefs();
-		if ( wifiOn )
-		{
-			if ( !wifi.setWifiEnabled(true))
-				Toast.makeText( RouterKeygen.this , getString(R.string.msg_wifibroken),
-						Toast.LENGTH_SHORT).show();
-			else
-				wifi_state = true;
+		try{ 
+			super.onStart();
+			getPrefs();
+			if ( wifiOn )
+			{
+				if ( !wifi.setWifiEnabled(true))
+					Toast.makeText( RouterKeygen.this , getString(R.string.msg_wifibroken),
+							Toast.LENGTH_SHORT).show();
+				else
+					wifi_state = true;
+			}
+			scan();	
 		}
-		scan();
+		catch (Exception e) {}
 	}
 
 	public void onStop() {
@@ -318,7 +321,7 @@ public class RouterKeygen extends Activity {
 				final AutoCompleteTextView edit = (AutoCompleteTextView) layout.findViewById(R.id.manual_autotext);
 				edit.setAdapter(adapter);
 				edit.setThreshold(1);
-				InputFilter filterSsid = new InputFilter() { 
+				InputFilter filterMAC = new InputFilter() { 
 			        public CharSequence filter(CharSequence source, int start, int end, 
 			        		Spanned dest, int dstart, int dend) { 
 			        		                for (int i = start; i < end; i++) { 
@@ -330,7 +333,7 @@ public class RouterKeygen extends Activity {
 			        		                return null; 
 			        		        }
 	     		};
-			    edit.setFilters(new InputFilter[]{filterSsid});
+			    edit.setFilters(new InputFilter[]{ filterMAC});
 			    if ( manualMac )
 			    {
 			    	layout.findViewById(R.id.manual_mac_root).setVisibility(View.VISIBLE);
@@ -341,7 +344,7 @@ public class RouterKeygen extends Activity {
 				    EditText mac4 = (EditText) layout.findViewById(R.id.input_mac_pair4);
 				    EditText mac5 = (EditText) layout.findViewById(R.id.input_mac_pair5);
 				    EditText mac6 = (EditText) layout.findViewById(R.id.input_mac_pair6);
-	
+		     		InputFilter maxSize = new InputFilter.LengthFilter(2);
 	        		InputFilter filterMac = new InputFilter() { 
 				        public CharSequence filter(CharSequence source, int start, int end, 
 				        		Spanned dest, int dstart, int dend) { 
@@ -354,12 +357,12 @@ public class RouterKeygen extends Activity {
 				        		                return null; 
 				        		        }
 				        		}; 
-				    mac1.setFilters(new InputFilter[]{filterMac});
-				    mac2.setFilters(new InputFilter[]{filterMac});
-				    mac3.setFilters(new InputFilter[]{filterMac});
-				    mac4.setFilters(new InputFilter[]{filterMac});
-				    mac5.setFilters(new InputFilter[]{filterMac});
-				    mac6.setFilters(new InputFilter[]{filterMac});
+				    mac1.setFilters(new InputFilter[]{filterMac , maxSize});
+				    mac2.setFilters(new InputFilter[]{filterMac , maxSize});
+				    mac3.setFilters(new InputFilter[]{filterMac , maxSize});
+				    mac4.setFilters(new InputFilter[]{filterMac , maxSize});
+				    mac5.setFilters(new InputFilter[]{filterMac , maxSize});
+				    mac6.setFilters(new InputFilter[]{filterMac , maxSize});
 			    }
 				builder.setNeutralButton(getString(R.string.bt_manual_calc), new OnClickListener() {			
 					public void onClick(DialogInterface dialog, int which) {
