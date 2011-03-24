@@ -248,6 +248,10 @@ public class ThomsonKeygen extends KeygenThread {
 				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 						resources.getString(R.string.msg_err_native)));
 				return false;
+			}catch (LinkageError e) {
+				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+						resources.getString(R.string.err_misbuilt_apk)));
+				return false;
 			}
 			if ( stopRequested )
 				return false;
