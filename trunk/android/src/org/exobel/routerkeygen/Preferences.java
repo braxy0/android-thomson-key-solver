@@ -210,15 +210,21 @@ public class Preferences extends PreferenceActivity {
 				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
 				removeDialog(DIALOG_CHECKING_DOWNLOAD);
 				removeDialog(DIALOG_DOWNLOAD);
+				if (!isFinishing()) {
 				showDialog(DIALOG_ERROR);
+				}
 			break;
 			case 0:
 				removeDialog(DIALOG_DOWNLOAD);
-				showDialog(DIALOG_ERROR_NOSD);
+				if (!isFinishing()) {
+					showDialog(DIALOG_ERROR_NOSD);
+				}
 				break;
 			case 1:
 				removeDialog(DIALOG_DOWNLOAD);
-				showDialog(DIALOG_ERROR_NOMEMORYONSD);
+				if (!isFinishing()) {
+					showDialog(DIALOG_ERROR_NOMEMORYONSD);
+				}
 				break;
 			case 2:
 				downloadBefore = msg.arg1;
@@ -226,7 +232,7 @@ public class Preferences extends PreferenceActivity {
 				break;
 			case 3:
 				removeDialog(DIALOG_DOWNLOAD);
-				checkDownload();
+				checkDownload();				
 				break;
 			case 4:
 				now = System.currentTimeMillis();
@@ -258,12 +264,16 @@ public class Preferences extends PreferenceActivity {
 				break;
 			case 5:
 				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-				showDialog(DIALOG_ERROR_TOO_ADVANCED);
+				if (!isFinishing()) {
+					showDialog(DIALOG_ERROR_TOO_ADVANCED);
+				}
 				break;
 			case 6:
 				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-				Toast.makeText(getBaseContext(),getResources().getString(R.string.msg_dic_updated),
-						Toast.LENGTH_SHORT).show();
+				if (!isFinishing()) {
+					Toast.makeText(getBaseContext(),getResources().getString(R.string.msg_dic_updated),
+							Toast.LENGTH_SHORT).show();
+				}
 				break;
 			case 7: 
 				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
@@ -271,12 +281,17 @@ public class Preferences extends PreferenceActivity {
 				break;
 			case 8: 
 				removeDialog(DIALOG_CHECKING_DOWNLOAD);
+				if (!isFinishing()) {
 				Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_err_rename_dic),
 						Toast.LENGTH_SHORT).show();
+				}
 				break;
+				
 			case 9: 
 				removeDialog(DIALOG_CHECKING_DOWNLOAD);
-				Toast.makeText(Preferences.this, R.string.msg_dic_updated_finished, Toast.LENGTH_SHORT).show();
+				if (!isFinishing()) {
+					Toast.makeText(Preferences.this, R.string.msg_dic_updated_finished, Toast.LENGTH_SHORT).show();
+				}
 				break;
 			}
 		}
