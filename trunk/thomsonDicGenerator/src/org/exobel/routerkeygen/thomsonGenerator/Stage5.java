@@ -1,6 +1,5 @@
 package org.exobel.routerkeygen.thomsonGenerator;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;

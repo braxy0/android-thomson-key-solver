@@ -1,9 +1,11 @@
 package org.exobel.routerkeygen.thomsonGenerator;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class Stage4 {
 	
@@ -25,6 +27,17 @@ public class Stage4 {
 		short firstByte;
 		byte [] fileData = new  byte [300000];
 		byte [] table = new byte[1280];
+		RandomAccessFile webDicIndex = null;
+		try {
+			File webDic = new File("webdic.dic");
+			webDic.createNewFile();
+			webDicIndex = new RandomAccessFile(webDic, "rw");
+			webDicIndex.setLength(1282 + 256 * 1024);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		//size of the table
 		//1282 = 256 * ( 1 + 4) + 2
 		// 1byte for header and 4 for address. 2bytes for dictionary version control
@@ -63,8 +76,10 @@ public class Stage4 {
 		try {
 			fos = new FileOutputStream("RouterKeygen.dic");
 			fos.write(version);
+			webDicIndex.write(version);
 			entry.toFile(table);
 			fos.write(table);
+			webDicIndex.write(table);
 		} catch (Exception e) {
 			System.out.println("Error!" + e.getMessage());
 			return;
@@ -78,33 +93,23 @@ public class Stage4 {
            	fileName = AlphabetCodes.charect[a] + AlphabetCodes.charect[b] + ".dat";
            	try {
 					fis = new FileInputStream(fileName);
-				} catch (FileNotFoundException e) {
-		            System.out.println("Error!" + e);
-					return;
-				}
-				int count = 0;
-				
-				try {
+					int count = 0;
 					count = fis.read(fileData);
 					fis.close();
-				} catch (IOException e) {
-					System.out.println("Error!" + e);
-					return;
-				}
-				if ( count == -1 )
-				{
-					System.out.println("Error while reading " + fileName + "!");
-					return;
-				}
-				try {
+					if ( count == -1 )
+					{
+						System.out.println("Error while reading " + fileName + "!");
+						return;
+					}
 					fos.write(fileData , 0 , count);
+					webDicIndex.write(fileData, 0,1024);
+					progress = (c *100)>>8;
+					System.out.println("File " + fileName + " processed " +
+				           "  Total done: " + progress + "% " );
 				} catch (IOException e) {
 					System.out.println("Error!" + e);
 					return;
 				}
-				progress = (c *100)>>8;
-				System.out.println("File " + fileName + " processed " +
-			           "  Total done: " + progress + "% " );
 			}
 		}
 		try {
