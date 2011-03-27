@@ -98,7 +98,8 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.EIRCOM;
 			return true;
 		}
-		if ( ssid.length() == 5  && ( mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44") ||
+		if ( ssid.length() == 5  && 
+			  ( mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44") ||
 				mac.startsWith("00:18:01") || mac.startsWith("00:20:E0") ||
 				mac.startsWith("00:0F:B3") || mac.startsWith("00:1E:A7") ||
 				mac.startsWith("00:15:05") || mac.startsWith("00:24:7B") ||
@@ -156,25 +157,26 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 				mac = supportedAlice.get(0).mac;
 			return true;
 		}
-		if (  ( ssid.startsWith("WLAN_") && ssid.length() == 9 ) ||
-			  ( ssid.startsWith("JAZZTEL_") && ssid.length() == 12 ))
+		if (  ssid.startsWith("WLAN_[0-9a-zA-Z]{4}|JAZZTEL_[0-9a-zA-Z]{4}") &&
+		    ( mac.startsWith("00:1F:A4") || mac.startsWith("64:68:0C") ||
+			  mac.startsWith("00:1D:20") ) )
 		{
 			ssidSubpart = ssid.substring(ssid.length()-4);
 			type = TYPE.COMTREND_4X;
 			return true;
 		}
-		if ( ( ssid.startsWith("INFINITUM") && ssid.length() == 13 ) ||
-				mac.startsWith("00:25:9E") || mac.startsWith("00:25:68") ||
-				mac.startsWith("00:22:A1") || mac.startsWith("00:1E:10") ||
-				mac.startsWith("00:18:82") || mac.startsWith("00:0F:F2") ||
-				mac.startsWith("00:E0:FC") || mac.startsWith("28:6E:D4") ||
-				mac.startsWith("54:A5:1B") || mac.startsWith("F4:C7:14") ||
-				mac.startsWith("28:5F:DB") || mac.startsWith("30:87:30") ||
-				mac.startsWith("4C:54:99") || mac.startsWith("40:4D:8E") ||
-				mac.startsWith("64:16:F0") || mac.startsWith("78:1D:BA") ||
-				mac.startsWith("84:A8:E4") || mac.startsWith("04:C0:6F") ||
-				mac.startsWith("5C:4C:A9") || mac.startsWith("1C:1D:67") ||
-				mac.startsWith("CC:96:A0") || mac.startsWith("20:2B:C1"))
+		if ( ssid.matches("INFINITUM[0-9a-zA-Z]{4}") && ( 
+			mac.startsWith("00:25:9E") || mac.startsWith("00:25:68") ||
+			mac.startsWith("00:22:A1") || mac.startsWith("00:1E:10") ||
+			mac.startsWith("00:18:82") || mac.startsWith("00:0F:F2") ||
+			mac.startsWith("00:E0:FC") || mac.startsWith("28:6E:D4") ||
+			mac.startsWith("54:A5:1B") || mac.startsWith("F4:C7:14") ||
+			mac.startsWith("28:5F:DB") || mac.startsWith("30:87:30") ||
+			mac.startsWith("4C:54:99") || mac.startsWith("40:4D:8E") ||
+			mac.startsWith("64:16:F0") || mac.startsWith("78:1D:BA") ||
+			mac.startsWith("84:A8:E4") || mac.startsWith("04:C0:6F") ||
+			mac.startsWith("5C:4C:A9") || mac.startsWith("1C:1D:67") ||
+			mac.startsWith("CC:96:A0") || mac.startsWith("20:2B:C1") ) )
 		{
 			if ( ssid.startsWith("INFINITUM")  )
 				ssidSubpart = ssid.substring(ssid.length()-4);

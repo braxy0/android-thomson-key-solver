@@ -14,7 +14,6 @@ public class Wlan4Keygen extends KeygenThread {
 		super(h, res);
 	}
 	
-	
 	static final String magic = "bcgbghgg";
 	public void run(){
 		if ( router == null)
