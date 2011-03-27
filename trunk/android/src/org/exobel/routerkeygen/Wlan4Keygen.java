@@ -35,9 +35,11 @@ public class Wlan4Keygen extends KeygenThread {
 		String macMod = router.getMac().substring(0,8) + router.getEssid();
 		md.reset();
 		try {
-			md.update(magic.getBytes("ASCII"));
+			if ( !router.getMac().toUpperCase().startsWith("001FA4") )
+				md.update(magic.getBytes("ASCII"));
 			md.update(macMod.getBytes("ASCII"));
-			md.update(router.getMac().getBytes("ASCII"));
+			if ( !router.getMac().toUpperCase().startsWith("001FA4") )
+				md.update(router.getMac().getBytes("ASCII"));
 			byte [] hash = md.digest();
 			pwList.add(StringUtils.getHexString(hash).substring(0,20).toUpperCase());
 			handler.sendEmptyMessage(RESULTS_READY);
