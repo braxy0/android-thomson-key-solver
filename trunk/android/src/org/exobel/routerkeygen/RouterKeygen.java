@@ -1,3 +1,4 @@
+
 package org.exobel.routerkeygen;
 
 import java.io.BufferedWriter;
@@ -123,7 +124,7 @@ public class RouterKeygen extends Activity {
 			vulnerable = list_networks;
 			scanResuls.setAdapter(new WifiListAdapter(vulnerable, this));
 		}
-		WifiNetwork r = (WifiNetwork) savedInstanceState.getSerializable("warning");
+		WifiNetwork r = (WifiNetwork) savedInstanceState.getSerializable("router");
 		if ( r != null )
 		{
 			router = r;

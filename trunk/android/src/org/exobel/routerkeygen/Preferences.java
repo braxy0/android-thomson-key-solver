@@ -9,6 +9,7 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.Stack;
@@ -293,6 +294,12 @@ public class Preferences extends PreferenceActivity {
 					Toast.makeText(Preferences.this, R.string.msg_dic_updated_finished, Toast.LENGTH_SHORT).show();
 				}
 				break;
+			case 10:
+				removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+				if (!isFinishing()) {
+					Toast.makeText(Preferences.this, R.string.msg_errthomson3g, Toast.LENGTH_SHORT).show();
+				}
+				break;
 			}
 		}
 	};
@@ -518,10 +525,14 @@ public class Preferences extends PreferenceActivity {
 												return;
 											}
 											messHand.sendEmptyMessage(7);
+											return;
 											
-										} 
-										catch ( FileNotFoundException e ){
+										} catch ( FileNotFoundException e ){
 											messHand.sendEmptyMessage(7);
+											return;
+										} catch ( UnknownHostException e ){
+											messHand.sendEmptyMessage(10);
+											return;
 										}
 										catch (Exception e)
 										{
@@ -561,7 +572,7 @@ public class Preferences extends PreferenceActivity {
 				pbarDialog.setMessage(getString(R.string.msg_dl_estimating));
 				pbarDialog.setMax(100);
 				pbarDialog.setTitle(R.string.msg_dl_dlingdic);
-				pbarDialog.setCancelable(false);
+				pbarDialog.setCancelable(true);
 				pbarDialog.setOnDismissListener(new OnDismissListener() {
 					public void onDismiss(DialogInterface dialog) {
 						if ( downloader != null )
