@@ -63,7 +63,7 @@ public class RouterKeygen extends Activity {
 	WifiNetwork router;
 	long begin;
 	static final String TAG = "RouterKeygen";
-		final String welcomeScreenShownPref = "welcomeScreenShown";
+	static final String welcomeScreenShownPref = "welcomeScreenShown";
 
 	/** Called when the activity is first created. */
 	@SuppressWarnings("unchecked")

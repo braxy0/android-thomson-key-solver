@@ -45,31 +45,13 @@ public class SkyV1Keygen extends KeygenThread{
 		md.update(router.getMac().getBytes());
 		byte [] hash = md.digest();
 		String key ="";
-		int index = hash[1] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		index = hash[3] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		index = hash[5] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		index = hash[7] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		index = hash[9] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		index = hash[11] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		index = hash[13] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		index = hash[15] & 0xFF;
-		index %= 26;
-		key += ALPHABET.substring(index,index+1 );
-		
+		for ( int i = 1 ; i <= 15 ; i += 2 )
+		{
+			int index = hash[i] & 0xFF;
+			index %= 26;
+			key += ALPHABET.substring(index,index+1 );
+		}
+
 		pwList.add(key);
 		handler.sendEmptyMessage(RESULTS_READY);
 		return;
