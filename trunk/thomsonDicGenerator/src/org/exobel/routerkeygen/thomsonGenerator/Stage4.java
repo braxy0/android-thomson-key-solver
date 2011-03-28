@@ -32,7 +32,7 @@ public class Stage4 {
 			File webDic = new File("webdic.dic");
 			webDic.createNewFile();
 			webDicIndex = new RandomAccessFile(webDic, "rw");
-			webDicIndex.setLength(1282 + 256 * 1024);
+			webDicIndex.setLength(1024 + 256 * 768);
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (IOException e) {
@@ -76,10 +76,11 @@ public class Stage4 {
 		try {
 			fos = new FileOutputStream("RouterKeygen.dic");
 			fos.write(version);
-			webDicIndex.write(version);
 			entry.toFile(table);
 			fos.write(table);
-			webDicIndex.write(table);
+			entry.toWebDic( table );
+			webDicIndex.write(table , 0 , 1024);
+			webDicIndex.close();
 		} catch (Exception e) {
 			System.out.println("Error!" + e.getMessage());
 			return;
@@ -102,7 +103,6 @@ public class Stage4 {
 						return;
 					}
 					fos.write(fileData , 0 , count);
-					webDicIndex.write(fileData, 0,1024);
 					progress = (c *100)>>8;
 					System.out.println("File " + fileName + " processed " +
 				           "  Total done: " + progress + "% " );

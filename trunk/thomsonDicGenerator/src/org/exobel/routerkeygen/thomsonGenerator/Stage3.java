@@ -1,8 +1,10 @@
 package org.exobel.routerkeygen.thomsonGenerator;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 
 
@@ -20,6 +22,20 @@ public class Stage3 {
 		int c = 0;
 		byte [] fileData = new  byte [300000];
 		byte [] outputData = new  byte [300000];
+		byte [] webDicTable = new byte[768]; 
+		RandomAccessFile webDicIndex = null;
+		try {
+			File webDic = new File("webdic.dic");
+			webDic.delete();
+			webDic.createNewFile();
+			webDicIndex = new RandomAccessFile(webDic, "rw");
+			webDicIndex.setLength(1024 + 256 * 768);
+			webDicIndex.seek(1024);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		for(int a = 0; a < AlphabetCodes.charect.length; a++)
         {
             for(int b = 0; b < AlphabetCodes.charect.length; b++ , c++)
@@ -66,7 +82,13 @@ public class Stage3 {
 					address += 2;
 				}
 				entry.toFile(outputData);
+				entry.toWebDic(webDicTable);
 				files.sendFile(fileName, outputData , address);
+				try {
+					webDicIndex.write(webDicTable);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				progress = (c *100)>>8;
 				System.out.println("File " + fileName + " processed " +
 				           "  Total done: " + progress + "% " );
