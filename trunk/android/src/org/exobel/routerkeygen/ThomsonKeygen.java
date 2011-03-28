@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -87,38 +88,81 @@ public class ThomsonKeygen extends KeygenThread {
 		return;
 	}
 	private boolean internetCalc(){
-		DataInputStream onlineFile = null;
-		int lenght =0 ;
-		URL url;
-		try {
-			url = new URL(onlineDict + router.getEssid().substring(0, 2).toLowerCase() + "/" + 
-										router.getEssid().substring(2, 4).toLowerCase() + ".dat");
+	try{
+			DataInputStream onlineFile = null;
+			int lenght =0 ;
+			URL url;
+			InputStream fis = resources.openRawResource(R.raw.webdic);
+			//ZipInputStream fis = new ZipInputStream(file);
+			//fis.getNextEntry();
+			if ( fis.read(table , 0 , 1024) == -1 )
+			{
+				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+						resources.getString(R.string.msg_err_webdic_table)));
+				errorDict = true;
+				return false;
+			}
+			int totalOffset = 0;
+			int offset = 0;
+			int lastLength = 0 ;
+			int i = ( 0xFF &routerESSID[0] )*4;
+			offset =( (0xFF & table[i]) << 24 ) | ( (0xFF & table[i + 1])  << 16 ) |
+					( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
+			if ( i != 1019 ) // routerESSID[0] != 0xFF
+				lastLength = ( (0xFF & table[i + 4]) << 24 ) | ( (0xFF & table[i + 5])  << 16 ) |
+					( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
+			totalOffset += offset;
+			fis.skip((i/4)*768);
+			if ( fis.read(table,0,768) == -1 )
+			{
+				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+						resources.getString(R.string.msg_err_webdic_table)));
+				errorDict = true;
+				return false;
+			}	
+			i = ( 0xFF &routerESSID[1] )*3;
+			offset =( (0xFF & table[i])  << 16 ) |
+					( (0xFF & table[i + 1 ])  << 8 ) | (0xFF & table[i + 2]);
+			/*There's no check here because humans are lazy people and because it doesn't matter*/
+			lenght =  ( (0xFF & table[i + 3])  << 16 ) |
+					( (0xFF & table[i + 4])  << 8 ) | (0xFF & table[i + 5]);
+			totalOffset += offset;
+			lenght -= offset;
+			if ( ( lastLength != 0 ) && ( (0xFF & routerESSID[1] ) == 0xFF ) )
+			{
+				/*Only for SSID starting with XXFF. We use the next item on the main table
+			 	to know the length of the sector we are looking for. */
+				lastLength -= totalOffset;
+				lenght = lastLength;
+			}
+			if ( ( (0xFF & routerESSID[0] ) == 0xFF ) && ( (0xFF & routerESSID[1] ) == 0xFF  ) )
+			{
+			 /*Only for SSID starting with FFFF as we don't have a marker of the end.*/
+					lenght = 2000;
+			}
+			url = new URL("http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic");
 			URLConnection con= url.openConnection();
+			con.setRequestProperty("Range", "bytes="  + totalOffset + "-");
 			onlineFile = new DataInputStream(con.getInputStream());
-			lenght = con.getContentLength();
-		} catch (IOException e1) {}
-		
-		if ( onlineFile == null )
-		{
+			if ( onlineFile == null )
+			{
+				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+						resources.getString(R.string.msg_errthomson3g)));
+				return false;
+			}
+			len = 0;
+			this.entry = new byte[lenght];
+			if ( ( len = onlineFile.read(this.entry , 0 , lenght ) ) != -1 ){
+				lenght = len;;
+			}
+			onlineFile.close();
+			return thirdDic();
+		} catch ( IOException e) {
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-					resources.getString(R.string.msg_errthomson3g)));
+					resources.getString(R.string.msg_err_webdic_table)));
+			errorDict = true;
 			return false;
 		}
-		this.entry = new byte[2000];
-		len = 0;
-		while ( len < lenght )
-		try {
-			Thread.sleep(10);
-			if ( ( len += onlineFile.read(this.entry , len , 2000 - len ) ) == -1 ){
-				len = lenght;
-				onlineFile.close();
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {}
-		
-		return thirdDic();
 	}
 
 	private boolean localCalc(){
