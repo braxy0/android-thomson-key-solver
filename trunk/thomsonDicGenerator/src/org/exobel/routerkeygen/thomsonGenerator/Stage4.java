@@ -49,8 +49,10 @@ public class Stage4 {
            	fileName = AlphabetCodes.charect[a] + AlphabetCodes.charect[b] + ".dat";
 			firstByte = (short) (( AlphabetCodes.charectCode[a] << 4 ) | AlphabetCodes.charectCode[b]);
             entry.addEntry(firstByte, address);
+            File fileDat;
            	try {
-					fis = new FileInputStream(fileName);
+           			fileDat = new File(fileName);
+					fis = new FileInputStream(fileDat);
 				} catch (FileNotFoundException e) {
 		            System.out.println("Error!" + e);
 					return;
@@ -58,6 +60,7 @@ public class Stage4 {
 				int count = 0;
 				
 				try {
+					fileDat.deleteOnExit();
 					count = fis.read(fileData);
 					fis.close();
 				} catch (IOException e) {
