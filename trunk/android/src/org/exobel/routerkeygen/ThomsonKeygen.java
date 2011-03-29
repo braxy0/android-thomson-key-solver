@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.zip.ZipInputStream;
 
 import android.content.res.Resources;
 import android.os.Environment;
@@ -32,7 +33,6 @@ public class ThomsonKeygen extends KeygenThread {
 	boolean errorDict;
 	int len = 0;
 	String folderSelect;
-	final String onlineDict = "http://paginas.fe.up.pt/~ee08281/webdic/";
 
 	public ThomsonKeygen(Handler h, Resources res , String folder , boolean thomson3g ) {
 		super(h, res);
@@ -88,19 +88,26 @@ public class ThomsonKeygen extends KeygenThread {
 		return;
 	}
 	private boolean internetCalc(){
-	try{
+		try{
 			DataInputStream onlineFile = null;
 			int lenght =0 ;
 			URL url;
-			InputStream fis = resources.openRawResource(R.raw.webdic);
-			//ZipInputStream fis = new ZipInputStream(file);
-			//fis.getNextEntry();
-			if ( fis.read(table , 0 , 1024) == -1 )
+			InputStream file = resources.openRawResource(R.raw.webdic);
+			ZipInputStream fis = new ZipInputStream(file);
+			fis.getNextEntry();
+			int check = 0 , ret = 0 ;
+			while ( check != 1024 )/*ZipInputStream doens't seems to block.*/
 			{
-				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-						resources.getString(R.string.msg_err_webdic_table)));
-				errorDict = true;
-				return false;
+				ret = fis.read(table , check , 1024 - check);
+				if ( ret == -1 )
+				{
+					handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+							resources.getString(R.string.msg_err_webdic_table)));
+					errorDict = true;
+					return false;
+				}
+				else
+					check += ret;
 			}
 			int totalOffset = 0;
 			int offset = 0;
@@ -113,13 +120,20 @@ public class ThomsonKeygen extends KeygenThread {
 					( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
 			totalOffset += offset;
 			fis.skip((i/4)*768);
-			if ( fis.read(table,0,768) == -1 )
+			check = 0 ;
+			while ( check != 768 )
 			{
-				handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
-						resources.getString(R.string.msg_err_webdic_table)));
-				errorDict = true;
-				return false;
-			}	
+				ret = fis.read(table , check , 768 - check);
+				if ( ret == -1 )
+				{
+					handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+							resources.getString(R.string.msg_err_webdic_table)));
+					errorDict = true;
+					return false;
+				}
+				else
+					check += ret;
+			}
 			i = ( 0xFF &routerESSID[1] )*3;
 			offset =( (0xFF & table[i])  << 16 ) |
 					( (0xFF & table[i + 1 ])  << 8 ) | (0xFF & table[i + 2]);
@@ -140,7 +154,7 @@ public class ThomsonKeygen extends KeygenThread {
 			 /*Only for SSID starting with FFFF as we don't have a marker of the end.*/
 					lenght = 2000;
 			}
-			url = new URL("http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic");
+			url = new URL(Preferences.PUB_DOWNLOAD);
 			URLConnection con= url.openConnection();
 			con.setRequestProperty("Range", "bytes="  + totalOffset + "-");
 			onlineFile = new DataInputStream(con.getInputStream());
@@ -155,7 +169,9 @@ public class ThomsonKeygen extends KeygenThread {
 			if ( ( len = onlineFile.read(this.entry , 0 , lenght ) ) != -1 ){
 				lenght = len;;
 			}
+			
 			onlineFile.close();
+			fis.close();
 			return thirdDic();
 		} catch ( IOException e) {
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 

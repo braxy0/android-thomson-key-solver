@@ -62,7 +62,7 @@ public class Preferences extends PreferenceActivity {
 	
 	private static final String PUB_DONATE = 
 		"market://details?id=org.exobel.routerkeygen.donate";
-	private static final String PUB_DOWNLOAD = 
+	public static final String PUB_DOWNLOAD = 
 		"http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
 	private static final String PUB_DIC_CFV =
 		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
