@@ -1,5 +1,13 @@
 #include "keygenthread.h"
 
-KeygenThread::KeygenThread()
+KeygenThread::KeygenThread( WifiNetwork * r ) : router(r), stopRequested(false)
 {
+}
+
+QVector<QString> KeygenThread::getResults() const{
+    return this->results;
+}
+
+void KeygenThread::stop(){
+   stopRequested = true;
 }

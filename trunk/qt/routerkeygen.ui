@@ -14,40 +14,50 @@
    <string>RouterKeygen</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="calcButton">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>190</y>
+      <x>130</x>
+      <y>90</y>
       <width>93</width>
       <height>27</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Calculate</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="inputSSID">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>130</y>
+      <x>110</x>
+      <y>60</y>
       <width>113</width>
       <height>27</height>
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="labelSSID">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>80</y>
-      <width>62</width>
+      <x>60</x>
+      <y>60</y>
+      <width>41</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>SSID:</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
+      <width>241</width>
+      <height>192</height>
+     </rect>
     </property>
    </widget>
   </widget>

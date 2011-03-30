@@ -1,12 +1,17 @@
 #include "tecomkeygen.h"
 
-TecomKeygen::TecomKeygen()
+TecomKeygen::TecomKeygen( WifiNetwork * router ) : KeygenThread(router)
 {
-    this->hash = new QCryptographicHash(QCryptographicHash::Sha1);
 }
 
 void TecomKeygen::run(){
-    this->hash->reset();
-    QByteArray result = this->hash->hash(router.toAscii() ,QCryptographicHash::Sha1 );
-   this->result = this->result.fromAscii(result.toHex().data());
+    QString result;
+    result = QString::fromAscii(QCryptographicHash::hash(
+                                router->getSSID().toUpper().toAscii() ,
+                                QCryptographicHash::Sha1 )
+                                      .toHex().data());
+    result.truncate(26);
+    if ( stopRequested )
+        return;
+    this->results.append(result);
 }

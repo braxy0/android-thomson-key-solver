@@ -5,7 +5,7 @@
 class TecomKeygen : public KeygenThread
 {
     public:
-        TecomKeygen();
+        TecomKeygen( WifiNetwork * router );
         void run();
 };
 

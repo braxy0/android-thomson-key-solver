@@ -2,16 +2,22 @@
 #define KEYGENTHREAD_H
 #include <QCryptographicHash>
 #include <QThread>
-#include <QTextStream>
+#include <QVector>
+#include "wifinetwork.h"
 
 class KeygenThread : public QThread
 {   
     public:
-        KeygenThread();
-        QString router;
-        QString result;
+        KeygenThread( WifiNetwork * router );
+        QVector<QString> getResults() const;
+        void stop();
     protected:
         QCryptographicHash * hash;
+        QVector<QString> results;
+        WifiNetwork * router;
+        bool stopRequested;
+
+
 };
 
 #endif // KEYGENTHREAD_H

@@ -13,11 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         routerkeygen.cpp \
     keygenthread.cpp \
-    tecomkeygen.cpp
+    tecomkeygen.cpp \
+    wifinetwork.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
-    tecomkeygen.h
+    tecomkeygen.h \
+    wifinetwork.h
 
 FORMS    += routerkeygen.ui
 

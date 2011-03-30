@@ -1,7 +1,7 @@
 #ifndef ROUTERKEYGEN_H
 #define ROUTERKEYGEN_H
 #include "keygenthread.h"
-
+#include "wifinetwork.h"
 #include <QMainWindow>
 
 namespace Ui {
@@ -16,11 +16,12 @@ public:
     explicit RouterKeygen(QWidget *parent = 0);
     ~RouterKeygen();
 public slots:
-    void setText();
-    void update();
+    void calculateKeys();
+    void getResults();
 private:
     Ui::RouterKeygen *ui;
     KeygenThread * calculator;
+    QVector<QString> listKeys;
 };
 
 #endif // ROUTERKEYGEN_H
