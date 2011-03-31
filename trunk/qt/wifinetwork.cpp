@@ -48,6 +48,18 @@ bool WifiNetwork::ssidFilter(){
             type = DLINK;
             return true;
     }
+    if ( (ssid.count(QRegExp("eircom[0-7]{4} [0-7]{4}")) == 1 )||
+         (ssid.count(QRegExp("eircom[0-7]{8}")) == 1))
+    {
+        if (  ssid.size() == 14 )
+            ssidSubpart = ssid.right(8);
+        else
+            ssidSubpart = ssid.mid(6,4) + ssid.right(4);
+            if ( mac.isEmpty() )
+                    calcEircomMAC();
+            type = EIRCOM;
+        return true;
+    }
     if ( ssid.size() == 5  &&
           ( mac.startsWith("00:1F:90") || mac.startsWith("A8:39:44") ||
             mac.startsWith("00:18:01") || mac.startsWith("00:20:E0") ||
@@ -72,4 +84,15 @@ bool WifiNetwork::ssidFilter(){
             return true;
     }
     return false;
+}
+void WifiNetwork::calcEircomMAC(){
+    QString end;
+    bool status = false;
+    int ssidNum = ssidSubpart.toInt(&status , 8 ) ^ 0x000fcc;
+    end.setNum(ssidNum,16);
+    while ( end.size() < 6 )
+        end = "0" + end;
+    end = end.toUpper();
+    this->mac = "00:0F:CC:" + end.left(2)+ ":" +
+                           end.mid(2,2)+ ":" + end.right(2);
 }

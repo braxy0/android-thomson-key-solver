@@ -16,7 +16,9 @@ SOURCES += main.cpp\
     tecomkeygen.cpp \
     wifinetwork.cpp \
     thomsonkeygen.cpp \
-    verizonkeygen.cpp
+    verizonkeygen.cpp \
+    infostradakeygen.cpp \
+    eircomkeygen.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
@@ -24,7 +26,9 @@ HEADERS  += routerkeygen.h \
     wifinetwork.h \
     thomsonkeygen.h \
     unknown.h \
-    verizonkeygen.h
+    verizonkeygen.h \
+    infostradakeygen.h \
+    eircomkeygen.h
 
 FORMS    += routerkeygen.ui
 

@@ -12,6 +12,7 @@ class WifiNetwork
         bool newThomson;
         bool ssidFilter();
         int type;
+        void calcEircomMAC();
     public:
         WifiNetwork(QString ssid , QString mac = "");
         QString getSSID() const;
