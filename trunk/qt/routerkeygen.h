@@ -22,6 +22,7 @@ private:
     Ui::RouterKeygen *ui;
     KeygenThread * calculator;
     QVector<QString> listKeys;
+    WifiNetwork * router;
 };
 
 #endif // ROUTERKEYGEN_H

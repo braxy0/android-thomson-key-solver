@@ -1,8 +1,6 @@
 #include "tecomkeygen.h"
 
-TecomKeygen::TecomKeygen( WifiNetwork * router ) : KeygenThread(router)
-{
-}
+TecomKeygen::TecomKeygen( WifiNetwork * router ) : KeygenThread(router) {}
 
 void TecomKeygen::run(){
     QString result;

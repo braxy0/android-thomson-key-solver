@@ -4,10 +4,27 @@
 
 class WifiNetwork
 {
-    QString ssid;
-public:
-    WifiNetwork(QString ssid);
-    QString getSSID() const;
+    private:
+        QString ssid;
+        QString ssidSubpart;
+        QString mac;
+        bool supported;
+        bool newThomson;
+        bool ssidFilter();
+        int type;
+    public:
+        WifiNetwork(QString ssid , QString mac = "");
+        QString getSSID() const;
+        QString getMac() const;
+        QString getSSIDsubpart() const;
+        int getType() const;
+        bool isSupported() const;
+        enum SUPPORTED{
+            THOMSON = 0 , DLINK , DISCUS , VERIZON ,
+            EIRCOM , PIRELLI , TELSEY , ALICE ,
+            COMTREND_4X , HUAWEI, WLAN2 , ONO_WEP ,
+            SKY_V1 , WLAN6 ,TECOM , INFOSTRADA
+        };
 };
 
 #endif // WIFINETWORK_H

@@ -14,12 +14,17 @@ SOURCES += main.cpp\
         routerkeygen.cpp \
     keygenthread.cpp \
     tecomkeygen.cpp \
-    wifinetwork.cpp
+    wifinetwork.cpp \
+    thomsonkeygen.cpp \
+    verizonkeygen.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
     tecomkeygen.h \
-    wifinetwork.h
+    wifinetwork.h \
+    thomsonkeygen.h \
+    unknown.h \
+    verizonkeygen.h
 
 FORMS    += routerkeygen.ui
 
