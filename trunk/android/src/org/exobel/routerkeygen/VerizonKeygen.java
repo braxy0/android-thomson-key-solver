@@ -33,12 +33,16 @@ public class VerizonKeygen extends KeygenThread {
 					resources.getString(R.string.msg_err_verizon_ssid)));
 			return;
 		}
+		
+		ssid = Integer.toHexString(result).toUpperCase();
+		while ( ssid.length() < 6 )
+			ssid = "0" + ssid;
 	    if ( !router.mac.equals(""))
 	    {
 	    	pwList.add(router.mac.substring(3,5) + router.mac.substring(6,8) + 
 	    					Integer.toHexString(result).toUpperCase());
 	    }
-	    else
+	    else	
 	    {
 	    	pwList.add("1801" + Integer.toHexString(result).toUpperCase());
 	    	pwList.add("1F90" + Integer.toHexString(result).toUpperCase());
