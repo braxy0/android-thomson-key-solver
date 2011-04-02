@@ -11,6 +11,7 @@ class KeygenThread : public QThread
         KeygenThread( WifiNetwork * router );
         QVector<QString> getResults() const;
         void stop();
+        bool isStopped();
     protected:
         QCryptographicHash * hash;
         QVector<QString> results;

@@ -77,6 +77,20 @@ bool WifiNetwork::ssidFilter(){
             type = TECOM;
             return true;
     }
+    if ( ( ssid.count(QRegExp("SKY[0-9]{5}"))==1) && (mac.startsWith("C4:3D:C7") ||
+          mac.startsWith("E0:46:9A") ||  mac.startsWith("E0:91:F5") ||
+          mac.startsWith("00:09:5B") ||  mac.startsWith("00:0F:B5") ||
+          mac.startsWith("00:14:6C") ||  mac.startsWith("00:18:4D") ||
+          mac.startsWith("00:26:F2") ||  mac.startsWith("C0:3F:0E") ||
+          mac.startsWith("30:46:9A") ||  mac.startsWith("00:1B:2F") ||
+          mac.startsWith("A0:21:B7") ||  mac.startsWith("00:1E:2A") ||
+          mac.startsWith("00:1F:33") ||  mac.startsWith("00:22:3F") ||
+          mac.startsWith("00:24:B2") ) )
+    {
+            ssidSubpart = ssid.right(5);
+            type = SKY_V1;
+            return true;
+    }
     if ( ssid.count(QRegExp("InfostradaWiFi-[0-9a-zA-Z]{6}")) ==   1 )
     {
             ssidSubpart = ssid;

@@ -6,6 +6,7 @@
 #include "verizonkeygen.h"
 #include "infostradakeygen.h"
 #include "eircomkeygen.h"
+#include "skyv1keygen.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -19,7 +20,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     /*Auto-Complete!*/
     QStringList wordList;
     wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN"
-            << "eircom" << "InfostradaWiFi-" ;
+            << "eircom" << "InfostradaWiFi-" << "SKY" ;
     QCompleter *completer = new QCompleter(wordList, this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
@@ -42,8 +43,9 @@ RouterKeygen::~RouterKeygen()
 
 void RouterKeygen::calculateKeys()
 {//TECOM-AH4222-527A92
-   // router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
-    router= new WifiNetwork(ui->inputSSID->text());
+   ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
+   // router= new WifiNetwork(ui->inputSSID->text());
+    router= new WifiNetwork(ui->inputSSID->text(), "00:22:3F:FF:FF:FF");
     if ( !router->isSupported() )
         return;
     switch ( router->getType() )
@@ -62,6 +64,9 @@ void RouterKeygen::calculateKeys()
                                 break;
     case  WifiNetwork::INFOSTRADA:
                                 this->calculator = new InfostradaKeygen(router);
+                                break;
+    case  WifiNetwork::SKY_V1:
+                                this->calculator = new SkyV1Keygen(router);
                                 break;
     }
     connect( this->calculator , SIGNAL( finished() ), this , SLOT( getResults() ) );

@@ -11,3 +11,7 @@ QVector<QString> KeygenThread::getResults() const{
 void KeygenThread::stop(){
    stopRequested = true;
 }
+
+bool KeygenThread::isStopped(){
+   return this->stopRequested ;
+ }

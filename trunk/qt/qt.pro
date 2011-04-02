@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     thomsonkeygen.cpp \
     verizonkeygen.cpp \
     infostradakeygen.cpp \
-    eircomkeygen.cpp
+    eircomkeygen.cpp \
+    skyv1keygen.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
@@ -28,7 +29,8 @@ HEADERS  += routerkeygen.h \
     unknown.h \
     verizonkeygen.h \
     infostradakeygen.h \
-    eircomkeygen.h
+    eircomkeygen.h \
+    skyv1keygen.h
 
 FORMS    += routerkeygen.ui
 
