@@ -46,13 +46,13 @@ void RouterKeygen::calculateKeys()
 {//TECOM-AH4222-527A92
    ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
    // router= new WifiNetwork(ui->inputSSID->text());
-    router= new WifiNetwork(ui->inputSSID->text(), "00:1F:A4:FF:FF:FF");
+    router= new WifiNetwork(ui->inputSSID->text(), "64:68:0C:FF:FF:FF");
     if ( !router->isSupported() )
         return;
     switch ( router->getType() )
     {
     case WifiNetwork::THOMSON:
-                                this->calculator = new ThomsonKeygen(router);
+                                this->calculator = new ThomsonKeygen(router , false );
                                 break;
     case  WifiNetwork::EIRCOM:
                                 this->calculator = new EircomKeygen(router);
@@ -70,7 +70,7 @@ void RouterKeygen::calculateKeys()
                                 this->calculator = new SkyV1Keygen(router);
                                 break;
     case WifiNetwork::WLAN2:
-                                this->calculator = new ThomsonKeygen(router);
+                                this->calculator = new Wlan4Keygen(router);
                                 break;
     case  WifiNetwork::WLAN4:
                                 this->calculator = new Wlan4Keygen(router);
