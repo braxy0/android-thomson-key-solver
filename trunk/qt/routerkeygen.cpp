@@ -7,6 +7,7 @@
 #include "infostradakeygen.h"
 #include "eircomkeygen.h"
 #include "skyv1keygen.h"
+#include "wlan4keygen.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -45,7 +46,7 @@ void RouterKeygen::calculateKeys()
 {//TECOM-AH4222-527A92
    ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
    // router= new WifiNetwork(ui->inputSSID->text());
-    router= new WifiNetwork(ui->inputSSID->text(), "00:22:3F:FF:FF:FF");
+    router= new WifiNetwork(ui->inputSSID->text(), "00:1F:A4:FF:FF:FF");
     if ( !router->isSupported() )
         return;
     switch ( router->getType() )
@@ -66,6 +67,24 @@ void RouterKeygen::calculateKeys()
                                 this->calculator = new InfostradaKeygen(router);
                                 break;
     case  WifiNetwork::SKY_V1:
+                                this->calculator = new SkyV1Keygen(router);
+                                break;
+    case WifiNetwork::WLAN2:
+                                this->calculator = new ThomsonKeygen(router);
+                                break;
+    case  WifiNetwork::WLAN4:
+                                this->calculator = new Wlan4Keygen(router);
+                                break;
+    case  WifiNetwork::WLAN6:
+                                this->calculator = new VerizonKeygen(router);
+                                break;
+    case  WifiNetwork::DISCUS:
+                                this->calculator = new TecomKeygen(router);
+                                break;
+    case  WifiNetwork::HUAWEI:
+                                this->calculator = new InfostradaKeygen(router);
+                                break;
+    case  WifiNetwork::ALICE:
                                 this->calculator = new SkyV1Keygen(router);
                                 break;
     }

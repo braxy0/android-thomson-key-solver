@@ -97,6 +97,14 @@ bool WifiNetwork::ssidFilter(){
             type = INFOSTRADA;
             return true;
     }
+    if ( ( ssid.count(QRegExp("WLAN_[0-9a-zA-Z]{4}|JAZZTEL_[0-9a-zA-Z]{4}")) == 1 ) &&
+        ( mac.startsWith("00:1F:A4") || mac.startsWith("64:68:0C") ||
+              mac.startsWith("00:1D:20") ) )
+    {
+            ssidSubpart = ssid.right(4);
+            type = WLAN4;
+            return true;
+    }
     return false;
 }
 void WifiNetwork::calcEircomMAC(){

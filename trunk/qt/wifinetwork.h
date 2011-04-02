@@ -23,7 +23,7 @@ class WifiNetwork
         enum SUPPORTED{
             THOMSON = 0 , DLINK , DISCUS , VERIZON ,
             EIRCOM , PIRELLI , TELSEY , ALICE ,
-            COMTREND_4X , HUAWEI, WLAN2 , ONO_WEP ,
+            WLAN4 , HUAWEI, WLAN2 , ONO_WEP ,
             SKY_V1 , WLAN6 ,TECOM , INFOSTRADA
         };
 };

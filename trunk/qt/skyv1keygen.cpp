@@ -1,6 +1,7 @@
 #include "skyv1keygen.h"
 
-SkyV1Keygen::SkyV1Keygen( WifiNetwork * router ) : KeygenThread(router) , ALPHABET("ABCDEFGHIJKLMNOPQRSTUVWXYZ") {}
+SkyV1Keygen::SkyV1Keygen( WifiNetwork * router ) : KeygenThread(router) ,
+                    ALPHABET("ABCDEFGHIJKLMNOPQRSTUVWXYZ") {}
 
 void SkyV1Keygen::run(){
     if ( router == NULL)
