@@ -327,7 +327,7 @@ public class RouterKeygen extends Activity {
 			        		Spanned dest, int dstart, int dend) { 
 			        		                for (int i = start; i < end; i++) { 
 			        		                        if (!Character.isLetterOrDigit(source.charAt(i)) &&
-			        		                        		source.charAt(i) != '-' ) { 
+			        		                        		source.charAt(i) != '-' && source.charAt(i) != '_') { 
 			        		                                return ""; 
 			        		                        } 
 			        		                } 
@@ -523,7 +523,7 @@ public class RouterKeygen extends Activity {
 				case ALICE:	 RouterKeygen.this.calculator = 
 							new AliceKeygen(handler,getResources());
 							break;
-				case COMTREND_4X:	 RouterKeygen.this.calculator = 
+				case WLAN4:	 RouterKeygen.this.calculator = 
 							new Wlan4Keygen(handler,getResources());
 							break;
 				case HUAWEI: RouterKeygen.this.calculator = 

@@ -20,7 +20,7 @@ public class Wlan6Keygen extends KeygenThread {
 					resources.getString(R.string.msg_nomac)));
 			return;
 		}
-		String ssidStr = router.getEssid();
+		String ssidStr = router.getSSIDsubpart();
 		String macStr = router.mac;
 		char [] ssidSubPart = {'1', '2','3', '4', '5','6' };/*These values are not revelant.*/
 		char [] bssidLastByte = { '6', '6' };

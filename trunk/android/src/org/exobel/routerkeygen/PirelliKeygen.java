@@ -32,7 +32,7 @@ public class PirelliKeygen extends KeygenThread{
 					resources.getString(R.string.msg_nomd5)));
 			return;
 		}
-		if ( router.getEssid().length() != 12 ) 
+		if ( router.getSSIDsubpart().length() != 12 ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_errpirelli)));
@@ -41,8 +41,8 @@ public class PirelliKeygen extends KeygenThread{
 		
 		byte [] routerESSID = new byte[6];
 		for (int i = 0; i < 12; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(router.getEssid().charAt(i), 16) << 4)
-					+ Character.digit(router.getEssid().charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(router.getSSIDsubpart().charAt(i), 16) << 4)
+					+ Character.digit(router.getSSIDsubpart().charAt(i + 1), 16));
 
 		md.reset();
 		md.update(routerESSID);

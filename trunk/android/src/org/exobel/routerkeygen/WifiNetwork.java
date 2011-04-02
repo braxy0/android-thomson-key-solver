@@ -24,7 +24,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 	static enum TYPE {
 		THOMSON , DLINK , DISCUS , VERIZON ,
 		EIRCOM , PIRELLI , TELSEY , ALICE ,
-		COMTREND_4X , HUAWEI, WLAN2 , ONO_WEP ,
+		WLAN4 , HUAWEI, WLAN2 , ONO_WEP ,
 		SKY_V1 , WLAN6 ,TECOM , INFOSTRADA };
 	public WifiNetwork(String ssid, String mac, int level , String enc , Context con ){
 		this.ssid = ssid;
@@ -41,7 +41,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		return level;
 	}
 	
-	public String getEssid(){
+	public String getSSIDsubpart(){
 		return ssidSubpart;
 	}
 	
@@ -138,7 +138,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.TELSEY;
 			return true;
 		}
-		if ( ssid.matches("Alice-[0-9]{8}") )
+		if ( ssid.matches("[aA]lice-[0-9]{8}") )
 		{
 			AliceHandle aliceReader = new AliceHandle(ssid.substring(0,9));
 			SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -157,12 +157,12 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 				mac = supportedAlice.get(0).mac;
 			return true;
 		}
-		if (  ssid.startsWith("WLAN_[0-9a-zA-Z]{4}|JAZZTEL_[0-9a-zA-Z]{4}") &&
+		if (  ssid.matches("WLAN_[0-9a-zA-Z]{4}|JAZZTEL_[0-9a-zA-Z]{4}") &&
 		    ( mac.startsWith("00:1F:A4") || mac.startsWith("64:68:0C") ||
 			  mac.startsWith("00:1D:20") ) )
 		{
 			ssidSubpart = ssid.substring(ssid.length()-4);
-			type = TYPE.COMTREND_4X;
+			type = TYPE.WLAN4;
 			return true;
 		}
 		if ( ssid.matches("INFINITUM[0-9a-zA-Z]{4}") && ( 

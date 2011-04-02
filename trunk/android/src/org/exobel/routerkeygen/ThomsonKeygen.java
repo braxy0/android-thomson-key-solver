@@ -55,7 +55,7 @@ public class ThomsonKeygen extends KeygenThread {
 					resources.getString(R.string.msg_nosha1)));
 			return;
 		}
-		if ( router.getEssid().length() != 6 ) 
+		if ( router.getSSIDsubpart().length() != 6 ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_shortessid6)));
@@ -63,8 +63,8 @@ public class ThomsonKeygen extends KeygenThread {
 		}
 		
 		for (int i = 0; i < 6; i += 2)
-			routerESSID[i / 2] = (byte) ((Character.digit(router.getEssid().charAt(i), 16) << 4)
-					+ Character.digit(router.getEssid().charAt(i + 1), 16));
+			routerESSID[i / 2] = (byte) ((Character.digit(router.getSSIDsubpart().charAt(i), 16) << 4)
+					+ Character.digit(router.getSSIDsubpart().charAt(i + 1), 16));
 
 		
 		if ( !thomson3g )

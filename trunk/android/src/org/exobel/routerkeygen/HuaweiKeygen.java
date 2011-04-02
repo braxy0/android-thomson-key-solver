@@ -119,7 +119,7 @@ public class HuaweiKeygen extends KeygenThread {
 				Integer.toString(key[yc]) + Integer.toString(key[yd]) + 
 				Integer.toString(key[ye]) );
 		handler.sendEmptyMessage(RESULTS_READY);
-		if ( !router.getEssid().equalsIgnoreCase(ssidFinal) && 
+		if ( !router.getSSIDsubpart().equalsIgnoreCase(ssidFinal) && 
 				router.ssid.startsWith("INFINITUM") )
 		{
 

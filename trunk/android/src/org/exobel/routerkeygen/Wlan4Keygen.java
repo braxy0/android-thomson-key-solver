@@ -31,16 +31,22 @@ public class Wlan4Keygen extends KeygenThread {
 					resources.getString(R.string.msg_errpirelli)));
 			return;
 		}
-		String macMod = router.getMac().substring(0,8) + router.getEssid();
+		String macMod = router.getMac().substring(0,8) + router.getSSIDsubpart();
 		md.reset();
 		try {
 			if ( !router.getMac().toUpperCase().startsWith("001FA4") )
 				md.update(magic.getBytes("ASCII"));
-			md.update(macMod.getBytes("ASCII"));
 			if ( !router.getMac().toUpperCase().startsWith("001FA4") )
-				md.update(router.getMac().getBytes("ASCII"));
+				md.update(macMod.toUpperCase().getBytes("ASCII"));
+			else
+				md.update(macMod.toLowerCase().getBytes("ASCII"));
+			if ( !router.getMac().toUpperCase().startsWith("001FA4") )
+				md.update(router.getMac().toUpperCase().getBytes("ASCII"));
 			byte [] hash = md.digest();
-			pwList.add(StringUtils.getHexString(hash).substring(0,20).toUpperCase());
+			if  ( !router.getMac().toUpperCase().startsWith("001FA4") )
+				pwList.add(StringUtils.getHexString(hash).substring(0,20));
+			else
+				pwList.add(StringUtils.getHexString(hash).substring(0,20).toUpperCase());
 			handler.sendEmptyMessage(RESULTS_READY);
 			return;
 		} catch (UnsupportedEncodingException e) {}

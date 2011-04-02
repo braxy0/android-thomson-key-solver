@@ -58,7 +58,7 @@ public class AliceKeygen extends KeygenThread {
 			String serialStr = router.supportedAlice.get(j).serial + "X";
 			int Q = router.supportedAlice.get(j).magic[0];
 			int k = router.supportedAlice.get(j).magic[1] ;
-			int serial = ( Integer.valueOf(router.getEssid()) - Q ) / k;
+			int serial = ( Integer.valueOf(router.getSSIDsubpart()) - Q ) / k;
 			String tmp = Integer.toString(serial);
 			for (int i = 0; i < 7 - tmp.length(); i++){
 				serialStr += "0";
@@ -99,7 +99,7 @@ public class AliceKeygen extends KeygenThread {
 			while ( extraNumber <= 9 )
 			{
 				String calc = Integer.toHexString(Integer.valueOf(
-						extraNumber + router.getEssid()) ).toUpperCase();
+						extraNumber + router.getSSIDsubpart()) ).toUpperCase();
 				if ( macEth.charAt(5) == calc.charAt(0))
 				{
 					macEth += calc.substring(1);
