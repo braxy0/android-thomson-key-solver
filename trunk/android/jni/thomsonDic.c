@@ -66,34 +66,8 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_ThomsonKeygen_thirdD
 	input[0] = 'C';
 	input[1] = 'P';
 	input[2] = '0';
-	sequenceNumber = ( entry[0 ]<<8 ) |  entry[1 ];
-	for ( j = 0 ; j < 18 ; ++j )
-	{
-		inc = j* ( 36*36*36*6*3);
-		year = ( (sequenceNumber+inc) / ( 36*36*36 )% 6) + 4 ;
-		week = (sequenceNumber+inc) / ( 36*36*36*6 )  + 1 ;
-		c = sequenceNumber % 36;
-		b = sequenceNumber/36 % 36;
-		a = sequenceNumber/(36*36) % 36;
-
-		input[3] = '0' + year % 10 ;
-		input[4] = '0' + week / 10;
-		input[5] = '0' + week % 10;
-		input[6] = charectbytes0[a];
-		input[7] = charectbytes1[a];
-		input[8] = charectbytes0[b];
-		input[9] = charectbytes1[b];
-		input[10] = charectbytes0[c];
-		input[11] = charectbytes1[c];
-		SHA1_Init(&sha1);
-		SHA1_Update(&sha1 ,(const void *) input , 12 );
-		SHA1_Final(message_digest , &sha1 );
-		if( ( memcmp(&message_digest[17],&ssid[0],3) == 0) ){
-		sprintf( result[keys++], "%02X%02X%02X%02X%02X\0" , message_digest[0], message_digest[1] ,
-							message_digest[2] , message_digest[3], message_digest[4] );
-		}
-	}
-	for( i = 2; i < len; i+=2  )
+	sequenceNumber = 0;
+	for( i = 0; i < len; i+=2  )
 	{
 		sequenceNumber += ( entry[i + 0 ]<<8 ) |  entry[i + 1 ];
 		for ( j = 0 ; j < 18 ; ++j )

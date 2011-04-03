@@ -327,7 +327,7 @@ public class RouterKeygen extends Activity {
 			        		Spanned dest, int dstart, int dend) { 
 			        		                for (int i = start; i < end; i++) { 
 			        		                        if (!Character.isLetterOrDigit(source.charAt(i)) &&
-			        		                        		source.charAt(i) != '-' && source.charAt(i) != '_') { 
+			        		                        		source.charAt(i) != '-' && source.charAt(i) != '_' && source.charAt(i) != ' ') { 
 			        		                                return ""; 
 			        		                        } 
 			        		                } 
@@ -380,6 +380,8 @@ public class RouterKeygen extends Activity {
 						    mac= mac1.getText().toString()+':'+mac2.getText().toString()+':'+
 						    	 mac3.getText().toString()+':'+mac4.getText().toString()+':'+
 						    	 mac5.getText().toString()+':'+mac6.getText().toString();
+						    if ( mac.length() < 17 )
+						    	mac = "";
 					    }
 						if ( ssid.equals("") )
 							return;
