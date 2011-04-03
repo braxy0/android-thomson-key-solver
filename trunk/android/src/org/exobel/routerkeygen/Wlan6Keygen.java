@@ -59,18 +59,19 @@ public class Wlan6Keygen extends KeygenThread {
 			int ninth = seventh ^ eleventh;
 			int thirteenth = third ^ tenth;
 			int first = twelfth ^ sixth;
-			String key = Integer.toHexString(Integer.valueOf(first & 0xf)) + Integer.toHexString(Integer.valueOf(second & 0xf)) +
-						Integer.toHexString(Integer.valueOf(third & 0xf)) + Integer.toHexString(Integer.valueOf(fourth & 0xf)) +
-						Integer.toHexString(Integer.valueOf(fifth & 0xf)) + Integer.toHexString(Integer.valueOf(sixth & 0xf)) +
-						Integer.toHexString(Integer.valueOf(seventh & 0xf)) + Integer.toHexString(Integer.valueOf(eighth & 0xf)) +
-						Integer.toHexString(Integer.valueOf(ninth & 0xf)) + Integer.toHexString(Integer.valueOf(tenth & 0xf)) + 
-						Integer.toHexString(Integer.valueOf(eleventh & 0xf)) + Integer.toHexString(Integer.valueOf(twelfth & 0xf)) +
-						Integer.toHexString(Integer.valueOf(thirteenth & 0xf));
+			String key = Integer.toHexString(first & 0xf) + Integer.toHexString(second & 0xf)+
+						Integer.toHexString(third & 0xf) + Integer.toHexString(fourth & 0xf) +
+						Integer.toHexString(fifth & 0xf) + Integer.toHexString(sixth & 0xf) +
+						Integer.toHexString(seventh & 0xf) + Integer.toHexString(eighth & 0xf) +
+						Integer.toHexString(ninth & 0xf) + Integer.toHexString(tenth & 0xf) + 
+						Integer.toHexString(eleventh & 0xf) + Integer.toHexString(twelfth & 0xf) +
+						Integer.toHexString(thirteenth & 0xf);
 			
 			pwList.add(key.toUpperCase());
 		}
 		handler.sendEmptyMessage(RESULTS_READY);
-		if ( ( ssidSubPart[0] != macStr.charAt(10) ) || ( ssidSubPart[1] != macStr.charAt(12) ) ||( ssidSubPart[2] != macStr.charAt(13) ) )
+		if ( ( ( ssidSubPart[0] != macStr.charAt(10) ) || ( ssidSubPart[1] != macStr.charAt(12) ) ||( ssidSubPart[2] != macStr.charAt(13) ) )
+				&& !router.ssid.startsWith("WiFi"))
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_err_essid_no_match)));

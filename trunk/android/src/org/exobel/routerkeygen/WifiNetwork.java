@@ -76,14 +76,13 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.THOMSON;
 			return true;
 		}
-		if (  ssid.startsWith("DLink-") && ssid.length() == 12 )
+		if (  ssid.matches("DLink-[0-9a-fA-F]{6}") )
 		{
 			ssidSubpart = new String ( ssid.substring(ssid.length()-6));
 			type = TYPE.DLINK;
 			return true;
 		}
-		if ( ( ssid.startsWith("Discus-") && ssid.length() == 13 ) ||
-			( ssid.startsWith("Discus--") && ssid.length() == 14 )	)
+		if ( ssid.matches("Discus--?[0-9a-fA-F]{6}") ) 
 		{
 			ssidSubpart = ssid.substring(ssid.length()-6);
 			type = TYPE.DISCUS;
@@ -111,20 +110,20 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			type = TYPE.VERIZON;
 			return true;
 		}
-		if ( ( ssid.startsWith("FASTWEB-1-000827") && ssid.length() == 22 ) ||
-		     ( ssid.startsWith("FASTWEB-1-0013C8") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-0017C2") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-00193E") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-001CA2") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-001D8B") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-002233") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-00238E") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-002553") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-00A02F") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-080018") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-3039F2") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-38229D") && ssid.length() == 22 )	||
-		     ( ssid.startsWith("FASTWEB-1-6487D7") && ssid.length() == 22 ))
+		if ( ( ssid.toUpperCase().startsWith("FASTWEB-1-000827") && ssid.length() == 22 ) ||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-0013C8") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-0017C2") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-00193E") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-001CA2") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-001D8B") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-002233") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-00238E") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-002553") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-00A02F") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-080018") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-3039F2") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-38229D") && ssid.length() == 22 )	||
+		     ( ssid.toUpperCase().startsWith("FASTWEB-1-6487D7") && ssid.length() == 22 ))
 			{
 				ssidSubpart = ssid.substring(ssid.length()-12);
 				if ( mac.equals("") )
@@ -159,7 +158,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 				mac = supportedAlice.get(0).mac;
 			return true;
 		}
-		if (  ssid.matches("WLAN_[0-9a-zA-Z]{4}|JAZZTEL_[0-9a-zA-Z]{4}") &&
+		if (  ssid.matches("WLAN_[0-9a-fA-F]{4}|JAZZTEL_[0-9a-fA-F]{4}") &&
 		    ( mac.startsWith("00:1F:A4") || mac.startsWith("64:68:0C") ||
 			  mac.startsWith("00:1D:20") ) )
 		{
