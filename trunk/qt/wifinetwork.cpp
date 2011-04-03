@@ -1,6 +1,6 @@
 #include "wifinetwork.h"
 #include <QRegExp>
-WifiNetwork::WifiNetwork(QString r , QString m) : ssid(r) , mac(m)
+WifiNetwork::WifiNetwork(QString r , QString m) : ssid(r) , mac(m.toUpper() )
 {
     newThomson = false;/*Must be first*/
     supported = ssidFilter();
@@ -101,6 +101,15 @@ bool WifiNetwork::ssidFilter(){
     {
             ssidSubpart = ssid;
             type = INFOSTRADA;
+            return true;
+    }
+    if ( ssid.startsWith("WLAN_") && ssid.length() == 7 &&
+            ( mac.startsWith("00:01:38") || mac.startsWith("00:16:38") ||
+              mac.startsWith("00:01:13") || mac.startsWith("00:01:1B") ||
+              mac.startsWith("00:19:5B") ) )
+    {
+            ssidSubpart = ssid.right(2);
+            type = WLAN2;
             return true;
     }
     if ( ( ssid.count(QRegExp("WLAN_[0-9a-zA-Z]{4}|JAZZTEL_[0-9a-zA-Z]{4}")) == 1 ) &&
