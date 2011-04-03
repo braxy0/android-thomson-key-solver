@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     infostradakeygen.cpp \
     eircomkeygen.cpp \
     skyv1keygen.cpp \
-    wlan4keygen.cpp
+    wlan4keygen.cpp \
+    discuskeygen.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
@@ -32,7 +33,8 @@ HEADERS  += routerkeygen.h \
     infostradakeygen.h \
     eircomkeygen.h \
     skyv1keygen.h \
-    wlan4keygen.h
+    wlan4keygen.h \
+    discuskeygen.h
 
 FORMS    += routerkeygen.ui
 

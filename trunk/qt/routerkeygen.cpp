@@ -8,6 +8,7 @@
 #include "eircomkeygen.h"
 #include "skyv1keygen.h"
 #include "wlan4keygen.h"
+#include "discuskeygen.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -79,7 +80,7 @@ void RouterKeygen::calculateKeys()
                                 this->calculator = new VerizonKeygen(router);
                                 break;
     case  WifiNetwork::DISCUS:
-                                this->calculator = new TecomKeygen(router);
+                                this->calculator = new DiscusKeygen(router);
                                 break;
     case  WifiNetwork::HUAWEI:
                                 this->calculator = new InfostradaKeygen(router);

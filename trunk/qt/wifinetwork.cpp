@@ -42,10 +42,16 @@ bool WifiNetwork::ssidFilter(){
             type = THOMSON;
             return true;
     }
-    if (  ssid.startsWith("DLink-") && ( ssid.count(QRegExp("[a-fA-F0-9]{6}")) == 1) )
+    if (  ( ssid.count(QRegExp("DLink-[a-fA-F0-9]{6}")) == 1) && ( ssid.size() == 12 ) )
     {
             ssidSubpart = ssid.right(6);
             type = DLINK;
+            return true;
+    }
+    if ( ssid.count(QRegExp("Discus--?[0-9a-fA-F]{6}")) == 1)
+    {
+            ssidSubpart = ssid.right(6);
+            type = DISCUS;
             return true;
     }
     if ( (ssid.count(QRegExp("eircom[0-7]{4} [0-7]{4}")) == 1 )||
