@@ -120,6 +120,12 @@ bool WifiNetwork::ssidFilter(){
             type = WLAN4;
             return true;
     }
+    if ( ssid.count(QRegExp("WLAN[0-9a-zA-Z]{6}|WiFi[0-9a-zA-Z]{6}|YaCom[0-9a-zA-Z]{6}")) == 1 )
+    {
+            ssidSubpart = ssid.right(6);
+            type = WLAN6;
+            return true;
+    }
     return false;
 }
 void WifiNetwork::calcEircomMAC(){

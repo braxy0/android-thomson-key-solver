@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     skyv1keygen.cpp \
     wlan4keygen.cpp \
     discuskeygen.cpp \
-    wlan2keygen.cpp
+    wlan2keygen.cpp \
+    wlan6keygen.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
@@ -36,7 +37,8 @@ HEADERS  += routerkeygen.h \
     skyv1keygen.h \
     wlan4keygen.h \
     discuskeygen.h \
-    wlan2keygen.h
+    wlan2keygen.h \
+    wlan6keygen.h
 
 FORMS    += routerkeygen.ui
 

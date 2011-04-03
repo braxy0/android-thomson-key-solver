@@ -24,12 +24,15 @@ static char charectbytes1[] = {
         };
 
 ThomsonKeygen::ThomsonKeygen( WifiNetwork * router , bool t) : KeygenThread(router) ,
-                                thomson3g(t) {
+                                table(NULL) , entry(NULL) ,  len(0) , thomson3g(t){
     this->hash = new QCryptographicHash(QCryptographicHash::Sha1);
+    table = NULL;
 }
 
 ThomsonKeygen::~ThomsonKeygen(){
     delete hash;
+    delete [] table;
+    delete [] entry;
 }
 
 void ThomsonKeygen::run(){
@@ -95,7 +98,7 @@ bool ThomsonKeygen::localCalc(){
     routerESSID[2] = routerSSIDint & 0xFF;
     QDataStream fis( &file );
     int version = 0;
-    char * table = new char[1282];
+    table = new char[1282];
     if ( fis.readRawData(table, 1282) == -1 )
     {
 
@@ -199,6 +202,7 @@ bool ThomsonKeygen::localCalc(){
                     }
             }
     }
+
    return true;
 }
 

@@ -5,6 +5,7 @@
 class ThomsonKeygen : public KeygenThread
 {
     private:
+        char * table;
         char * entry;
         int len;
         bool thomson3g;
