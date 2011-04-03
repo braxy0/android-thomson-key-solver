@@ -94,7 +94,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 			if ( ssid.length() == 14 )
 				ssidSubpart = ssid.substring(ssid.length()-8);
 			else
-				ssidSubpart = ssid.substring(5, 9) + ssid.substring(ssid.length()-4);
+				ssidSubpart = ssid.substring(6, 10) + ssid.substring(ssid.length()-4);
 			if ( mac.equals("") )
 				calcEircomMAC();
 			type = TYPE.EIRCOM;
