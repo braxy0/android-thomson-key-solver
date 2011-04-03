@@ -59,7 +59,7 @@ public class PirelliKeygen extends KeygenThread{
 			if ( key[i] >= 0x0A )
 				key[i] += 0x57;
 		try {
-			pwList.add(StringUtils.getHexString(key).toUpperCase());
+			pwList.add(StringUtils.getHexString(key));
 		} catch (UnsupportedEncodingException e) {}
 		handler.sendEmptyMessage(RESULTS_READY);
 		return;
