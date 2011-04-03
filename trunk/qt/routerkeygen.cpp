@@ -11,6 +11,7 @@
 #include "wlan4keygen.h"
 #include "wlan6keygen.h"
 #include "discuskeygen.h"
+#include "dlinkkeygen.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -23,8 +24,9 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 
     /*Auto-Complete!*/
     QStringList wordList;
-    wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN"
-            << "eircom" << "InfostradaWiFi-" << "SKY" ;
+    wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN" << "WLAN_"
+            << "eircom" << "InfostradaWiFi-" << "SKY" << "DLink-" << "WiFi" << "YaCom"
+            << "Discus--";
     QCompleter *completer = new QCompleter(wordList, this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
@@ -84,8 +86,8 @@ void RouterKeygen::calculateKeys()
     case  WifiNetwork::DISCUS:
                                 this->calculator = new DiscusKeygen(router);
                                 break;
-    case  WifiNetwork::HUAWEI:
-                                this->calculator = new InfostradaKeygen(router);
+    case  WifiNetwork::DLINK:
+                                this->calculator = new DlinkKeygen(router);
                                 break;
     case  WifiNetwork::ALICE:
                                 this->calculator = new SkyV1Keygen(router);
