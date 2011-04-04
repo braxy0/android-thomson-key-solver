@@ -126,6 +126,27 @@ bool WifiNetwork::ssidFilter(){
             type = WLAN6;
             return true;
     }
+    if ( ( ssid.toUpper().startsWith("FASTWEB-1-000827") && ssid.length() == 22 ) ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-0013C8") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-0017C2") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-00193E") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-001CA2") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-001D8B") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-002233") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-00238E") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-002553") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-00A02F") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-080018") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-3039F2") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-38229D") && ssid.length() == 22 )  ||
+        ( ssid.toUpper().startsWith("FASTWEB-1-6487D7") && ssid.length() == 22 ))
+    {
+           ssidSubpart = ssid.right(12);
+           if ( mac == "" )
+                   calcFastwebMAC();
+           type = PIRELLI;
+           return true;
+    }
     return false;
 }
 void WifiNetwork::calcEircomMAC(){
@@ -138,4 +159,10 @@ void WifiNetwork::calcEircomMAC(){
     end = end.toUpper();
     this->mac = "00:0F:CC:" + end.left(2)+ ":" +
                            end.mid(2,2)+ ":" + end.right(2);
+}
+
+void WifiNetwork::calcFastwebMAC(){
+    this->mac = ssidSubpart.left(2) + ":" + ssidSubpart.mid(2,2) + ":" +
+                   ssidSubpart.mid(4,2) + ":" + ssidSubpart.mid(6,2) + ":" +
+                   ssidSubpart.mid(8,2) + ":" + ssidSubpart.right(2);
 }

@@ -12,6 +12,7 @@
 #include "wlan6keygen.h"
 #include "discuskeygen.h"
 #include "dlinkkeygen.h"
+#include "pirellikeygen.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -50,8 +51,8 @@ RouterKeygen::~RouterKeygen()
 void RouterKeygen::calculateKeys()
 {//TECOM-AH4222-527A92
    ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
-   // router= new WifiNetwork(ui->inputSSID->text());
-    router= new WifiNetwork(ui->inputSSID->text(), "00:11:22:33:44:55");
+    router= new WifiNetwork(ui->inputSSID->text());
+  // router= new WifiNetwork(ui->inputSSID->text(), "00:11:22:33:44:55");
     if ( !router->isSupported() )
         return;
     switch ( router->getType() )
@@ -89,8 +90,8 @@ void RouterKeygen::calculateKeys()
     case  WifiNetwork::DLINK:
                                 this->calculator = new DlinkKeygen(router);
                                 break;
-    case  WifiNetwork::ALICE:
-                                this->calculator = new SkyV1Keygen(router);
+    case  WifiNetwork::PIRELLI:
+                                this->calculator = new PirelliKeygen(router);
                                 break;
     }
     connect( this->calculator , SIGNAL( finished() ), this , SLOT( getResults() ) );

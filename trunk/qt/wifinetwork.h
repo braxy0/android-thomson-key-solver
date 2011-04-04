@@ -13,6 +13,7 @@ class WifiNetwork
         bool ssidFilter();
         int type;
         void calcEircomMAC();
+        void calcFastwebMAC();
     public:
         WifiNetwork(QString ssid , QString mac = "");
         QString getSSID() const;
