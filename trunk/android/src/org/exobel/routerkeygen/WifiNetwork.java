@@ -131,9 +131,9 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 				type = TYPE.PIRELLI;
 				return true;
 			}
-		if ( ssid.matches("FASTWEB-[1-2]-002196[0-9A-F]{6}|FASTWEB-[1-2]-00036F[0-9A-F]{6}") )
+		if ( ssid.matches("FASTWEB-[1-2]-002196[0-9A-Fa-f]{6}|FASTWEB-[1-2]-00036F[0-9A-Fa-f]{6}") )
 		{
-			ssidSubpart = new String ( ssid.substring(ssid.length()-12));
+			ssidSubpart = ssid.substring(ssid.length()-12);
 			if ( mac.equals("") )
 				calcFastwebMAC();
 			type = TYPE.TELSEY;

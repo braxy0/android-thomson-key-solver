@@ -33,13 +33,9 @@ public class EircomKeygen extends KeygenThread  {
 		mac = StringUtils.dectoString(macDec) + "Although your world wonders me, ";
 		md.reset();
 		md.update(mac.getBytes());
-		byte [] pass = new byte[13];
 		byte [] hash = md.digest();
-		for ( int i = 0 ; i < 13 ; ++i )
-			pass[i] = hash[i];
-			
 		try {
-			pwList.add(StringUtils.getHexString(pass));
+			pwList.add(StringUtils.getHexString(hash).substring(0,26));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

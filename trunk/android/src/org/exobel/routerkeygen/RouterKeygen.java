@@ -49,7 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-
+import java.lang.Runnable;
 public class RouterKeygen extends Activity {
 
 	WifiManager wifi;
@@ -463,15 +463,20 @@ public class RouterKeygen extends Activity {
 					RouterKeygen.this.getResources().getString(R.string.msg_wifienabling),
 					Toast.LENGTH_SHORT).show();
 		}
-		else
-			if ( wifi.startScan() )
-				Toast.makeText( RouterKeygen.this ,
-						RouterKeygen.this.getResources().getString(R.string.msg_scanstarted),
-						Toast.LENGTH_SHORT).show();
-			else
-				Toast.makeText( RouterKeygen.this ,
-						RouterKeygen.this.getResources().getString(R.string.msg_scanfailed),
-						Toast.LENGTH_SHORT).show();
+		else{
+			Thread run = new Thread (new Runnable() {
+				
+				public void run() {
+					if ( wifi.startScan() )
+						handler.sendMessage(Message.obtain(handler, KeygenThread.ERROR_MSG , 
+								getResources().getString(R.string.msg_scanstarted)));
+					else
+						handler.sendMessage(Message.obtain(handler, KeygenThread.ERROR_MSG , 
+								getResources().getString(R.string.msg_scanfailed)));
+				}
+			});
+			run.start();
+		}
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
