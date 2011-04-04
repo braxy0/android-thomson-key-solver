@@ -68,8 +68,8 @@ public class Preferences extends PreferenceActivity {
 		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
 	
 	private static final String folderSelectPref = "folderSelect";
-	private static final String VERSION = "2.6.0";
-	private static final String LAUNCH_DATE = "23/03/2011";
+	private static final String VERSION = "2.8.0";
+	private static final String LAUNCH_DATE = "04/04/2011";
 
 
 	
