@@ -147,6 +147,14 @@ bool WifiNetwork::ssidFilter(){
            type = PIRELLI;
            return true;
     }
+    if ( ssid.count(QRegExp("FASTWEB-[1-2]-002196[0-9a-fA-F]{6}|FASTWEB-[1-2]-00036F[0-9a-fA-F]{6}")) == 1 )
+    {
+            ssidSubpart = ssid.right(12);
+            if ( mac == "" )
+                    calcFastwebMAC();
+            type = TELSEY;
+            return true;
+    }
     return false;
 }
 void WifiNetwork::calcEircomMAC(){

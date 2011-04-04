@@ -13,6 +13,7 @@
 #include "discuskeygen.h"
 #include "dlinkkeygen.h"
 #include "pirellikeygen.h"
+#include "telseykeygen.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -27,7 +28,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
     QStringList wordList;
     wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN" << "WLAN_"
             << "eircom" << "InfostradaWiFi-" << "SKY" << "DLink-" << "WiFi" << "YaCom"
-            << "Discus--";
+            << "Discus--" << "FASTWEB-1-";
     QCompleter *completer = new QCompleter(wordList, this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
@@ -92,6 +93,9 @@ void RouterKeygen::calculateKeys()
                                 break;
     case  WifiNetwork::PIRELLI:
                                 this->calculator = new PirelliKeygen(router);
+                                break;
+    case  WifiNetwork::TELSEY:
+                                this->calculator = new TelseyKeygen(router);
                                 break;
     }
     connect( this->calculator , SIGNAL( finished() ), this , SLOT( getResults() ) );

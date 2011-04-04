@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     wlan2keygen.cpp \
     wlan6keygen.cpp \
     dlinkkeygen.cpp \
-    pirellikeygen.cpp
+    pirellikeygen.cpp \
+    telseykeygen.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
@@ -42,7 +43,8 @@ HEADERS  += routerkeygen.h \
     wlan2keygen.h \
     wlan6keygen.h \
     dlinkkeygen.h \
-    pirellikeygen.h
+    pirellikeygen.h \
+    telseykeygen.h
 
 FORMS    += routerkeygen.ui
 
