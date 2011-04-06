@@ -34,8 +34,10 @@ public class OnoKeygen extends KeygenThread {
 					resources.getString(R.string.msg_shortessid6)));
 			return;
 		}
-		String val = router.ssid.substring(0,12)+ 
-					Integer.toString(Integer.parseInt(router.ssid.substring(12))+1);
+		String val = router.ssid.substring(0,11)+ 
+					Integer.toString(Integer.parseInt(router.ssid.substring(11))+1);
+		if ( val.length() < 13 )
+			val = router.ssid.substring(0,11)+ "0" + router.ssid.substring(11);
 		int [] pseed = new int[4];
 		pseed[0] = 0;
 		pseed[1] = 0;
