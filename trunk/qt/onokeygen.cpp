@@ -13,7 +13,10 @@ void OnoKeygen::run(){
         }
         QString val = "";
         val.setNum(router->getSSID().at(12).digitValue() + 1, 10);
-        val = router->getSSID().left(12) + val;
+        if ( val.size() < 2 )
+            val = router->getSSID().left(11) + "0" + val;
+        else
+            val = router->getSSID().left(11) + val;
         int pseed[4];
         pseed[0] = 0;
         pseed[1] = 0;
