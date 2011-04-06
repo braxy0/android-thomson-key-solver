@@ -23,6 +23,7 @@ class WifiNetwork
         QString getSSIDsubpart() const;
         int getType() const;
         bool isSupported() const;
+        QVector<AliceMagicInfo *> & getSupportedAlice();
         enum SUPPORTED{
             THOMSON = 0 , DLINK , DISCUS , VERIZON ,
             EIRCOM , PIRELLI , TELSEY , ALICE ,

@@ -30,7 +30,9 @@ SOURCES += main.cpp\
     onokeygen.cpp \
     huaweikeygen.cpp \
     alicemagicinfo.cpp \
-    alicehandler.cpp
+    alicehandler.cpp \
+    alicekeygen.cpp \
+    sha256.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
@@ -52,7 +54,9 @@ HEADERS  += routerkeygen.h \
     onokeygen.h \
     huaweikeygen.h \
     alicemagicinfo.h \
-    alicehandler.h
+    alicehandler.h \
+    alicekeygen.h \
+    sha256.h
 
 FORMS    += routerkeygen.ui
 

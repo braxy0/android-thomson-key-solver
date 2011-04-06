@@ -6,7 +6,7 @@ AliceHandler::AliceHandler(QString a) : alice(a)
 
 }
 AliceHandler::~AliceHandler(){
-    cleanInfo();
+  //  cleanInfo();
 }
 bool AliceHandler::isSupported(){
     return !this->supportedAlice.isEmpty();

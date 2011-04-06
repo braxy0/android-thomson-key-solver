@@ -16,6 +16,7 @@
 #include "telseykeygen.h"
 #include "onokeygen.h"
 #include "huaweikeygen.h"
+#include "alicekeygen.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -54,8 +55,8 @@ RouterKeygen::~RouterKeygen()
 void RouterKeygen::calculateKeys()
 {//TECOM-AH4222-527A92
    ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
-    //router= new WifiNetwork(ui->inputSSID->text());
-   router= new WifiNetwork(ui->inputSSID->text(), "64:16:F0:35:1C:FD");
+   router= new WifiNetwork(ui->inputSSID->text());
+   //router= new WifiNetwork(ui->inputSSID->text(), "64:16:F0:35:1C:FD");
     if ( !router->isSupported() )
         return;
     switch ( router->getType() )
@@ -105,7 +106,14 @@ void RouterKeygen::calculateKeys()
     case  WifiNetwork::HUAWEI:
                                 this->calculator = new HuaweiKeygen(router);
                                 break;
+    case  WifiNetwork::ALICE:
+                                this->calculator = new AliceKeygen(router);
+                                break;
+    default:    this->calculator = NULL;
+                break;
     }
+    if ( this->calculator == NULL )
+        return;
     connect( this->calculator , SIGNAL( finished() ), this , SLOT( getResults() ) );
     this->calculator->start();
 }

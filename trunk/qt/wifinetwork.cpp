@@ -22,6 +22,10 @@ int  WifiNetwork::getType() const{
     return this->type;
 }
 
+QVector<AliceMagicInfo *> & WifiNetwork::getSupportedAlice(){
+    return this->supportedAlice;
+}
+
 bool WifiNetwork::isSupported() const{
     return this->supported && !this->newThomson;
 }
