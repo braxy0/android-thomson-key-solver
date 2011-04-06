@@ -173,7 +173,7 @@ public class TelseyKeygen extends KeygenThread {
 	}	
 	
 	public void run(){
-		Hash hash = new Hash();
+		JenkinsHash hash = new JenkinsHash();
 		if ( router.getMac().equals("") ) 
 		{
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 

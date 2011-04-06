@@ -2,17 +2,66 @@ package org.exobel.routerkeygen;
 
 
 /**
- * <b>This is a Bob Jenkins hashing algorithm implementation</b>
- * <br> 
- * These are functions for producing 32-bit hashes for hash table lookup.
- * hashword(), hashlittle(), hashlittle2(), hashbig(), mix(), and final()
- * are externally useful functions.  Routines to test the hash are included
- * if SELF_TEST is defined.  You can use this free for any purpose.  It's in
- * the public domain.  It has no warranty.
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * <p>Fast, well distributed, cross-platform hash functions.
+ * </p>
+ *
+ * <p>Development background: I was surprised to discovered that there isn't a good cross-platform hash function defined for strings. MD5, SHA, FVN, etc, all define hash functions over bytes, meaning that it's under-specified for strings.
+ * </p>
+ *
+ * <p>So I set out to create a standard 32 bit string hash that would be well defined for implementation in all languages, have very high performance, and have very good hash properties such as distribution. After evaluating all the options, I settled on using Bob Jenkins' lookup3 as a base. It's a well studied and very fast hash function, and the hashword variant can work with 32 bits at a time (perfect for hashing unicode code points). It's also even faster on the latest JVMs which can translate pairs of shifts into native rotate instructions.
+ * </p>
+ * <p>The only problem with using lookup3 hashword is that it includes a length in the initial value. This would suck some performance out since directly hashing a UTF8 or UTF16 string (Java) would require a pre-scan to get the actual number of unicode code points. The solution was to simply remove the length factor, which is equivalent to biasing initVal by -(numCodePoints*4). This slightly modified lookup3 I define as lookup3ycs.
+ * </p>
+ * <p>So the definition of the cross-platform string hash lookup3ycs is as follows:
+ * </p>
+ * <p>The hash value of a character sequence (a string) is defined to be the hash of its unicode code points, according to lookup3 hashword, with the initval biased by -(length*4).
+ * </p>
+ *<p>So by definition
+ *</p>
+ * <pre>
+ * lookup3ycs(k,offset,length,initval) == lookup3(k,offset,length,initval-(length*4))
+ *
+ * AND
+ *
+ * lookup3ycs(k,offset,length,initval+(length*4)) == lookup3(k,offset,length,initval)
+ * </pre>
+ * <p>An obvious advantage of this relationship is that you can use lookup3 if you don't have an implementation of lookup3ycs.
+ * </p>
+ *
+ *
+ * @author yonik
  */
 public class JenkinsHash {
-
-    // max value to limit it to 4 bytes
+  /**
+   * A Java implementation of hashword from lookup3.c by Bob Jenkins
+   * (<a href="http://burtleburtle.net/bob/c/lookup3.c">original source</a>).
+   *
+   * @param k   the key to hash
+   * @param offset   offset of the start of the key
+   * @param length   length of the key
+   * @param initval  initial value to fold into the hash
+   * @return  the 32 bit hash code
+   */
+	
+	
+	 // max value to limit it to 4 bytes
     private static final long MAX_VALUE = 0xFFFFFFFFL;
 
     // internal variables used in the various calculations
@@ -20,18 +69,6 @@ public class JenkinsHash {
     long b;
     long c;
 
-    /**
-     * Convert a byte into a long value without making it negative.
-     * @param b
-     * @return
-     */
-    private long byteToLong(byte b) {
-        long val = b & 0x7F;
-        if ((b & 0x80) != 0) {
-            val += 128;
-        }
-        return val;
-    }
 
     /**
      * Do addition and turn into 4 bytes.
@@ -73,125 +110,78 @@ public class JenkinsHash {
         return (val << shift) & MAX_VALUE;
     }
 
-    /**
-     * Convert 4 bytes from the buffer at offset into a long value.
-     * @param bytes
-     * @param offset
-     * @return
-     */
-    private long fourByteToLong(byte[] bytes, int offset) {
-        return (byteToLong(bytes[offset + 0])
-                + (byteToLong(bytes[offset + 1]) << 8)
-                + (byteToLong(bytes[offset + 2]) << 16)
-                + (byteToLong(bytes[offset + 3]) << 24));
+    
+    private long rot(long val, int shift){
+    	return (leftShift(val, shift)|(val>>>(32-shift))) & MAX_VALUE;
     }
-
     /**
-     * Mix up the values in the hash function.
+     * Mix up the values in the hash function. 
      */
     private void hashMix() {
-        a = subtract(a, b);
-        a = subtract(a, c);
-        a = xor(a, c >> 13);
-        b = subtract(b, c);
-        b = subtract(b, a);
-        b = xor(b, leftShift(a, 8));
-        c = subtract(c, a);
-        c = subtract(c, b);
-        c = xor(c, (b >> 13));
-        a = subtract(a, b);
-        a = subtract(a, c);
-        a = xor(a, (c >> 12));
-        b = subtract(b, c);
-        b = subtract(b, a);
-        b = xor(b, leftShift(a, 16));
-        c = subtract(c, a);
-        c = subtract(c, b);
-        c = xor(c, (b >> 5));
-        a = subtract(a, b);
-        a = subtract(a, c);
-        a = xor(a, (c >> 3));
-        b = subtract(b, c);
-        b = subtract(b, a);
-        b = xor(b, leftShift(a, 10));
-        c = subtract(c, a);
-        c = subtract(c, b);
-        c = xor(c, (b >> 15));
+      a = subtract(a,c);
+      a = xor(a, rot(c, 4));
+      c = add(c, b);
+      b = subtract(b,a);
+      b = xor(b, rot(a, 6));
+      a = add(a, c);
+      c = subtract(c,b);
+      c = xor(c, rot(b, 8));
+      b = add(b, a);
+      a = subtract(a,c);
+      a = xor(a, rot(c, 16));
+      c = add(c, b); 
+      b = subtract(b,a);
+      b = xor(b, rot(a, 19));
+      a = add(a, c);
+      c = subtract(c,b);
+      c = xor(c, rot(b, 4));
+      b = add(b, a);
     }
 
-    /**
-     * Hash a variable-length key into a 32-bit value.  Every bit of the
-     * key affects every bit of the return value.  Every 1-bit and 2-bit
-     * delta achieves avalanche.  The best hash table sizes are powers of 2.
-     *
-     * @param buffer       Byte array that we are hashing on.
-     * @param initialValue Initial value of the hash if we are continuing from
-     *                     a previous run.  0 if none.
-     * @return Hash value for the buffer.
-     */
-    public long hash(byte[] buffer, long initialValue) {
-        int len, pos;
+  @SuppressWarnings("fallthrough")
+  public long hashword(long[] k, int length, long initval) {
+   
+    a = b = c = 0xdeadbeef + (length<<2) +  ( initval & MAX_VALUE ) ;
 
-        // set up the internal state
-        // the golden ratio; an arbitrary value
-        a = 0x09e3779b9L;
-        // the golden ratio; an arbitrary value
-        b = 0x09e3779b9L;
-        // the previous hash value
-        c = 0x0E6359A60L;
+    int i=0;
+    while (length > 3)
+    {
+      a = add( a, k[i+0]);
+      b = add( b, k[i+1]); 
+      c = add( c, k[i+2]); 
+      hashMix();
 
-        // handle most of the key
-        pos = 0;
-        for (len = buffer.length; len >= 12; len -= 12) {
-            a = add(a, fourByteToLong(buffer, pos));
-            b = add(b, fourByteToLong(buffer, pos + 4));
-            c = add(c, fourByteToLong(buffer, pos + 8));
-            hashMix();
-            pos += 12;
-        }
-
-        c += buffer.length;
-
-        // all the case statements fall through to the next on purpose
-        switch (len) {
-            case 11:
-                c = add(c, leftShift(byteToLong(buffer[pos + 10]), 24));
-            case 10:
-                c = add(c, leftShift(byteToLong(buffer[pos + 9]), 16));
-            case 9:
-                c = add(c, leftShift(byteToLong(buffer[pos + 8]), 8));
-                // the first byte of c is reserved for the length
-            case 8:
-                b = add(b, leftShift(byteToLong(buffer[pos + 7]), 24));
-            case 7:
-                b = add(b, leftShift(byteToLong(buffer[pos + 6]), 16));
-            case 6:
-                b = add(b, leftShift(byteToLong(buffer[pos + 5]), 8));
-            case 5:
-                b = add(b, byteToLong(buffer[pos + 4]));
-            case 4:
-                a = add(a, leftShift(byteToLong(buffer[pos + 3]), 24));
-            case 3:
-                a = add(a, leftShift(byteToLong(buffer[pos + 2]), 16));
-            case 2:
-                a = add(a, leftShift(byteToLong(buffer[pos + 1]), 8));
-            case 1:
-                a = add(a, byteToLong(buffer[pos + 0]));
-                // case 0: nothing left to add
-        }
-        hashMix();
-
-        return c;
+      length -= 3;
+      i += 3;
     }
 
-    /**
-     * See hash(byte[] buffer, long initialValue)
-     *
-     * @param buffer Byte array that we are hashing on.
-     * @return Hash value for the buffer.
-     */
-    public long hash(byte[] buffer) {
-        return hash(buffer, 0);
+    switch(length) {
+      case 3 : c = add( c, k[i+2]);  // fall through
+      case 2 : b = add( b, k[i+1]);  // fall through
+      case 1 : a = add( a, k[i+0]);  // fall through
+      		   finalHash();
+      case 0:
+        break;
     }
+    return c;
+  }
+
+  void finalHash(){
+	  c = xor(c, b);
+	  c = subtract(c,rot(b,14) );
+	  a = xor(a, c);
+	  a = subtract(a,rot(c,11) );
+	  b = xor(b,a);
+	  b = subtract(b, rot(a,25));
+	  c = xor(c, b);
+	  c = subtract(c,rot(b,16) );
+	  a = xor(a, c);
+	  a = subtract(a,rot(c,4) );
+	  b = xor(b,a);
+	  b = subtract(b, rot(a,14));
+	  c = xor(c, b);
+	  c = subtract(c,rot(b,24) );
+  }
+ 
 
 }

@@ -20,7 +20,6 @@ class AliceHandle extends DefaultHandler implements Serializable{
 	} 
 	public void startElement(String uri, String localName,
 	        String qName, Attributes attributes){
-		boolean supported;
 		int [] magic = new int[2];
 		String serial;
 		String mac;
@@ -30,8 +29,7 @@ class AliceHandle extends DefaultHandler implements Serializable{
 			mac = attributes.getValue("mac");
 			magic[0] = Integer.parseInt(attributes.getValue("q"));
 			magic[1] = Integer.parseInt(attributes.getValue("k"));
-			supported = true;
-			supportedAlice.add(new AliceMagicInfo(alice, supported, magic, serial, mac));
+			supportedAlice.add(new AliceMagicInfo(alice, magic, serial, mac));
 		}
 	}
 	
