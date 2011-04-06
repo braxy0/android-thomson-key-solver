@@ -155,6 +155,13 @@ bool WifiNetwork::ssidFilter(){
             type = TELSEY;
             return true;
     }
+    /*ssid must be of the form P1XXXXXX0000X or p1XXXXXX0000X*/
+    if ( ssid.count(QRegExp("[Pp]1[0-9]{6}0{4}[0-9]")) == 1  )
+    {
+            ssidSubpart = "";
+            type = ONO_WEP;
+            return true;
+    }
     return false;
 }
 void WifiNetwork::calcEircomMAC(){

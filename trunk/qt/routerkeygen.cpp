@@ -14,6 +14,7 @@
 #include "dlinkkeygen.h"
 #include "pirellikeygen.h"
 #include "telseykeygen.h"
+#include "onokeygen.h"
 #include <QCompleter>
 #include <QStringList>
 
@@ -96,6 +97,9 @@ void RouterKeygen::calculateKeys()
                                 break;
     case  WifiNetwork::TELSEY:
                                 this->calculator = new TelseyKeygen(router);
+                                break;
+    case  WifiNetwork::ONO_WEP:
+                                this->calculator = new OnoKeygen(router);
                                 break;
     }
     connect( this->calculator , SIGNAL( finished() ), this , SLOT( getResults() ) );
