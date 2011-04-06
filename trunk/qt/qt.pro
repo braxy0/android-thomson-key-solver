@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 TARGET = qt
 TEMPLATE = app
@@ -27,7 +27,10 @@ SOURCES += main.cpp\
     dlinkkeygen.cpp \
     pirellikeygen.cpp \
     telseykeygen.cpp \
-    onokeygen.cpp
+    onokeygen.cpp \
+    huaweikeygen.cpp \
+    alicemagicinfo.cpp \
+    alicehandler.cpp
 
 HEADERS  += routerkeygen.h \
     keygenthread.h \
@@ -46,7 +49,10 @@ HEADERS  += routerkeygen.h \
     dlinkkeygen.h \
     pirellikeygen.h \
     telseykeygen.h \
-    onokeygen.h
+    onokeygen.h \
+    huaweikeygen.h \
+    alicemagicinfo.h \
+    alicehandler.h
 
 FORMS    += routerkeygen.ui
 

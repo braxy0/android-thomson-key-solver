@@ -1,6 +1,7 @@
 #ifndef WIFINETWORK_H
 #define WIFINETWORK_H
 #include <QString>
+#include "alicehandler.h"
 
 class WifiNetwork
 {
@@ -8,6 +9,7 @@ class WifiNetwork
         QString ssid;
         QString ssidSubpart;
         QString mac;
+        QVector<AliceMagicInfo *> supportedAlice;
         bool supported;
         bool newThomson;
         bool ssidFilter();

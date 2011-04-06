@@ -162,6 +162,39 @@ bool WifiNetwork::ssidFilter(){
             type = ONO_WEP;
             return true;
     }
+    if ( ( ssid.count(QRegExp("INFINITUM[0-9a-zA-Z]{4}")) == 1 ) && (
+        mac.startsWith("00:25:9E") || mac.startsWith("00:25:68") ||
+        mac.startsWith("00:22:A1") || mac.startsWith("00:1E:10") ||
+        mac.startsWith("00:18:82") || mac.startsWith("00:0F:F2") ||
+        mac.startsWith("00:E0:FC") || mac.startsWith("28:6E:D4") ||
+        mac.startsWith("54:A5:1B") || mac.startsWith("F4:C7:14") ||
+        mac.startsWith("28:5F:DB") || mac.startsWith("30:87:30") ||
+        mac.startsWith("4C:54:99") || mac.startsWith("40:4D:8E") ||
+        mac.startsWith("64:16:F0") || mac.startsWith("78:1D:BA") ||
+        mac.startsWith("84:A8:E4") || mac.startsWith("04:C0:6F") ||
+        mac.startsWith("5C:4C:A9") || mac.startsWith("1C:1D:67") ||
+        mac.startsWith("CC:96:A0") || mac.startsWith("20:2B:C1") ) )
+    {
+            if ( ssid.startsWith("INFINITUM")  )
+                    ssidSubpart = ssid.right(4);
+            else
+                    ssidSubpart = "";
+            type = HUAWEI;
+            return true;
+    }
+    if ( ssid.count(QRegExp("[aA]lice-[0-9]{8}")) == 1 )
+    {
+        AliceHandler aliceReader(ssid.left(9));
+        aliceReader.readFile("alice.xml");
+        ssidSubpart = ssid.right(8);
+        type = ALICE;
+        if( !aliceReader.isSupported() )
+                return false;
+        supportedAlice = aliceReader.getSupportedAlice();
+        if ( getMac().size() < 6 )
+                mac = supportedAlice.at(0)->mac;
+        return true;
+    }
     return false;
 }
 void WifiNetwork::calcEircomMAC(){
