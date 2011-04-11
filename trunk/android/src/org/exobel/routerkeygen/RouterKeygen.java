@@ -373,12 +373,12 @@ public class RouterKeygen extends Activity {
 						    	if(e.length() != 2)
 						    		return;
 						    	
-							    for(int i = 0; i < 5; ++i)
+							    for(int i = 0; i < 6; ++i)
 							    {
-							    	if(macs[5 - i].getText().length() != 0)
+							    	if(macs[i].getText().length() != 0)
 							    		continue;
 							    	
-						    		macs[5 - i].requestFocus();
+						    		macs[i].requestFocus();
 						    		return;
 							    }
 							}
