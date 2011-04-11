@@ -31,8 +31,10 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.ClipboardManager;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -339,13 +341,14 @@ public class RouterKeygen extends Activity {
 			    {
 			    	layout.findViewById(R.id.manual_mac_root).setVisibility(View.VISIBLE);
 			    	edit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-				    EditText mac1 = (EditText) layout.findViewById(R.id.input_mac_pair1);
-				    EditText mac2 = (EditText) layout.findViewById(R.id.input_mac_pair2);
-				    EditText mac3 = (EditText) layout.findViewById(R.id.input_mac_pair3);
-				    EditText mac4 = (EditText) layout.findViewById(R.id.input_mac_pair4);
-				    EditText mac5 = (EditText) layout.findViewById(R.id.input_mac_pair5);
-				    EditText mac6 = (EditText) layout.findViewById(R.id.input_mac_pair6);
-		     		InputFilter maxSize = new InputFilter.LengthFilter(2);
+			    	final EditText macs[] = new EditText[6];
+			    	macs[0] = (EditText) layout.findViewById(R.id.input_mac_pair1);
+			    	macs[1] = (EditText) layout.findViewById(R.id.input_mac_pair2);
+			    	macs[2] = (EditText) layout.findViewById(R.id.input_mac_pair3);
+			    	macs[3] = (EditText) layout.findViewById(R.id.input_mac_pair4);
+			    	macs[4] = (EditText) layout.findViewById(R.id.input_mac_pair5);
+			    	macs[5] = (EditText) layout.findViewById(R.id.input_mac_pair6);
+		     		final InputFilter maxSize = new InputFilter.LengthFilter(2);
 	        		InputFilter filterMac = new InputFilter() { 
 				        public CharSequence filter(CharSequence source, int start, int end, 
 				        		Spanned dest, int dstart, int dend) { 
@@ -357,13 +360,30 @@ public class RouterKeygen extends Activity {
 				        		                }
 				        		                return null; 
 				        		        }
-				        		}; 
-				    mac1.setFilters(new InputFilter[]{filterMac , maxSize});
-				    mac2.setFilters(new InputFilter[]{filterMac , maxSize});
-				    mac3.setFilters(new InputFilter[]{filterMac , maxSize});
-				    mac4.setFilters(new InputFilter[]{filterMac , maxSize});
-				    mac5.setFilters(new InputFilter[]{filterMac , maxSize});
-				    mac6.setFilters(new InputFilter[]{filterMac , maxSize});
+				        		};
+				    for(final EditText mac : macs)
+				    {
+				    	mac.setFilters(new InputFilter[]{filterMac , maxSize});
+					    mac.addTextChangedListener(new TextWatcher() {
+							public void onTextChanged(CharSequence s, int start, int before, int count) {}
+							
+							public void beforeTextChanged(CharSequence s, int start, int count,int after) {}
+							
+							public void afterTextChanged(Editable e) {
+						    	if(e.length() != 2)
+						    		return;
+						    	
+							    for(int i = 0; i < 5; ++i)
+							    {
+							    	if(macs[5 - i].getText().length() != 0)
+							    		continue;
+							    	
+						    		macs[5 - i].requestFocus();
+						    		return;
+							    }
+							}
+						});
+				    }
 			    }
 				builder.setNeutralButton(getString(R.string.bt_manual_calc), new OnClickListener() {			
 					public void onClick(DialogInterface dialog, int which) {
