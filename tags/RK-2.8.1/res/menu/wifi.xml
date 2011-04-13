@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/wifi_scan"
+          android:icon="@drawable/ic_menu_refresh"
+          android:title="@string/menu_scan" />
+    <item android:id="@+id/manual_input"
+          android:icon="@drawable/ic_menu_search"
+          android:title="@string/menu_manual" />  
+    <item android:id="@+id/pref"
+          android:icon="@drawable/ic_menu_preferences"
+          android:title="@string/menu_preferences" />
+</menu>
