@@ -6,7 +6,7 @@
 #include "wifinetwork.h"
 
 class KeygenThread : public QThread
-{   
+{
     public:
         KeygenThread( WifiNetwork * router );
         QVector<QString> getResults() const;

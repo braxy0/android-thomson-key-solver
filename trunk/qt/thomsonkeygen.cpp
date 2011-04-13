@@ -38,7 +38,7 @@ ThomsonKeygen::~ThomsonKeygen(){
 void ThomsonKeygen::run(){
     if ( !localCalc() )
     {
-        results.append("erro");
+        nativeCalc();
         return;
     }
     if ( results.isEmpty() )

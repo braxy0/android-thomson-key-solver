@@ -4,6 +4,7 @@
 
 class EircomKeygen : public KeygenThread
 {
+     Q_OBJECT
     private:
         QString dectoString( int mac);
 
