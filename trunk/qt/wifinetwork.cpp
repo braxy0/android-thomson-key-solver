@@ -189,7 +189,7 @@ bool WifiNetwork::ssidFilter(){
     if ( ssid.count(QRegExp("[aA]lice-[0-9]{8}")) == 1 )
     {
         AliceHandler aliceReader(ssid.left(9));
-        aliceReader.readFile("alice.xml");
+        aliceReader.readFile(":/alice/alice.xml");
         ssidSubpart = ssid.right(8);
         type = ALICE;
         if( !aliceReader.isSupported() )

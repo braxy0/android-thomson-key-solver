@@ -55,10 +55,13 @@ RouterKeygen::~RouterKeygen()
 void RouterKeygen::calculateKeys()
 {//TECOM-AH4222-527A92
    ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
-   router= new WifiNetwork(ui->inputSSID->text());
-   //router= new WifiNetwork(ui->inputSSID->text(), "64:16:F0:35:1C:FD");
+   //router= new WifiNetwork(ui->inputSSID->text());
+    router= new WifiNetwork(ui->inputSSID->text(), "64:16:F0:35:1C:FD");
     if ( !router->isSupported() )
+    {
+        ui->listWidget->insertItem(0,  "Not supported");
         return;
+    }
     switch ( router->getType() )
     {
     case WifiNetwork::THOMSON:
@@ -123,6 +126,10 @@ void RouterKeygen::getResults()
 {
     ui->listWidget->clear();
     listKeys = this->calculator->getResults();
+    if ( listKeys.isEmpty() )
+    {
+        ui->listWidget->insertItem(0, "No results.");
+    }
     for ( int i = 0 ; i < listKeys.size() ;++i)
         ui->listWidget->insertItem(0,listKeys.at(i) );
     delete calculator;
