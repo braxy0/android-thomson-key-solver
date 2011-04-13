@@ -42,7 +42,6 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_ThomsonKeygen_thirdD
 	SHA_CTX sha1;
 	int a,b,c;
 
-    __android_log_write(ANDROID_LOG_DEBUG, "NativeThomson","enter");
     jclass cls = (*env)->GetObjectClass(env, obj);
     jfieldID fid_s = (*env)->GetFieldID(env, cls, "stopRequested", "Z");
     if ( fid_s == NULL ) {
@@ -97,7 +96,6 @@ JNIEXPORT jobjectArray JNICALL Java_org_exobel_routerkeygen_ThomsonKeygen_thirdD
 			}
 		}
 	}
-	__android_log_write(ANDROID_LOG_DEBUG, "NativeThomson","leaving");
 	jobjectArray ret;
 	ret= (jobjectArray)(*env)->NewObjectArray(env,keys, (*env)->FindClass(env,"java/lang/String"),0);
 	for ( i = 0; i < keys ; ++i )
