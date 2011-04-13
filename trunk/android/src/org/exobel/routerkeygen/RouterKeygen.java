@@ -30,7 +30,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.text.ClipboardManager;
+import android.content.ClipboardManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -187,7 +187,7 @@ public class RouterKeygen extends Activity {
 	private static final int DIALOG_MANUAL_CALC = 2;
 	private static final int DIALOG_NATIVE_CALC = 3;
 	private static final int DIALOG_AUTO_CONNECT = 4;
-	protected Dialog onCreateDialog(int id ) {
+	protected Dialog onCreateDialog(int id , Bundle args) {
 		switch (id) {
 			case DIALOG_THOMSON3G: {
 				progressDialog = new ProgressDialog(RouterKeygen.this);
