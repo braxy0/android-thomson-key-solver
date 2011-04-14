@@ -627,7 +627,8 @@ public class RouterKeygen extends Activity {
 				begin = System.currentTimeMillis()-begin;
 				list_key = RouterKeygen.this.calculator.getResults();
 				Log.d(TAG, "Time to solve:" + begin);
-				showDialog(DIALOG_KEY_LIST);
+				if (!isFinishing())
+					showDialog(DIALOG_KEY_LIST);
 				return;
 			}
 			if ( msg.what == KeygenThread.ERROR_MSG ) 
@@ -647,6 +648,8 @@ public class RouterKeygen extends Activity {
 									Toast.LENGTH_SHORT).show();
 							return;
 						}
+						if (isFinishing())
+							return;
 						RouterKeygen.this.calculator.router = tmp;
 						RouterKeygen.this.calculator.setPriority(Thread.MAX_PRIORITY);
 						RouterKeygen.this.calculator.start();
@@ -655,7 +658,8 @@ public class RouterKeygen extends Activity {
 					}
 
 				}
-				Toast.makeText( RouterKeygen.this , msg.obj.toString() , Toast.LENGTH_SHORT).show();
+				if (!isFinishing())
+					Toast.makeText( RouterKeygen.this , msg.obj.toString() , Toast.LENGTH_SHORT).show();
 				return;
 			}
 			if ( msg.what == 2 )
@@ -666,7 +670,8 @@ public class RouterKeygen extends Activity {
 			if ( msg.what == 3 )
 			{
 				removeDialog(DIALOG_AUTO_CONNECT);
-				Toast.makeText( RouterKeygen.this ,msg.obj.toString() , Toast.LENGTH_SHORT).show();
+				if (!isFinishing())
+					Toast.makeText( RouterKeygen.this ,msg.obj.toString() , Toast.LENGTH_SHORT).show();
 				return;
 			}
 		}
