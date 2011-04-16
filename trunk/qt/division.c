@@ -2,8 +2,8 @@
  // Many thanks!
 
 
- //#if __GCCE__
- //#if __SERIES60_30__
+ #if __GCCE__
+// #if __SERIES60_32__
  extern unsigned int __aeabi_uidivmod(unsigned numerator, unsigned denominator);
  int __aeabi_idiv(int numerator, int denominator)
     {
@@ -15,7 +15,7 @@
     {
     return __aeabi_uidivmod (numerator, denominator);
     }
- //#endif // __SERIES60_30__
+ #endif // __SERIES60_30__
  //#endif // __GCCE__
 
 

@@ -26,7 +26,7 @@ RouterKeygen::RouterKeygen(QWidget *parent) :
 {
     ui->setupUi(this);
     connect( ui->calcButton , SIGNAL( clicked() ), this , SLOT( calculateKeys() ) );
-
+    this->setWindowIcon(QIcon(":/images/icon.png"));
     /*Auto-Complete!*/
     QStringList wordList;
     wordList << "TECOM-AH4222-" << "TECOM-AH4021-" << "Thomson" << "WLAN" << "WLAN_"
@@ -56,7 +56,13 @@ void RouterKeygen::calculateKeys()
 {//TECOM-AH4222-527A92
    ///router= new WifiNetwork(ui->inputSSID->text(), "00:1F:90:E2:7E:61");
    //router= new WifiNetwork(ui->inputSSID->text());
-    router= new WifiNetwork(ui->inputSSID->text(), "64:16:F0:35:1C:FD");
+    if ( calculator != NULL )
+    {
+        if ( calculator->isRunning() )
+            return;
+    }
+    delete router;
+    router= new WifiNetwork(ui->inputSSID->text(), "00:23:8e:48:e7:d4");
     if ( !router->isSupported() )
     {
         ui->listWidget->insertItem(0,  "Not supported");
@@ -134,4 +140,5 @@ void RouterKeygen::getResults()
         ui->listWidget->insertItem(0,listKeys.at(i) );
     delete calculator;
     calculator = NULL;
+
 }
