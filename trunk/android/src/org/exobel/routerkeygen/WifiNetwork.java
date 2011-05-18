@@ -67,7 +67,7 @@ public class WifiNetwork implements Comparable<WifiNetwork>, Serializable{
 		     ( ssid.startsWith("DMAX") && ssid.length() == 10 )  || 
 		     ( ssid.startsWith("privat") && ssid.length() == 12 ) ||
 		     ( ssid.startsWith("TN_private_") && ssid.length() == 17 ) || 
-		     ( ssid.startsWith("Cyta") && ssid.length() == 10 ))
+		     ( ssid.startsWith("CYTA") && ssid.length() == 10 ))
 		{
 			ssidSubpart = ssid.substring(ssid.length()-6);
 			if ( !mac.equals("") )

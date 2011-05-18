@@ -52,7 +52,6 @@
 								<b>Rui Araújo</b> - Exobel Team Member\n
 								<b>Luís Fonseca</b> - Exobel Team Member\n
 								<b>Ângela Igreja</b> for the Portuguese Translation\n
-								<b>Ângela Igreja</b> for the Portuguese Translation\n
 								<b>Simone Guidi</b> for the Italian Translation\n
 								<b>Matthijs de Rijk</b> and <b>Van Hove Sven</b> for the Dutch Translation\n
 								<b>Jon Uriarte</b> for the Spanish Translation and the WLAN_XX implementation\n
@@ -165,7 +164,7 @@
         <item>TECOM-AH4021-</item>
         <item>InfostradaWiFi-</item>
         <item>TN_private_</item>
-        <item>Cyta</item>
+        <item>CYTA</item>
     </string-array>
 </resources>
 
