@@ -423,12 +423,21 @@ public class Preferences extends PreferenceActivity {
 						editor.commit();
 						String path = mPath.toString();
 						mPath = new File(path +  File.separator + "RouterKeygen.dic");
-						if ( !mPath.exists() )
+						File second = new File(path +  File.separator + "RKDictionary.dic");
+						if ( !mPath.exists() && !second.exists())
+						{
 							Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_notfound) + " " + path,
-									Toast.LENGTH_SHORT).show();
+									Toast.LENGTH_SHORT).show();							
+						}
 						else
-							Toast.makeText(getBaseContext(),mPath.toString() +  " " + getResources().getString(R.string.pref_msg_found),
-									Toast.LENGTH_SHORT).show();
+						{
+							if ( mPath.exists() )
+								Toast.makeText(getBaseContext(),mPath.toString() +  " " + getResources().getString(R.string.pref_msg_found),
+										Toast.LENGTH_SHORT).show();
+							else
+								Toast.makeText(getBaseContext(),second.toString() +  " " + getResources().getString(R.string.pref_msg_found),
+										Toast.LENGTH_SHORT).show();
+						}
 					}
 				});
 	

@@ -193,7 +193,8 @@ public class ThomsonKeygen extends KeygenThread {
 		}
 		RandomAccessFile fis;
 		try {
-			fis = new RandomAccessFile(folderSelect + File.separator + "RouterKeygen.dic", "r");
+			File dictionay = getDictionaryFile();
+			fis = new RandomAccessFile(dictionay, "r");
 		} catch (FileNotFoundException e2) {
 			handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
 					resources.getString(R.string.msg_dictnotfound)));
@@ -291,6 +292,25 @@ public class ThomsonKeygen extends KeygenThread {
 		return true;
 	}
 	
+
+	private File getDictionaryFile() throws FileNotFoundException {
+		String firstName = folderSelect + File.separator + "RouterKeygen.dic";
+		String secondName = folderSelect + File.separator + "RKDictionary.dic";
+		try{
+			File dic = new File(firstName);
+			if ( dic.exists() )
+				return dic;
+			dic = new File(secondName);
+			if ( dic.exists() )
+				return dic;
+			else
+				throw new FileNotFoundException("Permissions Error");
+		} catch(SecurityException e  ){
+			e.printStackTrace();
+			throw new FileNotFoundException("Permissions Error");
+		}
+	}
+
 
 	static {
 		System.loadLibrary("thomson");
