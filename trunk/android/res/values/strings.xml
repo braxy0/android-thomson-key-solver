@@ -64,8 +64,8 @@
 								</string>
 	<string name="dialog_about_license">License</string>
 	<string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms 
-									<a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.</string>
-												
+									<a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.</string>										
+	<string name="dialog_paypal_init">Connecting to Paypal...</string>
 	
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
@@ -80,7 +80,7 @@
 	<string name="pref_donate_why">Buy me a coffee if you liked this application</string>
 	<string name="pref_about">About Router Keygen</string>
 	<string name="pref_about_desc">Router Keygen calculates default passwords for several common routers.\n\n
-			<a href="http://code.google.com/p/android-thomson-key-solver/">Project\'s Website</a>\n\nVersion: </string>
+						<a href="http://code.google.com/p/android-thomson-key-solver/">Project\'s Website</a>\n\nVersion: </string>
 	<string name="pref_msg_found">selected.</string>
 	<string name="pref_native">Native Calculation</string>
 	<string name="pref_hinton_native">Calculating on target if it fails to find the dictionary</string>
@@ -136,8 +136,9 @@
     <string name="msg_saved_key_file">saved to the SD card.</string>
     <string name="pref_msg_no_network">There is no network access.</string>
     <string name="msg_err_webdic_table">Error while processing online keys.</string>
-     
-       <!-- AUTOCOMPLETE SUPPORT -->
+    <string name="msg_err_paypal">Error while connecting to Paypal.</string>
+    
+    <!-- AUTOCOMPLETE SUPPORT -->
 	<string-array name="supported_routers">
         <item>Thomson</item>
         <item>SpeedTouch</item>

@@ -16,6 +16,7 @@ import java.security.MessageDigest;
 import java.util.Stack;
 import java.util.TreeSet;
 
+
 import com.paypal.android.MEP.PayPal;
 import com.paypal.android.MEP.PayPalPayment;
 
@@ -25,6 +26,7 @@ import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,8 +74,8 @@ public class Preferences extends PreferenceActivity {
 	private static final String VERSION = "2.8.1";
 	private static final String LAUNCH_DATE = "13/04/2011";
 
-	PayPal pp =null;
-	
+	PayPal pp = null;
+	AsyncTask<Void, Void, Void> paypalTask = null;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -101,8 +103,13 @@ public class Preferences extends PreferenceActivity {
   				new OnPreferenceClickListener() {
   					public boolean onPreferenceClick(Preference preference)
   					{
-  						(new AsyncTask<Void, Void, Void>() {
+  						paypalTask =  new AsyncTask<Void, Void, Void>() {
   					      
+  							protected void onPreExecute(){
+  								if ( PayPal.getInstance() == null || !PayPal.getInstance().isLibraryInitialized()) 
+  									showDialog(DIALOG_INITIALIZING_PAYPAL);
+  							}
+  							
   							protected Void doInBackground(Void... params) {
   								pp = PayPal.getInstance();
   								if(pp == null)
@@ -114,25 +121,27 @@ public class Preferences extends PreferenceActivity {
   							}
   				      
   							protected void onPostExecute(Void result ){
+  								removeDialog(DIALOG_INITIALIZING_PAYPAL);
   								if (PayPal.getInstance().isLibraryInitialized()) {
   									Toast.makeText(getBaseContext(),"Launching paypal",
   											Toast.LENGTH_SHORT).show();
   								}
   								else
   								{
-  									Toast.makeText(getBaseContext(),"Error launching paypal",
+  									Toast.makeText(getBaseContext(),getString(R.string.msg_err_paypal),
   										Toast.LENGTH_SHORT).show();
   									return;
   								}
   								PayPalPayment payment = new PayPalPayment();
   		  						payment.setSubtotal(new BigDecimal("8.25"));
-  		  						payment.setCurrencyType("USD");
-  		  						payment.setRecipient("bike-store-sandbox@gmail.com");
+  		  						payment.setCurrencyType("EUR");
+  		  						payment.setRecipient("exobel_1307657771_biz@gmail.com");
   		  						payment.setPaymentType(PayPal.PAYMENT_TYPE_GOODS);
   		  						Intent checkoutIntent = PayPal.getInstance().checkout(payment, Preferences.this);
   		  						startActivityForResult(checkoutIntent, 1); 
   							}
-  						}).execute();
+  						};
+  						paypalTask.execute();
   						
 
   						return true;
@@ -411,6 +420,7 @@ public class Preferences extends PreferenceActivity {
 	private static final int DIALOG_ERROR_NOSD = 1007;
 	private static final int DIALOG_ERROR_NOMEMORYONSD = 1008;
 	private static final int DIALOG_CHECKING_DOWNLOAD = 1009;
+	private static final int DIALOG_INITIALIZING_PAYPAL = 1010;
 
 
 
@@ -516,7 +526,6 @@ public class Preferences extends PreferenceActivity {
 			}
 			case DIALOG_ASK_DOWNLOAD:
 			{
-				
 				builder.setTitle(R.string.pref_download);
 				builder.setMessage(R.string.msg_dicislarge);
 				builder.setCancelable(false);
@@ -666,6 +675,21 @@ public class Preferences extends PreferenceActivity {
 				pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				pbarDialog.setMessage(getString(R.string.msg_wait));
 				return pbarDialog;
+			}
+			case DIALOG_INITIALIZING_PAYPAL:
+			{
+				ProgressDialog progressDialog =new ProgressDialog(this);
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.setCancelable(true);
+				progressDialog.setMessage(getString(R.string.dialog_paypal_init));
+				progressDialog.setOnCancelListener(new OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						removeDialog(DIALOG_INITIALIZING_PAYPAL);
+						paypalTask.cancel(true);
+					}
+				});
+				progressDialog.setIndeterminate(false);
+				return progressDialog;
 			}
 		}
 		return builder.create();
