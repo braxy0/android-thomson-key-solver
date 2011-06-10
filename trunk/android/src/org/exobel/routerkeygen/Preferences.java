@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -15,11 +16,13 @@ import java.security.MessageDigest;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import com.paypal.android.MEP.PayPal;
+import com.paypal.android.MEP.PayPalPayment;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -28,7 +31,7 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Environment;
@@ -60,8 +63,6 @@ public class Preferences extends PreferenceActivity {
 	byte[] dicVersion = new byte [2];
 	static byte[] cfvTable = new byte[18];
 	
-	private static final String PUB_DONATE = 
-		"market://details?id=org.exobel.routerkeygen.donate";
 	public static final String PUB_DOWNLOAD = 
 		"http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
 	private static final String PUB_DIC_CFV =
@@ -71,11 +72,14 @@ public class Preferences extends PreferenceActivity {
 	private static final String VERSION = "2.8.1";
 	private static final String LAUNCH_DATE = "13/04/2011";
 
-
+	PayPal pp =null;
+	
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.preferences);
+	
+		
 		findPreference("download").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference)
@@ -83,7 +87,7 @@ public class Preferences extends PreferenceActivity {
 						ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 					    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 					    if (netInfo == null || !netInfo.isConnectedOrConnecting()) {
-					    	Toast.makeText(getBaseContext(),getResources().getString(R.string.pref_msg_no_network),
+					    	Toast.makeText(getBaseContext(),getString(R.string.pref_msg_no_network),
 								Toast.LENGTH_SHORT).show();
 					        return true;
 					    }
@@ -92,17 +96,48 @@ public class Preferences extends PreferenceActivity {
 						return true;
 					}
 				});
+		
 		findPreference("donate").setOnPreferenceClickListener(
-				new OnPreferenceClickListener() {
-					public boolean onPreferenceClick(Preference preference) {
-						Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setData(Uri.parse(PUB_DONATE));
-						try {
-							Preferences.this.startActivity(intent);
-						} catch (ActivityNotFoundException anfe) {}
-						return true;
-					}
-				});
+  				new OnPreferenceClickListener() {
+  					public boolean onPreferenceClick(Preference preference)
+  					{
+  						(new AsyncTask<Void, Void, Void>() {
+  					      
+  							protected Void doInBackground(Void... params) {
+  								pp = PayPal.getInstance();
+  								if(pp == null)
+  								{
+  									pp =  PayPal.initWithAppID( Preferences.this, "APP-80W284485P519543T", PayPal.ENV_SANDBOX);        
+  									pp.setLanguage("en_US"); // Sets the language for the library.
+  								}
+  								return null;
+  							}
+  				      
+  							protected void onPostExecute(Void result ){
+  								if (PayPal.getInstance().isLibraryInitialized()) {
+  									Toast.makeText(getBaseContext(),"Launching paypal",
+  											Toast.LENGTH_SHORT).show();
+  								}
+  								else
+  								{
+  									Toast.makeText(getBaseContext(),"Error launching paypal",
+  										Toast.LENGTH_SHORT).show();
+  									return;
+  								}
+  								PayPalPayment payment = new PayPalPayment();
+  		  						payment.setSubtotal(new BigDecimal("8.25"));
+  		  						payment.setCurrencyType("USD");
+  		  						payment.setRecipient("bike-store-sandbox@gmail.com");
+  		  						payment.setPaymentType(PayPal.PAYMENT_TYPE_GOODS);
+  		  						Intent checkoutIntent = PayPal.getInstance().checkout(payment, Preferences.this);
+  		  						startActivityForResult(checkoutIntent, 1); 
+  							}
+  						}).execute();
+  						
+
+  						return true;
+  					}
+  				});
 		
 		findPreference("about").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
