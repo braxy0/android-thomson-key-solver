@@ -42,6 +42,9 @@
         <PreferenceCategory
                 android:title="@string/pref_2section">
                 <Preference
+                android:title="@string/pref_update"
+                android:key="update" />
+                <Preference
                 android:title="@string/pref_donate"
                 android:summary="@string/pref_donate_why"
                 android:key="donate" />

@@ -69,7 +69,9 @@ public class Preferences extends PreferenceActivity {
 		"http://android-thomson-key-solver.googlecode.com/files/RKDictionary.dic";
 	private static final String PUB_DIC_CFV =
 		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RKDictionary.cfv";
-	
+	private static final String PUB_VERSION =
+		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
+
 	private static final String folderSelectPref = "folderSelect";
 	private static final String VERSION = "2.8.1";
 	private static final String LAUNCH_DATE = "13/04/2011";
@@ -147,7 +149,72 @@ public class Preferences extends PreferenceActivity {
   						return true;
   					}
   				});
-		
+		findPreference("update").setOnPreferenceClickListener(
+				new OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						new AsyncTask<Void, Void, Integer>() {
+  							protected void onPreExecute(){
+  									showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+  							}
+  							
+  							protected Integer doInBackground(Void... params) {
+
+								// Comparing this version with the online version
+								try {
+									URLConnection con = new URL(PUB_VERSION).openConnection();
+									DataInputStream dis = new DataInputStream(con.getInputStream());
+									final byte [] versionData = new byte[6];
+									dis.read(versionData);
+									final String version = new String(versionData);
+									// Check our version
+									
+									if(VERSION.equalsIgnoreCase(version))
+									{
+										// It is the latest version, but is it not corrupt?
+										return 1;
+									}
+									return 0;
+									
+								}  catch ( UnknownHostException e ){
+									return -1;
+								}
+								catch (Exception e)
+								{
+									return null;
+								}
+  							}
+  				      
+  							protected void onPostExecute(Integer result ){
+  								removeDialog(DIALOG_CHECKING_DOWNLOAD);
+  								if (isFinishing())
+  									return;
+  								if ( result == null )
+  								{
+  									showDialog(DIALOG_ERROR);
+  									return;
+  								}
+  								switch ( result )
+  								{
+  									case -1:  								
+		  								Toast.makeText(Preferences.this, 
+		  										R.string.msg_errthomson3g, 
+		  										Toast.LENGTH_SHORT).show();
+		  								break;
+  									case 0: 
+	  									showDialog(0);
+	  									break;
+  									case 1:
+  										Toast.makeText(Preferences.this, 
+		  										R.string.msg_app_updated, 
+		  										Toast.LENGTH_SHORT).show();
+		  								break;
+  								}
+  								
+  							}
+  						}.execute();
+						return true;
+					}
+				});
 		findPreference("about").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {

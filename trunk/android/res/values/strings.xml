@@ -66,6 +66,7 @@
 	<string name="dialog_about_license_desc">This application is under the GPLv3.\n\nYou can read its terms 
 									<a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.</string>										
 	<string name="dialog_paypal_init">Connecting to Paypal...</string>
+	<string name="msg_app_updated">The application is already at the latest version.</string>
 	
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
@@ -94,6 +95,7 @@
     <string name="pref_hintoff_manual_mac">Manual input has only a SSID field</string>
     <string name="pref_thomson_section">Thomson Options</string>
     <string name="pref_manual_mac">MAC manual input</string>
+	<string name="pref_update">Check for Updates</string>
 
 	<!-- ERROR MESSAGE STRINGS -->
 	<string name="msg_newthomson">That is a new Thomson router which key can not be calculated!</string>
