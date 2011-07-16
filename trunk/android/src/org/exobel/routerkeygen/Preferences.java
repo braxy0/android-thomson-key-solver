@@ -33,6 +33,7 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,6 +48,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,7 +77,7 @@ public class Preferences extends PreferenceActivity {
 	private static final String folderSelectPref = "folderSelect";
 	private static final String VERSION = "2.8.1";
 	private static final String LAUNCH_DATE = "13/04/2011";
-
+	private String version ="";
 	PayPal pp = null;
 	AsyncTask<Void, Void, Void> paypalTask = null;
 	
@@ -125,8 +127,7 @@ public class Preferences extends PreferenceActivity {
   							protected void onPostExecute(Void result ){
   								removeDialog(DIALOG_INITIALIZING_PAYPAL);
   								if (PayPal.getInstance().isLibraryInitialized()) {
-  									Toast.makeText(getBaseContext(),"Launching paypal",
-  											Toast.LENGTH_SHORT).show();
+  									showDialog(DIALOG_DONATION_VALUE);
   								}
   								else
   								{
@@ -134,13 +135,7 @@ public class Preferences extends PreferenceActivity {
   										Toast.LENGTH_SHORT).show();
   									return;
   								}
-  								PayPalPayment payment = new PayPalPayment();
-  		  						payment.setSubtotal(new BigDecimal("8.25"));
-  		  						payment.setCurrencyType("EUR");
-  		  						payment.setRecipient("exobel_1307657771_biz@gmail.com");
-  		  						payment.setPaymentType(PayPal.PAYMENT_TYPE_GOODS);
-  		  						Intent checkoutIntent = PayPal.getInstance().checkout(payment, Preferences.this);
-  		  						startActivityForResult(checkoutIntent, 1); 
+  								
   							}
   						};
   						paypalTask.execute();
@@ -165,12 +160,12 @@ public class Preferences extends PreferenceActivity {
 									DataInputStream dis = new DataInputStream(con.getInputStream());
 									final byte [] versionData = new byte[6];
 									dis.read(versionData);
-									final String version = new String(versionData);
-									// Check our version
+									version = new String(versionData).trim();
 									
-									if(VERSION.equalsIgnoreCase(version))
+									// Check our version
+									if(VERSION.equals(version))
 									{
-										// It is the latest version, but is it not corrupt?
+										// All is well
 										return 1;
 									}
 									return 0;
@@ -185,7 +180,7 @@ public class Preferences extends PreferenceActivity {
   							}
   				      
   							protected void onPostExecute(Integer result ){
-  								removeDialog(DIALOG_CHECKING_DOWNLOAD);
+  								removeDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
   								if (isFinishing())
   									return;
   								if ( result == null )
@@ -201,7 +196,7 @@ public class Preferences extends PreferenceActivity {
 		  										Toast.LENGTH_SHORT).show();
 		  								break;
   									case 0: 
-	  									showDialog(0);
+	  									showDialog(DIALOG_UPDATE_NEEDED);
 	  									break;
   									case 1:
   										Toast.makeText(Preferences.this, 
@@ -488,6 +483,8 @@ public class Preferences extends PreferenceActivity {
 	private static final int DIALOG_ERROR_NOMEMORYONSD = 1008;
 	private static final int DIALOG_CHECKING_DOWNLOAD = 1009;
 	private static final int DIALOG_INITIALIZING_PAYPAL = 1010;
+	private static final int DIALOG_UPDATE_NEEDED = 1011;
+	private static final int DIALOG_DONATION_VALUE = 1012;
 
 
 
@@ -497,10 +494,11 @@ public class Preferences extends PreferenceActivity {
 			case DIALOG_LOAD_FOLDER:
 			{
 				loadFolderList();
-				builder.setTitle("Choose your folder");
+				builder.setTitle(getString(R.string.folder_chooser_title));
 				if(mFileList == null || mFileList.length == 0) {
 					Log.e(TAG, "Showing file picker before loading the file list");
-					mFileList = new String[]{"(There are no more directories)"};
+					mFileList = new String[1];
+					mFileList[0] = getString(R.string.folder_chooser_no_dir);
 					builder.setItems(mFileList, new DialogInterface.OnClickListener(){
 						public void onClick(DialogInterface dialog,int which) {}}
 					);
@@ -599,70 +597,77 @@ public class Preferences extends PreferenceActivity {
 				builder.setPositiveButton(R.string.bt_yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						// Check if we have the latest dictionary version.
-						final File myDicFile = new File(PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-							.getString(folderSelectPref,
-								Environment.getExternalStorageDirectory().getAbsolutePath())
-								+ File.separator + "RouterKeygen.dic");
-						
-						if(myDicFile.exists());
+						try 
 						{
-							removeDialog(DIALOG_ASK_DOWNLOAD);
-							showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-							  new Thread(new Runnable() {
-								    public void run() {
-
-										// Comparing this version with the online version
-										try {
-											InputStream is = new FileInputStream(myDicFile);
-											URLConnection con = new URL(PUB_DIC_CFV).openConnection();
-											DataInputStream dis = new DataInputStream(con.getInputStream());
-											if(con.getContentLength() != 18)
-												throw new Exception();
-											
-											dis.read(Preferences.cfvTable);
-											
-											// Check our version
-											is.read(dicVersion);
-											
-											int thisVersion, onlineVersion;
-											thisVersion = dicVersion[0] << 8 | dicVersion[1];
-											onlineVersion = cfvTable[0] << 8 | cfvTable[1];
-											
-											if(thisVersion == onlineVersion)
-											{
-												// It is the latest version, but is it not corrupt?
-												if(checkDicMD5(myDicFile.getPath()))
+							final File myDicFile = getDictionaryFile();
+							if( myDicFile == null )
+							{
+								messHand.sendEmptyMessage(7);
+							}
+							else
+							{
+							    removeDialog(DIALOG_ASK_DOWNLOAD);
+								showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+								  new Thread(new Runnable() {
+									    public void run() {
+	
+											// Comparing this version with the online version
+											try {
+												InputStream is = new FileInputStream(myDicFile);
+												URLConnection con = new URL(PUB_DIC_CFV).openConnection();
+												DataInputStream dis = new DataInputStream(con.getInputStream());
+												if(con.getContentLength() != 18)
+													throw new Exception();
+												
+												dis.read(Preferences.cfvTable);
+												
+												// Check our version
+												is.read(dicVersion);
+												
+												int thisVersion, onlineVersion;
+												thisVersion = dicVersion[0] << 8 | dicVersion[1];
+												onlineVersion = cfvTable[0] << 8 | cfvTable[1];
+												
+												if(thisVersion == onlineVersion)
 												{
-													// All is well
-													messHand.sendEmptyMessage(6);
+													// It is the latest version, but is it not corrupt?
+													if(checkDicMD5(myDicFile.getPath()))
+													{
+														// All is well
+														messHand.sendEmptyMessage(6);
+														return;
+													}
+												}
+												if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
+												{
+													// Online version is too advanced
+													messHand.sendEmptyMessage(5);
 													return;
 												}
-											}
-											if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
-											{
-												// Online version is too advanced
-												messHand.sendEmptyMessage(5);
+												messHand.sendEmptyMessage(7);
+												return;
+												
+											} catch ( FileNotFoundException e ){
+												messHand.sendEmptyMessage(7);
+												return;
+											} catch ( UnknownHostException e ){
+												messHand.sendEmptyMessage(10);
 												return;
 											}
-											messHand.sendEmptyMessage(7);
-											return;
-											
-										} catch ( FileNotFoundException e ){
-											messHand.sendEmptyMessage(7);
-											return;
-										} catch ( UnknownHostException e ){
-											messHand.sendEmptyMessage(10);
-											return;
+											catch (Exception e)
+											{
+												messHand.sendEmptyMessage(-1);
+												return;
+											}
 										}
-										catch (Exception e)
-										{
-											messHand.sendEmptyMessage(-1);
-											return;
-										}
-									}
-								  }).start();
-
-						}									
+									  }).start();
+							}
+						}
+						catch (Exception e) {
+								e.printStackTrace();					
+						}
+							
+															
 		           }
 		       } );
 		       builder.setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
@@ -671,6 +676,27 @@ public class Preferences extends PreferenceActivity {
 		           }
 		       });
 		       break;
+			}
+			case DIALOG_UPDATE_NEEDED:
+			{
+				builder.setTitle(R.string.update_title)
+				.setMessage(getString(R.string.update_message,version))
+				.setNegativeButton(R.string.bt_close,new OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						removeDialog(DIALOG_UPDATE_NEEDED);
+					}
+				})
+				.setPositiveButton(R.string.bt_website, new OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						String url = "http://code.google.com/p/android-thomson-key-solver/downloads/list";
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						i.setData(Uri.parse(url));
+						startActivity(i);
+					}
+				});
+				break;
 			}
 			case DIALOG_CHECK_DOWNLOAD_SERVER:
 			{
@@ -758,8 +784,69 @@ public class Preferences extends PreferenceActivity {
 				progressDialog.setIndeterminate(false);
 				return progressDialog;
 			}
+			case DIALOG_DONATION_VALUE:
+			{
+				final LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+				final View layout = inflater.inflate(R.layout.donate_input,
+                        (ViewGroup) findViewById(R.id.donate_root));
+				final EditText value = (EditText) layout.findViewById(R.id.input_donate
+						);
+				builder.setTitle(R.string.donate_title)
+				.setNegativeButton(R.string.bt_manual_cancel, new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						removeDialog(DIALOG_DONATION_VALUE);
+					}
+				})
+				.setPositiveButton(R.string.bt_ok, new OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						String donation =  value.getText().toString().trim();
+						if ( donation.equals("") ){
+							return;
+						}
+						PayPalPayment payment = new PayPalPayment();
+  						payment.setSubtotal(new BigDecimal(donation));
+  						payment.setCurrencyType("EUR");
+  						payment.setRecipient("ruka.araujo@gmail.com");
+  						payment.setPaymentType(PayPal.PAYMENT_TYPE_GOODS);
+  						Intent checkoutIntent = PayPal.getInstance().checkout(payment, Preferences.this);
+  						startActivityForResult(checkoutIntent, 1); 
+					}
+				});
+				
+				builder.setTitle(getString(R.string.menu_manual));
+				builder.setOnCancelListener(new OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						removeDialog(DIALOG_DONATION_VALUE);
+					}
+				});
+				
+				builder.setView(layout);
+				break;
+			}
 		}
 		return builder.create();
+	}
+	
+	private File getDictionaryFile() throws FileNotFoundException {
+		String folderSelect =  PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+		.getString(folderSelectPref,
+				Environment.getExternalStorageDirectory().getAbsolutePath())
+				;
+		String firstName = folderSelect + File.separator + "RouterKeygen.dic";
+		String secondName = folderSelect + File.separator + "RKDictionary.dic";
+		try{
+			File dic = new File(firstName);
+			if ( dic.exists() )
+				return dic;
+			dic = new File(secondName);
+			if ( dic.exists() )
+				return dic;
+		} catch(SecurityException e  ){
+			e.printStackTrace();
+			throw new FileNotFoundException("Permissions Error");
+		}
+		return null;
 	}
 };
 

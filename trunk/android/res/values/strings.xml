@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>  
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">  
 	<!-- Main file and reference for the others.-->
     
     <!-- MISC STRINGS -->
@@ -31,6 +31,7 @@
 	<string name="bt_pause">Pause</string>
 	<string name="bt_save_sd">Save to the SD</string>
 	<string name="bt_connect">Auto connect</string>
+	<string name="bt_website">Go to Website</string>
 	
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Input your ESSID here:</string>
@@ -67,6 +68,12 @@
 									<a href="http://www.gnu.org/licenses/gpl-3.0.html">here</a>.</string>										
 	<string name="dialog_paypal_init">Connecting to Paypal...</string>
 	<string name="msg_app_updated">The application is already at the latest version.</string>
+	<string name="lb_donate">Insert the value of the donation ( in Euros ):</string>
+	<string name="donate_title">Donation Value</string>
+	<string name="folder_chooser_title">Choose your folder</string>
+	<string name="folder_chooser_no_dir">(There are no more directories)</string>
+	<string name="update_title">Update Available</string>
+	<string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string>
 	
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Activate the Wifi Automatically</string>
