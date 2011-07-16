@@ -118,7 +118,7 @@ public class Preferences extends PreferenceActivity {
   								pp = PayPal.getInstance();
   								if(pp == null)
   								{
-  									pp =  PayPal.initWithAppID( Preferences.this, "APP-80W284485P519543T", PayPal.ENV_SANDBOX);        
+  									pp =  PayPal.initWithAppID( Preferences.this, "APP-0YL42849K5744710C", PayPal.ENV_LIVE);        
   									pp.setLanguage("en_US"); // Sets the language for the library.
   								}
   								return null;
