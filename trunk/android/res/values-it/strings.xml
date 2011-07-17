@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Translation proudly done by Simone "lostrozzacavalli" Guidi-->
     
     <!-- MISC STRINGS -->
@@ -31,6 +31,7 @@
 	<string name="bt_pause">Pausa</string>
 	<string name="bt_save_sd">Salva nella scheda SD</string>
 	<string name="bt_connect">Connetti automaticamente</string>
+	<string name="bt_website">Go to Website</string> <!-- UNTRANSLATED -->
 		
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Inserisci qui il tuo ESSID:</string>
@@ -49,14 +50,14 @@
 	<string name="lb_manual_bssid">indirizzo MAC</string>
 	<string name="dialog_about_credits">Crediti</string>
 	<string name="dialog_about_credits_desc">Router Keygen è il risultato dell\'inestimabile contributo da parte delle seguenti persone/organizzazioni:\n\n
-                <b>Luís Fonseca</b> - membro del Team Exobel\n
-				<b>Rui Araújo</b> - membro del Team Exobel\n
-                <b>Ângela Igreja</b> per la traduzione Portoghese\n
-				<b>Simone Guidi</b> per la traduzione Italiana\n
-                <b>Matthijs de Rijk</b> e <b>Van Hove Sven</b> per la traduzione Tedesca\n
-                <b>Jon Uriarte</b> per la traduzione Spagnola e l\'attuazione del WLAN_XX\n
-                <b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> per l\'algoritmo di Thomson\n
-                <b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> per gli algoritmi di Alice e FASTWEB\n
+				                <b>Luís Fonseca</b> - membro del Team Exobel\n
+								<b>Rui Araújo</b> - membro del Team Exobel\n
+				                <b>Ângela Igreja</b> per la traduzione Portoghese\n
+								<b>Simone Guidi</b> per la traduzione Italiana\n
+				                <b>Matthijs de Rijk</b> e <b>Van Hove Sven</b> per la traduzione Tedesca\n
+				                <b>Jon Uriarte</b> per la traduzione Spagnola e l\'attuazione del WLAN_XX\n
+				                <b><a href="http://www.gnucitizen.org/">GNUCITIZEN</a></b> per l\'algoritmo di Thomson\n
+				                <b><a href="http://wifiresearchers.wordpress.com/">White Hats Crew</a></b> per gli algoritmi di Alice e FASTWEB\n
 								<b>Fred Williams</b> per l\'algoritmo Verizon FiOS\n
 								<b>Muris Kurgaš </b> per l\'algoritmo Discus\n
 								<b><a href="http://websec.ca/">Pedro Joaquim</a></b> per l\'algoritmo di Huawei\n
@@ -64,7 +65,15 @@
 								</string>
 	<string name="dialog_about_license">Licenza</string>
 	<string name="dialog_about_license_desc">Questa applicazione è sotto licenza GPLv3.\n\nPuoi leggere le sue condizioni 
-									<a href="http://www.gnu.org/licenses/gpl-3.0.html">qui</a>.</string>
+								<a href="http://www.gnu.org/licenses/gpl-3.0.html">qui</a>.</string>									
+	<string name="dialog_paypal_init">Connecting to Paypal...</string> <!-- UNTRANSLATED -->
+	<string name="msg_app_updated">The application is already at the latest version.</string> <!-- UNTRANSLATED -->
+	<string name="lb_donate">Insert the value of the donation ( in Euros ):</string> <!-- UNTRANSLATED -->
+	<string name="donate_title">Donation Value</string> <!-- UNTRANSLATED -->
+	<string name="folder_chooser_title">Choose your folder</string> <!-- UNTRANSLATED -->
+	<string name="folder_chooser_no_dir">(There are no more directories)</string> <!-- UNTRANSLATED -->
+	<string name="update_title">Update Available</string> <!-- UNTRANSLATED -->
+	<string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string> <!-- UNTRANSLATED -->
     
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Attivare il wifi automaticamente</string>
@@ -93,6 +102,7 @@
     <string name="pref_hintoff_manual_mac">L\'input manuale ha anche un campo SSID</string>
     <string name="pref_thomson_section">Opzioni Thomson</string>
     <string name="pref_manual_mac">input manuale MAC</string>
+	<string name="pref_update">Check for Updates</string> <!-- UNTRANSLATED -->
 	
 	<!-- ERROR MESSAGE STRINGS -->
 	<string name="msg_newthomson">Questo è un nuovo router Thomson la cui chiave non può essere calcolata!</string>
@@ -134,4 +144,5 @@
     <string name="msg_err_saving_key_file">Errore nel salvataggio del file con le chiavi.</string>
     <string name="msg_saved_key_file">salvato nella scheda SD.</string>
     <string name="pref_msg_no_network">Nessun accesso alla rete.</string>
+    <string name="msg_err_paypal">Error while connecting to PayPal.</string> <!-- UNTRANSLATED -->
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>    
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">    
      <!-- Translation by Ângela Igreja, Rui Araújo and Luís Fonseca -->
 
     <!-- MISC STRINGS -->
@@ -31,6 +31,7 @@
     <string name="bt_pause">Pausar</string>
 	<string name="bt_save_sd">Guardar no SD</string>
 	<string name="bt_connect">Auto connectar</string>
+	<string name="bt_website">Abrir Website</string>
  
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Introduza o ESSID:</string>
@@ -65,7 +66,15 @@
 								</string>
 	<string name="dialog_about_license">Licença</string>
 	<string name="dialog_about_license_desc">Esta aplicação está sobre a GPLv3.\n\nPode ler os termos desta 
-									<a href="http://www.gnu.org/licenses/gpl-3.0.html">aqui</a>.</string>
+								<a href="http://www.gnu.org/licenses/gpl-3.0.html">aqui</a>.</string>									
+	<string name="dialog_paypal_init">Conectando com o PayPal...</string>
+	<string name="msg_app_updated">A aplicação já está na última versão.</string>
+	<string name="lb_donate">Insira o valor do donativo ( em Euros ):</string>
+	<string name="donate_title">Valor do Donativo</string>
+	<string name="folder_chooser_title">Escolha a pasta</string>
+	<string name="folder_chooser_no_dir">(Não há pastas)</string>
+	<string name="update_title">Actualização Disponivel</string>
+	<string name="update_message">Está disponível a versão <xliff:g id="version">%1$s</xliff:g>. Abra o Website para descarregar a última versão.</string>
 									 	
     <!-- PREFERENCES STRINGS -->
     <string name="pref_hinton_wifion">Activar automaticamente o Wifi</string>
@@ -94,6 +103,7 @@
     <string name="pref_hintoff_manual_mac">Entrada manual apenas tem um campo para o SSID</string>
     <string name="pref_thomson_section">Opções do Thomson</string>
     <string name="pref_manual_mac">Entrada manual do MAC</string>
+	<string name="pref_update">Verificar Actualizações</string>
     
  	<!-- ERROR MESSAGE STRINGS -->
     <string name="msg_newthomson">Este é um novo Thomson router que a sua password não pode ser calculada!</string>
@@ -135,4 +145,5 @@
     <string name="msg_err_saving_key_file">Erro ao guardar ficheiro com as senhas.</string>
     <string name="msg_saved_key_file">guardado no cartão SD.</string>
     <string name="pref_msg_no_network">Não há acesso à rede.</string>
+    <string name="msg_err_paypal">Erro ao conectar ao PayPal.</string>
 </resources>

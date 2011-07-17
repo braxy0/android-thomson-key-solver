@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Translation by Jon Uriarte -->
 
     <!-- MISC STRINGS -->
@@ -31,6 +31,7 @@
 	<string name="bt_pause">Pausa</string>
 	<string name="bt_save_sd">Guardar en la SD</string>
 	<string name="bt_connect">Auto conectar</string>
+	<string name="bt_website">Go to Website</string> <!-- UNTRANSLATED -->
 	
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Introduce tu ESSID:</string>
@@ -64,7 +65,15 @@
 								</string>
 	<string name="dialog_about_license">Licencia</string>
 	<string name="dialog_about_license_desc">Esta aplicación está bajo licencia GPLv3.\n\nPuedes leer los téminos 
-									<a href="http://www.gnu.org/licenses/gpl-3.0.html">aquí</a>.</string>
+								<a href="http://www.gnu.org/licenses/gpl-3.0.html">aquí</a>.</string>										
+	<string name="dialog_paypal_init">Connecting to Paypal...</string> <!-- UNTRANSLATED -->
+	<string name="msg_app_updated">The application is already at the latest version.</string> <!-- UNTRANSLATED -->
+	<string name="lb_donate">Insert the value of the donation ( in Euros ):</string> <!-- UNTRANSLATED -->
+	<string name="donate_title">Donation Value</string> <!-- UNTRANSLATED -->
+	<string name="folder_chooser_title">Choose your folder</string> <!-- UNTRANSLATED -->
+	<string name="folder_chooser_no_dir">(There are no more directories)</string> <!-- UNTRANSLATED -->
+	<string name="update_title">Update Available</string> <!-- UNTRANSLATED -->
+	<string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string> <!-- UNTRANSLATED -->
 	
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Activar la Wifi Automaticamente</string>
@@ -93,6 +102,7 @@
     <string name="pref_hintoff_manual_mac">La entrada Manual solo tiene un campo SSID</string>
     <string name="pref_thomson_section">Opciones para el Thomson</string>
     <string name="pref_manual_mac">Entrada manual de MAC</string>
+	<string name="pref_update">Check for Updates</string> <!-- UNTRANSLATED -->
 
 	<!-- ERROR MESSAGE STRINGS -->
 	<string name="msg_newthomson">Nuevo Thomson cuya Key todavía no sí calcula!</string>
@@ -134,4 +144,5 @@
     <string name="msg_err_saving_key_file">Error al grabar el fichero con las keys.</string>
     <string name="msg_saved_key_file">guardado a la tarjeta SD.</string>
     <string name="pref_msg_no_network">No hay acceso a la red.</string>
+    <string name="msg_err_paypal">Error while connecting to PayPal.</string> <!-- UNTRANSLATED -->
 </resources>
