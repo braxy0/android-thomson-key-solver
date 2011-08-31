@@ -66,10 +66,7 @@
     <string name="dialog_about_license">Licence</string>
     <string name="dialog_about_license_desc">Cette application est sous GPLv3.\n\nVous pouvez lire les termes 
                                 <a href="http://www.gnu.org/licenses/gpl-3.0.html">ici</a>.</string>										
-	<string name="dialog_paypal_init">Connexion à Paypal...</string>
 	<string name="msg_app_updated">Cette application est à la dernière version.</string>
-	<string name="lb_donate">Insérer la valeur de votre don ( en Euros ):</string>
-	<string name="donate_title">Valeur du don</string>
 	<string name="folder_chooser_title">Choisir le dossier</string>
 	<string name="folder_chooser_no_dir">(Il n\'existe plus de répertoire)</string>
 	<string name="update_title">Mise à jour disponible</string>
@@ -146,5 +143,4 @@
     <string name="msg_saved_key_file">sauvegardé sur la carte SD.</string>
     <string name="pref_msg_no_network">Il n\'y a pas d\'accès au réseau.</string>
     <string name="msg_err_webdic_table">Erreur lors du traitement des clés en ligne.</string>
-    <string name="msg_err_paypal">Erreur durant la connexion à PayPal.</string>
 </resources>

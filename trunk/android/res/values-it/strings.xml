@@ -66,10 +66,7 @@
 	<string name="dialog_about_license">Licenza</string>
 	<string name="dialog_about_license_desc">Questa applicazione è sotto licenza GPLv3.\n\nPuoi leggere le sue condizioni 
 								<a href="http://www.gnu.org/licenses/gpl-3.0.html">qui</a>.</string>									
-	<string name="dialog_paypal_init">Connecting to Paypal...</string> <!-- UNTRANSLATED -->
 	<string name="msg_app_updated">The application is already at the latest version.</string> <!-- UNTRANSLATED -->
-	<string name="lb_donate">Insert the value of the donation ( in Euros ):</string> <!-- UNTRANSLATED -->
-	<string name="donate_title">Donation Value</string> <!-- UNTRANSLATED -->
 	<string name="folder_chooser_title">Choose your folder</string> <!-- UNTRANSLATED -->
 	<string name="folder_chooser_no_dir">(There are no more directories)</string> <!-- UNTRANSLATED -->
 	<string name="update_title">Update Available</string> <!-- UNTRANSLATED -->
@@ -144,5 +141,4 @@
     <string name="msg_err_saving_key_file">Errore nel salvataggio del file con le chiavi.</string>
     <string name="msg_saved_key_file">salvato nella scheda SD.</string>
     <string name="pref_msg_no_network">Nessun accesso alla rete.</string>
-    <string name="msg_err_paypal">Error while connecting to PayPal.</string> <!-- UNTRANSLATED -->
 </resources>

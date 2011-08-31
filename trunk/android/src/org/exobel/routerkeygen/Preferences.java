@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -16,17 +15,12 @@ import java.security.MessageDigest;
 import java.util.Stack;
 import java.util.TreeSet;
 
-
-import com.paypal.android.MEP.PayPal;
-import com.paypal.android.MEP.PayPalPayment;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,7 +42,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +49,7 @@ import android.widget.TabHost.TabSpec;
 
 public class Preferences extends PreferenceActivity {
 	
-	// The maximum supported dictionary version
+	/** The maximum supported dictionary version */
 	public static final int MAX_DIC_VERSION = 3;
 
 	ProgressDialog pbarDialog;
@@ -78,8 +71,6 @@ public class Preferences extends PreferenceActivity {
 	private static final String VERSION = "2.8.1";
 	private static final String LAUNCH_DATE = "13/04/2011";
 	private String version ="";
-	PayPal pp = null;
-	AsyncTask<Void, Void, Void> paypalTask = null;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,38 +98,7 @@ public class Preferences extends PreferenceActivity {
   				new OnPreferenceClickListener() {
   					public boolean onPreferenceClick(Preference preference)
   					{
-  						paypalTask =  new AsyncTask<Void, Void, Void>() {
-  					      
-  							protected void onPreExecute(){
-  								if ( PayPal.getInstance() == null || !PayPal.getInstance().isLibraryInitialized()) 
-  									showDialog(DIALOG_INITIALIZING_PAYPAL);
-  							}
-  							
-  							protected Void doInBackground(Void... params) {
-  								pp = PayPal.getInstance();
-  								if(pp == null)
-  								{
-  									pp =  PayPal.initWithAppID( Preferences.this, "APP-0YL42849K5744710C", PayPal.ENV_LIVE);        
-  									pp.setLanguage("en_US"); // Sets the language for the library.
-  								}
-  								return null;
-  							}
-  				      
-  							protected void onPostExecute(Void result ){
-  								removeDialog(DIALOG_INITIALIZING_PAYPAL);
-  								if (PayPal.getInstance().isLibraryInitialized()) {
-  									showDialog(DIALOG_DONATION_VALUE);
-  								}
-  								else
-  								{
-  									Toast.makeText(getBaseContext(),getString(R.string.msg_err_paypal),
-  										Toast.LENGTH_SHORT).show();
-  									return;
-  								}
-  								
-  							}
-  						};
-  						paypalTask.execute();
+  						
   						
 
   						return true;
@@ -482,9 +442,7 @@ public class Preferences extends PreferenceActivity {
 	private static final int DIALOG_ERROR_NOSD = 1007;
 	private static final int DIALOG_ERROR_NOMEMORYONSD = 1008;
 	private static final int DIALOG_CHECKING_DOWNLOAD = 1009;
-	private static final int DIALOG_INITIALIZING_PAYPAL = 1010;
 	private static final int DIALOG_UPDATE_NEEDED = 1011;
-	private static final int DIALOG_DONATION_VALUE = 1012;
 
 
 
@@ -768,61 +726,6 @@ public class Preferences extends PreferenceActivity {
 				pbarDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				pbarDialog.setMessage(getString(R.string.msg_wait));
 				return pbarDialog;
-			}
-			case DIALOG_INITIALIZING_PAYPAL:
-			{
-				ProgressDialog progressDialog =new ProgressDialog(this);
-				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				progressDialog.setCancelable(true);
-				progressDialog.setMessage(getString(R.string.dialog_paypal_init));
-				progressDialog.setOnCancelListener(new OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						removeDialog(DIALOG_INITIALIZING_PAYPAL);
-						paypalTask.cancel(true);
-					}
-				});
-				progressDialog.setIndeterminate(false);
-				return progressDialog;
-			}
-			case DIALOG_DONATION_VALUE:
-			{
-				final LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-				final View layout = inflater.inflate(R.layout.donate_input,
-                        (ViewGroup) findViewById(R.id.donate_root));
-				final EditText value = (EditText) layout.findViewById(R.id.input_donate
-						);
-				builder.setTitle(R.string.donate_title)
-				.setNegativeButton(R.string.bt_manual_cancel, new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						removeDialog(DIALOG_DONATION_VALUE);
-					}
-				})
-				.setPositiveButton(R.string.bt_ok, new OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						String donation =  value.getText().toString().trim();
-						if ( donation.equals("") ){
-							return;
-						}
-						PayPalPayment payment = new PayPalPayment();
-  						payment.setSubtotal(new BigDecimal(donation));
-  						payment.setCurrencyType("EUR");
-  						payment.setRecipient("ruka.araujo@gmail.com");
-  						payment.setPaymentType(PayPal.PAYMENT_TYPE_GOODS);
-  						Intent checkoutIntent = PayPal.getInstance().checkout(payment, Preferences.this);
-  						startActivityForResult(checkoutIntent, 1); 
-					}
-				});
-				
-				builder.setTitle(getString(R.string.menu_manual));
-				builder.setOnCancelListener(new OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						removeDialog(DIALOG_DONATION_VALUE);
-					}
-				});
-				
-				builder.setView(layout);
-				break;
 			}
 		}
 		return builder.create();

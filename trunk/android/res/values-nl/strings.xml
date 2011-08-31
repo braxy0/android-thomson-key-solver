@@ -66,10 +66,7 @@
 	<string name="dialog_about_license">Licentie</string>
 	<string name="dialog_about_license_desc">Deze applicatie is uitgebracht onder de GPLv3.\n\nU kan de voorwaarden 
 									<a href="http://www.gnu.org/licenses/gpl-3.0.html">hier</a>nalezen.</string>									
-	<string name="dialog_paypal_init">Verbinden met Paypal...</string>
 	<string name="msg_app_updated">Uw versie van Router Keyken is al up-to-date</string>
-	<string name="lb_donate">Voer de grootte van uw donatie in ( in euro\'s ):</string> 
-	<string name="donate_title">Donatiegrootte</string> 
 	<string name="folder_chooser_title">Kies uw map</string> 
 	<string name="folder_chooser_no_dir">(Er zijn geen dictionaries meer)</string> 
 	<string name="update_title">Update beschikbaar</string> 
@@ -144,5 +141,4 @@
     <string name="msg_err_saving_key_file">Fout bij het opslaan van de sleutels.</string>
     <string name="msg_saved_key_file">opgeslagen op de SD kaart.</string>
     <string name="pref_msg_no_network">Er is geen netwerkverbinding.</string>
-    <string name="msg_err_paypal">Fout tijdens het verbinden met PayPal</string>
 </resources>

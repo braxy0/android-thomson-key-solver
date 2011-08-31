@@ -66,10 +66,7 @@
 	<string name="dialog_about_license">Licencia</string>
 	<string name="dialog_about_license_desc">Esta aplicación está bajo licencia GPLv3.\n\nPuedes leer los téminos 
 								<a href="http://www.gnu.org/licenses/gpl-3.0.html">aquí</a>.</string>										
-	<string name="dialog_paypal_init">Conectando a Paypal...</string> 
 	<string name="msg_app_updated">Esta aplicación ya es la mas nueva.</string> 
-	<string name="lb_donate">Inserte el valor de la donación (En Euros):</string> 
-	<string name="donate_title">Valor de donación</string> 
 	<string name="folder_chooser_title">Escoga el folder</string> 
 	<string name="folder_chooser_no_dir">(No hay mas carpetas)</string>
 	<string name="update_title">Actualización disponible</string> 
@@ -144,5 +141,4 @@
     <string name="msg_err_saving_key_file">Error al grabar el fichero con las keys.</string>
     <string name="msg_saved_key_file">Guardado en la tarjeta SD.</string>
     <string name="pref_msg_no_network">No hay acceso a la red.</string>
-    <string name="msg_err_paypal">Error mientras se conectaba a PayPal.</string> 
 </resources>
