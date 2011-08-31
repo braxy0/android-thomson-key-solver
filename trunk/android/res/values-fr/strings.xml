@@ -31,7 +31,7 @@
     <string name="bt_pause">Pause</string>
     <string name="bt_save_sd">Sauvegarder sur SD</string>
     <string name="bt_connect">Connexion Auto</string>
-	<string name="bt_website">Go to Website</string> <!-- UNTRANSLATED -->
+	  <string name="bt_website">Visiter notre site web</string>
         
     <!-- DIALOG STRINGS -->
     <string name="lb_manual">Entrez votre ESSID ici:</string>
@@ -66,14 +66,14 @@
     <string name="dialog_about_license">Licence</string>
     <string name="dialog_about_license_desc">Cette application est sous GPLv3.\n\nVous pouvez lire les termes 
                                 <a href="http://www.gnu.org/licenses/gpl-3.0.html">ici</a>.</string>										
-	<string name="dialog_paypal_init">Connecting to Paypal...</string> <!-- UNTRANSLATED -->
-	<string name="msg_app_updated">The application is already at the latest version.</string> <!-- UNTRANSLATED -->
-	<string name="lb_donate">Insert the value of the donation ( in Euros ):</string> <!-- UNTRANSLATED -->
-	<string name="donate_title">Donation Value</string> <!-- UNTRANSLATED -->
-	<string name="folder_chooser_title">Choose your folder</string> <!-- UNTRANSLATED -->
-	<string name="folder_chooser_no_dir">(There are no more directories)</string> <!-- UNTRANSLATED -->
-	<string name="update_title">Update Available</string> <!-- UNTRANSLATED -->
-	<string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string> <!-- UNTRANSLATED -->
+	<string name="dialog_paypal_init">Connexion à Paypal...</string>
+	<string name="msg_app_updated">Cette application est à la dernière version.</string>
+	<string name="lb_donate">Insérer la valeur de votre don ( en Euros ):</string>
+	<string name="donate_title">Valeur du don</string>
+	<string name="folder_chooser_title">Choisir le dossier</string>
+	<string name="folder_chooser_no_dir">(Il n\'existe plus de répertoire)</string>
+	<string name="update_title">Mise à jour disponible</string>
+	<string name="update_message">La version <xliff:g id="version">%1$s</xliff:g> est disponible. Télécharger la dernière version sur notre site web.</string>
                                                                                                 
         
     <!-- PREFERENCES STRINGS -->
@@ -103,7 +103,7 @@
     <string name="pref_hintoff_manual_mac">Saisie manuelle seulement pour le champ SSID</string>
     <string name="pref_thomson_section">Options pour Thomson</string>
     <string name="pref_manual_mac">Saisie manuelle MAC</string>
-	<string name="pref_update">Check for Updates</string> <!-- UNTRANSLATED -->
+	<string name="pref_update">Vérifier les mises à jour</string>
 
     <!-- ERROR MESSAGE STRINGS -->
     <string name="msg_newthomson">C\'est un nouveau routeur Thomson dont la clé ne peut être calculée!</string>
@@ -146,5 +146,5 @@
     <string name="msg_saved_key_file">sauvegardé sur la carte SD.</string>
     <string name="pref_msg_no_network">Il n\'y a pas d\'accès au réseau.</string>
     <string name="msg_err_webdic_table">Erreur lors du traitement des clés en ligne.</string>
-    <string name="msg_err_paypal">Error while connecting to PayPal.</string> <!-- UNTRANSLATED -->
+    <string name="msg_err_paypal">Erreur durant la connexion à PayPal.</string>
 </resources>

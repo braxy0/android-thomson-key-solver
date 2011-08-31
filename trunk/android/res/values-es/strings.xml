@@ -6,16 +6,16 @@
 	<string name="app_name">Router Keygen</string>
 	<string name="msg_welcome_title">Router Keygen</string>
 	<string name="msg_welcome_text">Si te gusta, hazme una donación. El link esta en el menú de preferencias. Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de código abierto.</string>
-	<string name="msg_welcome_text_donate">Thank you for buying the Donate version of Router Keygen.  Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de código abierto.</string> <!-- UNTRANSLATED -->
-	<string name="menu_scan">Scan</string>
-	<string name="menu_manual">Introduccion Manual</string>
+	<string name="msg_welcome_text_donate">Gracias por comprar la versión de paga de Router Keygen.  Tu donación hará que piense en seguir desarrollando esta estupenda herramienta de código abierto.</string>
+	<string name="menu_scan">Scanear</string>
+	<string name="menu_manual">Introducción Manual</string>
 	<string name="menu_preferences">Preferencias</string>
 	<string name="share_msg_begin">Keys</string>
 	<string name="share_title">Compartir Keys</string>
-	<string name="msg_copied">  se ha copiado en el portapapeles!</string>
+	<string name="msg_copied">Se ha copiado en el portapapeles!</string>
 	<string name="msg_scanstarted">Inicio de Scanneo</string>
 	<string name="msg_wifienabling">Habilitando Wifi</string>
-	<string name="msg_results">Haz Click una de las keys para copiarla. Después se abrirón los Wifi Settings donde las puedes "probar" ;).</string>
+	<string name="msg_results">Haz Click en una de las keys para copiarla. Después se abrira la configuración de WIFI donde las puedes "probar" ;).</string>
     <string name="manual_mac_separator">:</string>
     
     <!-- BUTTONS STRINGS -->
@@ -31,7 +31,7 @@
 	<string name="bt_pause">Pausa</string>
 	<string name="bt_save_sd">Guardar en la SD</string>
 	<string name="bt_connect">Auto conectar</string>
-	<string name="bt_website">Go to Website</string> <!-- UNTRANSLATED -->
+	<string name="bt_website">Ir al Website</string> 
 	
 	<!-- DIALOG STRINGS -->
 	<string name="lb_manual">Introduce tu ESSID:</string>
@@ -66,21 +66,21 @@
 	<string name="dialog_about_license">Licencia</string>
 	<string name="dialog_about_license_desc">Esta aplicación está bajo licencia GPLv3.\n\nPuedes leer los téminos 
 								<a href="http://www.gnu.org/licenses/gpl-3.0.html">aquí</a>.</string>										
-	<string name="dialog_paypal_init">Connecting to Paypal...</string> <!-- UNTRANSLATED -->
-	<string name="msg_app_updated">The application is already at the latest version.</string> <!-- UNTRANSLATED -->
-	<string name="lb_donate">Insert the value of the donation ( in Euros ):</string> <!-- UNTRANSLATED -->
-	<string name="donate_title">Donation Value</string> <!-- UNTRANSLATED -->
-	<string name="folder_chooser_title">Choose your folder</string> <!-- UNTRANSLATED -->
-	<string name="folder_chooser_no_dir">(There are no more directories)</string> <!-- UNTRANSLATED -->
-	<string name="update_title">Update Available</string> <!-- UNTRANSLATED -->
-	<string name="update_message">There is version <xliff:g id="version">%1$s</xliff:g> available. Go to the website to download the latest version.</string> <!-- UNTRANSLATED -->
+	<string name="dialog_paypal_init">Conectando a Paypal...</string> 
+	<string name="msg_app_updated">Esta aplicación ya es la mas nueva.</string> 
+	<string name="lb_donate">Inserte el valor de la donación (En Euros):</string> 
+	<string name="donate_title">Valor de donación</string> 
+	<string name="folder_chooser_title">Escoga el folder</string> 
+	<string name="folder_chooser_no_dir">(No hay mas carpetas)</string>
+	<string name="update_title">Actualización disponible</string> 
+	<string name="update_message">La versión <xliff:g id="version">%1$s</xliff:g> esta disponible. Valla al Website para descargar la mas nueva.</string> 
 	
     <!-- PREFERENCES STRINGS -->
 	<string name="pref_hinton_wifion">Activar la Wifi Automaticamente</string>
 	<string name="pref_hintoff_wifion">No activar la Wifi Automaticamente</string>
 	<string name="pref_wifion">Auto Wifi On</string>
 	<string name="pref_wifioff">Auto Wifi Off</string>
-	<string name="pref_folder_select">Seleccion de Carpeta</string>
+	<string name="pref_folder_select">Selección de Carpeta</string>
 	<string name="pref_folder_select_des">Selecciona la carpeta del diccionario</string>
 	<string name="pref_1section">Opciones Generales</string>
 	<string name="pref_2section">Acerca de</string>
@@ -89,7 +89,7 @@
 	<string name="pref_about">Acerca de Router Keygen</string>
 	<string name="pref_about_desc">Router Keygen calcula los passwords por defecto para varios routers.\n\n
 			<a href="http://code.google.com/p/android-thomson-key-solver/">Sitio del Proyecto</a>\n\nVersion: </string>
-	<string name="pref_msg_found">seleccionado.</string>
+	<string name="pref_msg_found">Seleccionado.</string>
 	<string name="pref_native">Cálculo Nativo</string>
 	<string name="pref_hinton_native">Calcular en el objetivo si falla al encontrar el diccionario</string>
 	<string name="pref_hintoff_native">Sólo avisa si falla al encontrar el diccionario</string>
@@ -102,15 +102,15 @@
     <string name="pref_hintoff_manual_mac">La entrada Manual solo tiene un campo SSID</string>
     <string name="pref_thomson_section">Opciones para el Thomson</string>
     <string name="pref_manual_mac">Entrada manual de MAC</string>
-	<string name="pref_update">Check for Updates</string> <!-- UNTRANSLATED -->
+	<string name="pref_update">Verificar actualizaciones</string> 
 
 	<!-- ERROR MESSAGE STRINGS -->
-	<string name="msg_newthomson">Nuevo Thomson cuya Key todavía no sí calcula!</string>
+	<string name="msg_newthomson">Nuevo Thomson cuya Key todavía no se calcula!</string>
 	<string name="msg_unspported">Este ESSID no esta soportado!</string>
 	<string name="msg_nowifidetected">No se detectan redes WIFI!</string>
 	<string name="msg_nowifi">Wifi no activada! Activa la Wifi, por favor!</string>
 	<string name="msg_scanfailed">Scanneo Falló!</string>
-	<string name="msg_wifibroken">Faillo activando Wifi</string>
+	<string name="msg_wifibroken">Fallo activando Wifi</string>
 	<string name="msg_shortessid6">ESSID inválido! Debe tener 6 caracteres.</string>
 	<string name="msg_errordict">Error leyendo el diccionario!</string>
 	<string name="msg_errnomatches">No se encontraron coincidencias!</string>
@@ -118,17 +118,17 @@
 	<string name="msg_nomac">Esta key no se puede generar sin la MAC address</string>
 	<string name="msg_dlinkerror">Error en el cálculo de la key D-Link</string>
 	<string name="msg_dictnotfound">El Diccionario no se ha encontrado en la SDCard!</string>
-	<string name="pref_msg_notfound">El Dictionario no está en </string>
+	<string name="pref_msg_notfound">El Dictionario no está en la SDCard</string>
 	<string name="msg_nosdcard">La SD card esta desmontada!</string>
 	<string name="msg_nomd5">Este teléfono no puede procesar un hash MD5.</string>
 	<string name="msg_nosha1">Este teléfono no puede procesar un hash SHA1.</string>
 	<string name="msg_nosha256">Este teléfono no puede procesar un hash SHA256.</string>
-	<string name="msg_errpirelli">La MAC address is inválida.</string>
-	<string name="msg_errthomson3g">Error conectando con el web service.</string>
+	<string name="msg_errpirelli">La MAC address es inválida.</string>
+	<string name="msg_errthomson3g">Error conectando con el Web Service.</string>
 	<string name="msg_erralicenotsupported">Esta serie de Alice no esta soportada todavía!</string>
 	<string name="msg_errversion">Version desconocida del Diccionario.</string>
 	<string name="msg_startingnativecalc">Error con el Diccionario. Comienza Cálculo en modo Nativo</string>
-	<string name="msg_rotation_nativecalc">Cálculo Cancelado. Por favor, no ROTES el teléfono mientras se realiza el cáculo.</string>
+	<string name="msg_rotation_nativecalc">Calculo Cancelado. Por favor, no ROTES el teléfono mientras se realiza el cáculo.</string>
 	<string name="msg_err_essid_no_match">El SSID calculado no concuerda con el proporcionado.</string>
 	<string name="msg_err_native">Error en el Cáculo Nativo. Informa al KnD Taldea.</string>
 	<string name="msg_nomemoryonsdcard">La tarjeta de memoria externa no tiene suficiente espacio libre</string>
@@ -138,11 +138,11 @@
 	<string name="msg_err_sendto">Ha ocurrido un error tratando de compartir las Keys.</string>
     <string name="msg_shortessid13">ESSID inválido! Debe tener 13 caracteres.</string>
     <string name="msg_err_unkown">Ha ocurrido un error desconocido.</string>
-    <string name="msg_err_online_too_adv">La versión Online del diccionario es demasiado avanzada para este programa.\nPiensa en udpdatearlo.</string>
+    <string name="msg_err_online_too_adv">La versión Online del diccionario es demasiado avanzada para este programa.\nPiensa en actualizarlo.</string>
     <string name="err_misbuilt_apk">Tu APK no ha sido correctamente construida. Recuerda construir la parte Nativa antes.</string>
     <string name="msg_err_verizon_ssid">Error procesando este SSID.</string>
     <string name="msg_err_saving_key_file">Error al grabar el fichero con las keys.</string>
-    <string name="msg_saved_key_file">guardado a la tarjeta SD.</string>
+    <string name="msg_saved_key_file">Guardado en la tarjeta SD.</string>
     <string name="pref_msg_no_network">No hay acceso a la red.</string>
-    <string name="msg_err_paypal">Error while connecting to PayPal.</string> <!-- UNTRANSLATED -->
+    <string name="msg_err_paypal">Error mientras se conectaba a PayPal.</string> 
 </resources>
