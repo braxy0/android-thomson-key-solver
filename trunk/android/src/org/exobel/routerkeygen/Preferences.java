@@ -98,8 +98,9 @@ public class Preferences extends PreferenceActivity {
   				new OnPreferenceClickListener() {
   					public boolean onPreferenceClick(Preference preference)
   					{
-  						
-  						
+  						String donateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V3FFBTRTTV5DN";
+  						Uri uri = Uri.parse(donateLink );
+  			    		startActivity( new Intent( Intent.ACTION_VIEW, uri ) );
 
   						return true;
   					}
