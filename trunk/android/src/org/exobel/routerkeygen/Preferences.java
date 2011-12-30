@@ -28,6 +28,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -550,90 +551,96 @@ public class Preferences extends PreferenceActivity {
 			}
 			case DIALOG_ASK_DOWNLOAD:
 			{
+				DialogInterface.OnClickListener diOnClickListener = new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							// Check if we have the latest dictionary version.
+							try 
+							{
+								final File myDicFile = getDictionaryFile();
+								if( myDicFile == null )
+								{
+									messHand.sendEmptyMessage(7);
+								}
+								else
+								{
+								    removeDialog(DIALOG_ASK_DOWNLOAD);
+									showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
+									  new Thread(new Runnable() {
+										    public void run() {
+		
+												// Comparing this version with the online version
+												try {
+													InputStream is = new FileInputStream(myDicFile);
+													URLConnection con = new URL(PUB_DIC_CFV).openConnection();
+													DataInputStream dis = new DataInputStream(con.getInputStream());
+													if(con.getContentLength() != 18)
+														throw new Exception();
+													
+													dis.read(Preferences.cfvTable);
+													
+													// Check our version
+													is.read(dicVersion);
+													
+													int thisVersion, onlineVersion;
+													thisVersion = dicVersion[0] << 8 | dicVersion[1];
+													onlineVersion = cfvTable[0] << 8 | cfvTable[1];
+													
+													if(thisVersion == onlineVersion)
+													{
+														// It is the latest version, but is it not corrupt?
+														if(checkDicMD5(myDicFile.getPath()))
+														{
+															// All is well
+															messHand.sendEmptyMessage(6);
+															return;
+														}
+													}
+													if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
+													{
+														// Online version is too advanced
+														messHand.sendEmptyMessage(5);
+														return;
+													}
+													messHand.sendEmptyMessage(7);
+													return;
+													
+												} catch ( FileNotFoundException e ){
+													messHand.sendEmptyMessage(7);
+													return;
+												} catch ( UnknownHostException e ){
+													messHand.sendEmptyMessage(10);
+													return;
+												}
+												catch (Exception e)
+												{
+													messHand.sendEmptyMessage(-1);
+													return;
+												}
+											}
+										  }).start();
+								}
+							}
+							catch (Exception e) {
+									e.printStackTrace();					
+							}			
+			           }
+				};
+				// Don't complain about dictionary size if user is on a wifi connection
+				if((((WifiManager) getBaseContext().getSystemService(Context.WIFI_SERVICE))).getConnectionInfo().getSSID() != null)
+				{
+					diOnClickListener.onClick(null, -1);
+					break;
+				}
+				
 				builder.setTitle(R.string.pref_download);
 				builder.setMessage(R.string.msg_dicislarge);
 				builder.setCancelable(false);
-				builder.setPositiveButton(R.string.bt_yes, new DialogInterface.OnClickListener() {
+				builder.setPositiveButton(R.string.bt_yes, diOnClickListener);
+				builder.setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						// Check if we have the latest dictionary version.
-						try 
-						{
-							final File myDicFile = getDictionaryFile();
-							if( myDicFile == null )
-							{
-								messHand.sendEmptyMessage(7);
-							}
-							else
-							{
-							    removeDialog(DIALOG_ASK_DOWNLOAD);
-								showDialog(DIALOG_CHECK_DOWNLOAD_SERVER);
-								  new Thread(new Runnable() {
-									    public void run() {
-	
-											// Comparing this version with the online version
-											try {
-												InputStream is = new FileInputStream(myDicFile);
-												URLConnection con = new URL(PUB_DIC_CFV).openConnection();
-												DataInputStream dis = new DataInputStream(con.getInputStream());
-												if(con.getContentLength() != 18)
-													throw new Exception();
-												
-												dis.read(Preferences.cfvTable);
-												
-												// Check our version
-												is.read(dicVersion);
-												
-												int thisVersion, onlineVersion;
-												thisVersion = dicVersion[0] << 8 | dicVersion[1];
-												onlineVersion = cfvTable[0] << 8 | cfvTable[1];
-												
-												if(thisVersion == onlineVersion)
-												{
-													// It is the latest version, but is it not corrupt?
-													if(checkDicMD5(myDicFile.getPath()))
-													{
-														// All is well
-														messHand.sendEmptyMessage(6);
-														return;
-													}
-												}
-												if(onlineVersion > thisVersion && onlineVersion > MAX_DIC_VERSION)
-												{
-													// Online version is too advanced
-													messHand.sendEmptyMessage(5);
-													return;
-												}
-												messHand.sendEmptyMessage(7);
-												return;
-												
-											} catch ( FileNotFoundException e ){
-												messHand.sendEmptyMessage(7);
-												return;
-											} catch ( UnknownHostException e ){
-												messHand.sendEmptyMessage(10);
-												return;
-											}
-											catch (Exception e)
-											{
-												messHand.sendEmptyMessage(-1);
-												return;
-											}
-										}
-									  }).start();
-							}
-						}
-						catch (Exception e) {
-								e.printStackTrace();					
-						}
-							
-															
-		           }
-		       } );
-		       builder.setNegativeButton(R.string.bt_no, new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		                removeDialog(DIALOG_ASK_DOWNLOAD);
-		           }
-		       });
+						removeDialog(DIALOG_ASK_DOWNLOAD);
+					}
+				});
 		       break;
 			}
 			case DIALOG_UPDATE_NEEDED:
