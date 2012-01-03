@@ -146,6 +146,7 @@
     <!-- AUTOCOMPLETE SUPPORT -->
 	<string-array name="supported_routers">
         <item>Thomson</item>
+        <item>Blink</item>
         <item>SpeedTouch</item>
         <item>O2Wireless</item>
         <item>Orange-</item>
