@@ -115,11 +115,24 @@ public class ThomsonKeygen extends KeygenThread {
 			int i = ( 0xFF &routerESSID[0] )*4;
 			offset =( (0xFF & table[i]) << 24 ) | ( (0xFF & table[i + 1])  << 16 ) |
 					( (0xFF & table[i + 2])  << 8 ) | (0xFF & table[i + 3]);
-			if ( i != 1019 ) // routerESSID[0] != 0xFF
+			if ( i != 1020 ) // routerESSID[0] != 0xFF   ( 255*4 == 1020 )
 				lastLength = ( (0xFF & table[i + 4]) << 24 ) | ( (0xFF & table[i + 5])  << 16 ) |
 					( (0xFF & table[i + 6])  << 8 ) | (0xFF & table[i + 7]);
 			totalOffset += offset;
-			fis.skip((i/4)*768);
+	        long checkLong = 0 , retLong ;
+            while ( checkLong != (i/4)*768 )/*ZipInputStream doens't seems to block.*/
+            {
+                retLong = fis.skip((i/4)*768 - checkLong);
+                if ( retLong == -1 )
+                {
+                    handler.sendMessage(Message.obtain(handler, ERROR_MSG , 
+                            resources.getString(R.string.msg_err_webdic_table)));
+                    errorDict = true;
+                    return false;
+                }
+                else
+                    checkLong += retLong;
+            }
 			check = 0 ;
 			while ( check != 768 )
 			{
