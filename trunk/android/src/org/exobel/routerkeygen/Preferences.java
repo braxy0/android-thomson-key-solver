@@ -69,8 +69,8 @@ public class Preferences extends PreferenceActivity {
 		"http://android-thomson-key-solver.googlecode.com/svn/trunk/RouterKeygenVersion.txt";
 
 	private static final String folderSelectPref = "folderSelect";
-	private static final String VERSION = "2.8.2";
-	private static final String LAUNCH_DATE = "01/09/2011";
+	private static final String VERSION = "2.9.0";
+	private static final String LAUNCH_DATE = "04/01/2012";
 	private String version ="";
 	
 	protected void onCreate(Bundle savedInstanceState) {
