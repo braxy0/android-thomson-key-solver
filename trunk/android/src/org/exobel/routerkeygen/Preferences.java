@@ -629,7 +629,7 @@ public class Preferences extends PreferenceActivity {
 				if((((WifiManager) getBaseContext().getSystemService(Context.WIFI_SERVICE))).getConnectionInfo().getSSID() != null)
 				{
 					diOnClickListener.onClick(null, -1);
-					break;
+					return null;
 				}
 				
 				builder.setTitle(R.string.pref_download);
