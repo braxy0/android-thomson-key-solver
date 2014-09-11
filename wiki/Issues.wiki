@@ -1,6 +1,6 @@
 #summary New Issues page
 
-= Project had moved to Github =
+= Project has moved to Github =
 
 https://github.com/routerkeygen/routerkeygenAndroid
 
