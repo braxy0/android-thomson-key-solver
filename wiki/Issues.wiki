@@ -1,0 +1,7 @@
+#summary New Issues page
+
+= Project had moved to Github =
+
+https://github.com/routerkeygen/routerkeygenAndroid
+
+Publish your issues there
